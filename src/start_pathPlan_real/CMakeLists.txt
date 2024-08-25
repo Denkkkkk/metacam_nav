@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
-project(start_real_robot)
+project(start_pathPlan_real)
 
 # set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_BUILD_TYPE Release)

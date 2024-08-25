@@ -1,43 +1,24 @@
 <launch>
     <!-- 选择性开启-->
-    <arg name="use_global_planner" default="true" />
+    <arg name="use_global_planner" default="false" />
     <arg name="use_rviz" default="true" />
-    <arg name="use_2dlaser" default="false" />
     <arg name="use_map" default="true" />
     <arg name="use_lp_reconfigure" default="false" />
 
     <!-- 局部规划的初始点位-->
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
-    <arg name="vehicleYaw" default="1.5708" />
-    <!-- <arg name="vehicleX" default="-11" />
-    <arg name="vehicleY" default="5.23" />
-    <arg name="vehicleYaw" default="0.78" /> -->
-    <arg name="checkTerrainConn" default="false" />
+    <arg name="vehicleYaw" default="0" />
     <arg name="min_intensity" default="0.2" />
     <arg name="min_intensity_global" default="0.22" />
     <arg name="min_intensity_blind" default="0.35" />
-    <arg name="down_hill_judge_time" default="0.3" />
     <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
-    <arg name="pcd_path" default="$(find map_manager)/pcd/rmuc.pcd" />
+    <arg name="pcd_path" default="$(find map_manager)/pcd/NO.pcd" />
     <!-- <arg name="map_file" default="$(find map_manager)/map/white_test.yaml" />
-    <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing1.pcd" /> -->
+    <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" /> -->
     <!-- <arg name="map_file" default="$(find map_manager)/map/huanong.yaml" />
     <arg name="pcd_path" default="$(find map_manager)/pcd/huanong.pcd" /> -->
     <param name="use_sim_time" value="false" />
-
-    <!-- livox驱动包 -->
-    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch" />
-
-    <!-- 双3D点云融合包-->
-    <include file="$(find fusion_pointclouds)/launch/fusion_pointclouds.launch" />
-
-    <!--启动lio定位算法-->
-    <include file="$(find start_real_robot)/launch/interface/mid360_pointlio.launch">
-        <arg name="yaml_path" value="$(find point_lio)/config/mid360.yaml" />
-        <arg name="ns" value="" />
-        <arg name="robotFrame" value="Sentry/vehicle" />
-    </include>
 
     <include file="$(find map_to_odom)/launch/map_to_odom.launch">
         <arg name="vehicleX" value="$(arg vehicleX)" />
@@ -63,14 +44,6 @@
         <arg name="checkTerrainConn" value="true" />
     </include>
 
-    <include file="$(find start_real_robot)/launch/interface/tf_sentry2.launch" />
-
-    <group if="$(arg use_2dlaser)">
-        <!-- 2D雷达自动重启程序 -->
-        <include file="$(find start_real_robot)/launch/interface/start_control.launch" />
-        <include file="$(find rplidar_ros)/launch/view_rplidar.launch" />
-    </group>
-
     <!-- 启动全局规划 -->
     <group if="$(arg use_global_planner)">
         <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
@@ -88,25 +61,18 @@
         </include>
     </group>
 
-    <!-- <include file="$(find terrain_map_record)/launch/terrain_map_record.launch" /> -->
-
     <!-- 启动rviz -->
     <group if="$(arg use_rviz)">
         <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
             args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
     </group>
 
-    <include file="$(find nlink_parser)/launch/tofsense.launch">
-        <arg name="tof_topic" value="tof_front" />
-    </include>
-
     <!-- 启动规划器动态调参 -->
     <group if="$(arg use_lp_reconfigure)">
         <include file="$(find local_planner)/launch/reconfigure.launch" />
     </group>
 
-    <include file="$(find semantic_map)/launch/semantic_map.launch">
-        <arg name="default_map" value="$(arg map_file)" />
-        <arg name="down_hill_judge_time" value="$(arg down_hill_judge_time)" />
-    </include>
+    <!-- 启动服务通信 -->
+    <include file="$(find nav_service)/launch/nav_service.launch" />
+
 </launch>

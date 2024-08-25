@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
-    <name>start_real_robot</name>
+    <name>start_pathPlan_real</name>
     <version>0.0.0</version>
-    <description>The start_control package</description>
-    <maintainer email="fwy@todo.todo">fwy</maintainer>
+    <description>The start_pathPlan_real package</description>
+    <maintainer email="ldq@todo.todo">ldq</maintainer>
     <license>TODO</license>
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>roscpp</build_depend>
