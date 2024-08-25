@@ -1,0 +1,5 @@
+
+# 保存2维地图，障碍物或者占据的区域occ为90，自由区域free像素值为10
+rosrun map_server map_saver --occ 90 --free 10 -f map:=/projected_map
+# 保存3D地图
+rosrun map_server map_saver map:/octomap_full -f /home/denk/my_project/SCUT_robotlab/24-vision_PathPlan_sentry/src/AGlobalPlanner/map_manager/map/map3d

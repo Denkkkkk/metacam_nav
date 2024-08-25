@@ -1,0 +1,40 @@
+<launch>
+    <arg name="base_frame_id" default="Sentry/vehicle" />
+    <arg name="cloud_in_topic" default="/terrain_map" />
+
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+        <!-- 手动设置地图分辨率为0.05，每像素代表0.05米 -->
+        <param name="resolution" value="0.05" />
+        <!-- name of the fixed frame, needs to be "/map" for SLAM -->
+        <param name="frame_id" type="string" value="map" />
+        <param name="base_frame_id" type="string" value="$(arg base_frame_id)" />
+
+        <!-- max range / depth resolution of the kinect in meter -->
+        <param name="sensor_model/max_range" value="50.0" />
+        <!-- <param name="sensor_model/min_range" value="0.3" /> -->
+
+        <param name="latch" value="true" />
+
+        <!-- 认为是障碍物建图的高度范围 -->
+        <param name="pointcloud_max_z" value="1.0" />
+        <param name="pointcloud_min_z" value="0.15" />
+
+        <!-- 动态建图时过滤噪声用的，用于控制在将新的传感器数据融合到地图时，对地图中的占据概率进行调整的程度 -->
+        <!-- 为了确保地图的稳定性和准确性，可以设置一个最小概率阈值，低于该阈值的概率值将被认为是不可靠的 -->
+        <param name="sensor_model/max" value="0.8" />
+        <param name="sensor_model/min" value="0.12" />
+
+        <!-- 噪点过滤 -->
+        <param name="filter_speckles" value="true" />
+
+        <!-- 输出三维栅格时自带地面分割 -->
+        <param name="filter_ground" value="false" />                <!-- 是否进行地面分割-->
+        <param name="ground_filter/distance" value="0.04" />        <!-- 基于RANSAC算法的点到地面阈值，小于则该点为地面点。-->
+        <param name="ground_filter/angle" value="0.15" />           <!-- 与水平面的夹角小于这个值都是地面-->
+        <param name="ground_filter/plane_distance" value="0.07" />  <!-- 针对整个平面与地面之间的垂直距离判断整个平面-->
+
+        <!-- topic from where pointcloud2 messages are subscribed -->
+        <remap from="/cloud_in" to="$(arg cloud_in_topic)" />
+    </node>
+</launch>
+  

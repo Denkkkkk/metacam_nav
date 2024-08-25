@@ -1,0 +1,35 @@
+<launch>
+  <node pkg="terrain_analysis" type="terrainAnalysis" name="terrainAnalysis" output="screen"
+    respawn="true">
+    <!--人为设定地面分割周围对比中，单个平面体素的大小（最好是0.1到0.5就行）因为报错无法解决，暂时舍去-->
+    <!-- <param name="planarVoxelSize" type="double" value="0.2" /> -->
+    <param name="terrainMapRadius" type="double" value="10.0" /> <!--人为设定地形分析半径，应当小于10-->
+    <param name="scanVoxelSize" type="double" value="0.1" />    <!--下采样体素大小-->
+    <param name="decayTime" type="double" value="0.8" />        <!--衰减时间,体素地图中超过这个时间的点云会被清除-->
+    <param name="noDecayDis" type="double" value="0" />         <!--在这个区域的点云永远不会清除！很危险-->
+    <param name="clearingDis" type="double" value="5.0" />      <!--回调收到开启清图标志位后，清空这个范围外的所有点云-->
+    <param name="useSorting" type="bool" value="true" />        <!--是否由小到大-->
+    <!--小于1,如果useSorting,对平面体素高程planarPointElev仅保留第size*quantileZ的高程信息,比如7个高程信息,7*0.25=1.75约1,即仅保留第二小的高程信息-->
+    <param name="quantileZ" type="double" value="0.25" />
+    <param name="considerDrop" type="bool" value="false" />  <!--是否考虑下方可能的洞或坑-->
+    <param name="limitGroundLift" type="bool" value="false" />
+    <param name="maxGroundLift" type="double" value="0.5" />
+    <param name="clearDyObs" type="bool" value="true" />
+    <param name="minDyObsDis" type="double" value="0.3" />    <!--点云距离比较近,不作动态障碍物判断,直接认为是动态的障碍物,赋给这个体素位置判定标准的最小动态障碍物点云数量-->
+    <param name="minDyObsAngle" type="double" value="0" />
+    <param name="minDyObsRelZ" type="double" value="-0.5" />
+    <param name="minDyObsVFOV" type="double" value="-50" />
+    <param name="maxDyObsVFOV" type="double" value="10" />
+    <param name="minDyObsPointNum" type="int" value="1" />
+    <param name="noDataObstacle" type="bool" value="false" />
+    <param name="noDataBlockSkipNum" type="int" value="0" />
+    <param name="minBlockPointNum" type="int" value="10" />
+    <param name="vehicleHeight" type="double" value="0.7" />
+    <param name="voxelPointUpdateThre" type="int" value="20" />
+    <param name="voxelTimeUpdateThre" type="double" value="0.1" />
+    <param name="minRelZ" type="double" value="-1" />    <!--影响平面高程点的有效高度-->
+    <param name="maxRelZ" type="double" value="1" />
+    <param name="disRatioZ" type="double" value="0.2" />
+  </node>
+
+</launch>

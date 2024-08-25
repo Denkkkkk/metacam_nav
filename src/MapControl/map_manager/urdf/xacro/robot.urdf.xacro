@@ -1,0 +1,19 @@
+<!--24-李东权，1327165187@qq.com-->
+<!-- 主文件,整合所有模块 -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+    <gravity>true</gravity>
+    <xacro:include filename="property.xacro" />
+    <xacro:include filename="car_base.urdf.xacro" />
+    <xacro:include filename="velodyne.urdf.xacro" />
+
+    <xacro:VLP-16 parent="vehicle" name="velodyne" topic="/velodyne_points" hz="10"
+        min_range="0.1" samples="350" collision_range="0.1" organize_cloud="true" gpu="false"
+        min_angle="-3.14159" max_angle="3.14159" vmin_angle="${-52/180*PI}"
+        vmax_angle="${52/180*PI}">
+        <origin xyz="0.0 0.0 ${car_height/2+0.02}" rpy="0 0 0" />
+    </xacro:VLP-16>
+
+    <xacro:include
+        filename="$(find sentry_gazebo)/urdf/car_drive.gazebo" />
+    <xacro:base_mecanum_gazebo />
+</robot>

@@ -1,0 +1,8 @@
+<launch>
+  <arg name="ns" default="" />
+
+  <node pkg="vehicle_simulator" type="robotSimulator" name="robotSimulator" output="screen"
+    required="true">
+    <param name="ns" value="$(arg ns)" />
+  </node>
+</launch>

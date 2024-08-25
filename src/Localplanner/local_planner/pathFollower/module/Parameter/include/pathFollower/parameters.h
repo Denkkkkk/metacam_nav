@@ -1,0 +1,62 @@
+#pragma once
+#include <iostream>
+#include <ros/ros.h>
+#include <string>
+
+struct Params
+{
+    double lookAheadDis;
+    double maxSpeed;
+    bool useLoaclSlow;
+    double endPathDis;
+    double pathSlowDisThre;
+    double getPath_speed;
+    double path_zero_bias;
+    double goalSlowDisThre;
+    double getGoal_speed;
+    double goal_zero_bias;
+    double dirDiffThre;
+    double spinSpeed;
+    double endGoalDis;
+    bool useCloudSlowDown;
+    double cloudSlow_minSpeed;
+    double minSpeed;
+    double curvature;
+    int slowBegin;
+    bool safetyStop;
+    std::string cmdTopicdTopic;
+    double maxAddAccel;
+    double maxSlowAccel;
+    double yawRateGain;
+    double stopYawRateGain;
+    double maxYawRate;
+    double maxStopYawRate;
+    bool goal_path_direct;
+    bool use_MIDPlanning_slow;
+    double MIDPlanning_slow_rate;
+    double MIDPlanning_minSpeed;
+    bool use_closeGoal_direct;
+    double closeGoal_direct_dis;
+    double quick_turn_N;
+    double close_direct_speed;
+    double update_begin_dis_vehicleDis;
+    double update_begin_dis_goalPoint;
+    bool use_virtual_head;
+    bool use_move_base;
+};
+
+class ParamControl
+{
+public:
+    void load_params();
+    void update_params();
+    void output_params();
+
+    Params param;
+    Params param_origin;
+
+private:
+    ros::NodeHandle nhPrivate = ros::NodeHandle("~");
+    ros::NodeHandle nhPrivate_actual = ros::NodeHandle("pathFollower_actual");
+    ros::NodeHandle nh;
+};

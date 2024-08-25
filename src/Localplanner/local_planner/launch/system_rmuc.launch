@@ -1,0 +1,56 @@
+<launch>
+      <arg name="checkTerrainConn" default="true" />
+      <arg name="vehicleX" default="8" />
+      <arg name="vehicleY" default="6" />
+      <arg name="vehicleYaw" default="0" />
+      <arg name="robotFrame" default="Sentry/vehicle" />
+      <arg name="cmdTopic" default="/cmd_vel" />
+      <arg name="pcd_path" default="" />
+      <arg name="use_map" default="false" />
+      <arg name="min_intensity" default="0.17" />
+      <!-- 打开地形和扩展地形分析，
+  接收：/Odometry 位姿信息
+        /cloud_registered  point_lio输出点云
+        /map_clearing     可以一键清空地形点云地图，没有发布者，用户自己开发时可使用。
+  发布：
+        /terrain_map      地形点云地图
+  -->
+      <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
+      <!-- 扩展模块：
+    - 加入车体中心向外扩展连接片区的墙面边界判断(独立方法), 加入一个局部地形地图分析的半径限制,默认为4m
+    - 与基础地形分析一样的订阅+/terrain_map，此地图分析面积更大，频率更低，主要用来生成高质量的全局规划
+  发布：
+  /terrain_map_ext  扩展地形点云地图 -->
+      <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
+            <arg name="checkTerrainConn" value="$(arg checkTerrainConn)" />
+      </include>
+
+      <!-- 打开局部路径规划，问题：开源的local_planner没有订阅/terrain_map_ext，这个需要自己投入使用,但这个主要用于全局规划
+  接收：/Odometry    位姿信息
+        /cloud_registered     point_lio输出点云
+        /terrain_map         地形点云地图
+        /way_points          规划目标点
+        /serial_receive_data 串口接收的数据，自己开辟的串口指令
+  发布：
+        <nav_msgs::Path>("/path", 5) 局部规划的预测路径点
+  -->
+      <!--打开路径跟随
+  接收：/Odometry     里程计信息
+        /path                 路径信息
+        /speed                速度信息
+        /stop                 停止指令
+        /serial_receive_data  串口数据
+  发布：
+        <geometry_msgs::Twist>("/cmd_vel", 5) 底盘控制信息
+  -->
+      <include file="$(find local_planner)/launch/local_planner.launch">
+            <arg name="vehicleX" value="$(arg vehicleX)" />
+            <arg name="vehicleY" value="$(arg vehicleY)" />
+            <arg name="robotFrame" value="$(arg robotFrame)" />
+            <arg name="cmdTopic" value="$(arg cmdTopic)" />
+            <arg name="pcd_path" value="$(arg pcd_path)" />
+            <arg name="use_map" value="$(arg use_map)" />
+            <arg name="min_intensity" value="$(arg min_intensity)" />
+      </include>
+
+</launch>
