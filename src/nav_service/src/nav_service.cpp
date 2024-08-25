@@ -13,10 +13,9 @@
 
 bool is_running = false;
 NavigationModel nav_model;
-std::queue<Point> need_nav_points;
 double vehicle_x = 0.0;
 double vehicle_y = 0.0;
-bool need_pop_navPoint = false;
+int nav_index = 0;
 /**
  * @brief 更新导航点参数
  *
@@ -29,43 +28,22 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
                           std_srvs::Trigger::Response &res)
 {
     std::string config;
-    // if (ros::param::get("/nav/update_config", config))
-    if (true)
+    if (ros::param::get("/nav/config", config))
+    // if (true)
     {
-        // nlohmann::json json_data = nlohmann::json::parse(config);
-        // nav_model = json_data.get<NavigationModel>();
-        // res.success = true;
-        // res.message = "get navigation config successfully!";
-        /**
-         * @brief 导航点入栈处理
-         *
-         */
-        // 清空队列内数据
-        while (!need_nav_points.empty())
-        {
-            need_nav_points.pop();
-        }
-        // 按序入队
-        // 点序列调试模式
+        nlohmann::json json_data = nlohmann::json::parse(config);
+        nav_model = json_data.get<NavigationModel>();
         res.success = true;
-        Point point1 = {1, 0, 0};
-        Point point2 = {2, 2, 0};
-        Point point3 = {2, 4, 0};
-        need_nav_points.push(point1);
-        need_nav_points.push(point2);
-        need_nav_points.push(point3);
-        // for (auto &point : nav_model.points)
-        // {
+        res.message = "get navigation config successfully!";
 
-        //     need_nav_points.push(point);
-        // }
-        need_pop_navPoint = true;
+        nav_index = 0;
     }
     else
     {
         res.success = false;
-        res.message = "fail to get navigation config since /nav/update_config is not given!";
+        res.message = "fail to get navigation config since /nav/config is not given!";
     }
+    ROS_WARN("config:%s", config.c_str());
 
     if (res.success)
         ROS_INFO("%s", res.message);
@@ -154,10 +132,11 @@ int main(int argc, char **argv)
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
 
-    ros::Rate loop_rate(50);
+    ros::Rate loop_rate(20);
     geometry_msgs::PoseStamped way_point;
     while (ros::ok())
     {
+        loop_rate.sleep();
         ros::spinOnce();
         // 导航点出栈并发布到way_point，到点后再出栈下一个
         if (is_running)
@@ -166,15 +145,14 @@ int main(int argc, char **argv)
             std_msgs::Bool stop;
             stop.data = false;
             stop_pub.publish(stop);
-            if (need_nav_points.empty())
+            if (nav_model.points.empty())
             {
-                ROS_INFO("All Navigation Point is finished!");
+                ROS_INFO("NO Navigation Point!");
                 continue;
             }
-            // 是否需要取出队首元素并发布
-            if (!need_nav_points.empty() && need_pop_navPoint)
+            if (!nav_model.parameters.empty() && nav_model.parameters[0] > 0)
             {
-                Point point = need_nav_points.front(); // 获取队首元素
+                const auto &point = nav_model.points.at(nav_index);
                 // way_point赋值
                 way_point.header.frame_id = "map";
                 way_point.header.stamp = ros::Time::now();
@@ -186,19 +164,22 @@ int main(int argc, char **argv)
                 way_point.pose.orientation.z = 0;
                 way_point.pose.orientation.w = 1;
                 way_point_pub.publish(way_point);
-                need_pop_navPoint = false;
             }
             // 判断到点状态
             double dis = sqrt(pow(vehicle_x - way_point.pose.position.x, 2) + pow(vehicle_y - way_point.pose.position.y, 2));
             if (dis < 0.3)
             {
-                need_nav_points.pop(); // 到点后出队
-                need_pop_navPoint = true;
+                nav_index += 1;
+                if (nav_index == nav_model.points.size())
+                {
+                    nav_model.parameters[0] -= 1;
+                    nav_index = 0;
+                }
             }
             else
             {
                 way_point_pub.publish(way_point); // 未到点不断发布
-                ROS_INFO("Going to Navigation Point: x: %f, y: %f, z: %f", way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
+                ROS_INFO("points_nub:%ld,Going to Navigation Point: x: %f, y: %f, z: %f", nav_model.points.size(), way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
             }
         }
         else
@@ -209,8 +190,6 @@ int main(int argc, char **argv)
             stop_pub.publish(stop);
             ROS_INFO("Navigation service is not running!");
         }
-
-        loop_rate.sleep();
     }
     return 0;
 }
