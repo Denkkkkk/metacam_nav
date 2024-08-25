@@ -14,7 +14,7 @@ struct Point
 struct NavigationModel
 {
     int mode;
-    std::vector<int> parameters;
+    std::vector<float> parameters;
     std::vector<Point> points;
 };
 

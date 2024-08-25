@@ -1,47 +1,40 @@
 <launch>
     <!-- 选择性开启-->
     <arg name="use_global_planner" default="false" />
-    <arg name="use_rviz" default="true" />
+    <arg name="use_rviz" default="false" />
     <arg name="use_map" default="true" />
     <arg name="use_lp_reconfigure" default="false" />
 
     <!-- 局部规划的初始点位-->
+    <arg name="ns" default="TITA" />
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
     <arg name="min_intensity" default="0.2" />
     <arg name="min_intensity_global" default="0.22" />
     <arg name="min_intensity_blind" default="0.35" />
-    <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
+    <arg name="map_file" default="$(find map_manager)/map/NO.yaml" />
     <arg name="pcd_path" default="$(find map_manager)/pcd/NO.pcd" />
     <!-- <arg name="map_file" default="$(find map_manager)/map/white_test.yaml" />
     <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" /> -->
-    <!-- <arg name="map_file" default="$(find map_manager)/map/huanong.yaml" />
-    <arg name="pcd_path" default="$(find map_manager)/pcd/huanong.pcd" /> -->
     <param name="use_sim_time" value="false" />
 
     <include file="$(find map_to_odom)/launch/map_to_odom.launch">
         <arg name="vehicleX" value="$(arg vehicleX)" />
         <arg name="vehicleY" value="$(arg vehicleY)" />
         <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
+        <arg name="ns" value="$(arg ns)" />
     </include>
 
-    <!-- 打开局部路径规划和路径跟随，还有将/restered_scan点云转到map系的robot_simulator.launch -->
-    <include file="$(find local_planner)/launch/local_planner.launch">
+    <!-- 启动Autonomous Exploration Development Environment环境，加载地形分析，局部导航 -->
+    <include file="$(find local_planner)/launch/system_rmuc.launch">
+        <arg name="ns" value="$(arg ns)" />
+        <arg name="vehicleX" value="$(arg vehicleX)" />
+        <arg name="vehicleY" value="$(arg vehicleY)" />
+        <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
         <arg name="use_map" value="$(arg use_map)" />
+        <arg name="min_intensity" value="$(arg min_intensity)" />
         <arg name="pcd_path" value="$(arg pcd_path)" />
-        <arg name="goalX" value="$(arg vehicleX)" />
-        <arg name="goalY" value="$(arg vehicleY)" />
-    </include>
-
-    <!-- 打开地形和扩展地形分析，
-      - /map_clearing     可以一键清空地形点云地图，没有发布者，用户自己开发时可使用。
-      - 扩展模块：只给far_planner使用，加入车体中心向外扩展连接片区的墙面边界判断(独立方法), 加入一个局部地形地图分析的半径限制,默认为4m
-      - checkTerrainConn
--->
-    <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
-    <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
-        <arg name="checkTerrainConn" value="true" />
     </include>
 
     <!-- 启动全局规划 -->
@@ -74,5 +67,10 @@
 
     <!-- 启动服务通信 -->
     <include file="$(find nav_service)/launch/nav_service.launch" />
+
+    <!-- 补充的tf转换-->
+    <include file="$(find start_pathPlan_real)/launch/tf_real.launch">
+        <arg name="ns" value="$(arg ns)" />
+    </include>
 
 </launch>

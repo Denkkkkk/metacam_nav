@@ -50,8 +50,10 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
         res.success = true;
         Point point1 = {1, 0, 0};
         Point point2 = {2, 2, 0};
+        Point point3 = {2, 4, 0};
         need_nav_points.push(point1);
         need_nav_points.push(point2);
+        need_nav_points.push(point3);
         // for (auto &point : nav_model.points)
         // {
 

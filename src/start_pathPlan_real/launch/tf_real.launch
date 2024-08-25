@@ -1,0 +1,18 @@
+<launch>
+     <arg name="ns" default="" />
+
+     <!--手动设定雷达到机器人位置的转换,二代车-->
+     <node pkg="tf"
+          type="static_transform_publisher"
+          name="vehicleTObody"
+          output="screen"
+          args="0.0 0.0 0 0 0 0 body $(arg ns)/vehicle  40" respawn="true" />
+
+     <node pkg="tf"
+          type="static_transform_publisher"
+          name="camera_initTOodom"
+          output="screen"
+          args="0.0 0.0 0.0 0.0 0.0 0.0  $(arg ns)/odom camera_init 40" respawn="true" />
+
+
+</launch>

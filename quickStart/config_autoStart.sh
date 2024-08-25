@@ -19,7 +19,7 @@ dir=$(pwd);
 file="$HOME/.bashrc"
 pattern1="sentry_run"
 pattern2="sentry_kill"
-pattern3="24-vision_PathPlan_sentry"
+pattern3="explorationExp_ws"
 # 使用 sed 命令删除匹配的行
 sed -i "/$pattern1/d" "$file"
 sed -i "/$pattern2/d" "$file"
