@@ -2,6 +2,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   sensor_msgs
+  pcl_ros
 )
 
 add_library(Parts SHARED src/Parts.cpp)

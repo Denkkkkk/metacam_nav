@@ -46,9 +46,9 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
     ROS_WARN("config:%s", config.c_str());
 
     if (res.success)
-        ROS_INFO("%s", res.message);
+        ROS_INFO("%s", res.message.c_str());
     else
-        ROS_ERROR("%s", res.message);
+        ROS_ERROR("%s", res.message.c_str());
     return true;
 }
 
@@ -76,9 +76,9 @@ bool startCallback(std_srvs::Trigger::Request &req,
     }
 
     if (res.success)
-        ROS_INFO("%s", res.message);
+        ROS_INFO("%s", res.message.c_str());
     else
-        ROS_ERROR("%s", res.message);
+        ROS_ERROR("%s", res.message.c_str());
     return true;
 }
 
@@ -106,9 +106,9 @@ bool stopCallback(std_srvs::Trigger::Request &req,
     }
 
     if (res.success)
-        ROS_INFO("%s", res.message);
+        ROS_INFO("%s", res.message.c_str());
     else
-        ROS_ERROR("%s", res.message);
+        ROS_ERROR("%s", res.message.c_str());
     return true;
 }
 
@@ -150,7 +150,17 @@ int main(int argc, char **argv)
                 ROS_INFO("NO Navigation Point!");
                 continue;
             }
-            if (!nav_model.parameters.empty() && nav_model.parameters[0] > 0)
+            else if (nav_model.parameters.empty())
+            {
+                ROS_INFO("nav_model Parameters Is Empty!");
+                continue;
+            }
+            else if (nav_model.parameters[0] <= 0)
+            {
+                ROS_INFO("nav_model.parameters[0] <= 0 !");
+                continue;
+            }
+            else
             {
                 const auto &point = nav_model.points.at(nav_index);
                 // way_point赋值
@@ -175,6 +185,7 @@ int main(int argc, char **argv)
                     nav_model.parameters[0] -= 1;
                     nav_index = 0;
                 }
+                ROS_INFO("get point: x: %f, y: %f, z: %f", way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
             }
             else
             {
