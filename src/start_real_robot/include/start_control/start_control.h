@@ -15,14 +15,8 @@ class StartControl
 private:
     ros::NodeHandle nh;          // 句柄
     ros::Subscriber serial_sub;  // 订阅 串口信息
-    ros::Subscriber rplidar_sub; // 订阅 2D雷达
-    ros::Subscriber rplidar_status_sub;
 
 public:
-    std_msgs::Bool rplidar_status;
-    pcl::PointCloud<pcl::PointXYZI>::Ptr lidar_points;
     StartControl();
     ~StartControl() = default;
-    void rplidarCallBack(const sensor_msgs::PointCloud2ConstPtr &addPoints);
-    void rplidarStatusCallBack(const std_msgs::BoolConstPtr &status);
 };

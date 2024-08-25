@@ -16,22 +16,6 @@ int main(int argc, char **argv)
         // 处理所有的订阅回调，先拉取各种的数据信息，点云信息
         ros::spinOnce();
         bool status = ros::ok();
-        if (!sc.rplidar_status.data)
-        {
-            ROS_WARN("noRplidar_client.....");
-            rate.sleep();
-            continue;
-        }
-        if (sc.lidar_points->size() > 5)
-        {
-            get_points = true;
-        }
-        if (get_points)
-        {
-            // ROS_WARN("get_rplidar!!!");
-            rate.sleep();
-            continue;
-        }
         if (times > 400)
         {
             int status = system("gnome-terminal -- bash -c 'rosnode kill /rplidarNode;roslaunch rplidar_ros rplidar.launch'");
