@@ -179,7 +179,8 @@ int main(int argc, char **argv)
             else
             {
                 way_point_pub.publish(way_point); // 未到点不断发布
-                ROS_INFO("points_nub:%ld,Going to Navigation Point: x: %f, y: %f, z: %f", nav_model.points.size(), way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
+                ROS_INFO("points_num: %ld, left_count: %.0f", nav_model.points.size(), nav_model.parameters[0]);
+                ROS_INFO("Going to Navigation Point: x: %f, y: %f, z: %f", way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
             }
         }
         else
