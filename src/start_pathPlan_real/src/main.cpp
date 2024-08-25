@@ -1,8 +1,6 @@
-#include "msg_process/receive_data.h"
 #include "start_control/start_control.h"
 using namespace std;
 
-// 2D雷达重启
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "start_control");
@@ -27,7 +25,6 @@ int main(int argc, char **argv)
         {
             times++;
         }
-        ROS_WARN("waiting_rplidar_points.....");
         rate.sleep();
     }
     return 0;

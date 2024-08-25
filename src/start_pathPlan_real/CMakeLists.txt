@@ -7,7 +7,6 @@ project(start_pathPlan_real)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 
 find_package(catkin REQUIRED COMPONENTS
-        msg_process
         roscpp
         std_msgs
         geometry_msgs
@@ -25,10 +24,9 @@ include_directories(
         include
         ${CMAKE_CURRENT_SOURCE_DIR} 
         ${catkin_INCLUDE_DIRS}
-        ${OpenCV_INCLUDE_DIRECTORIES}
 )
 
 add_executable(start_control src/main.cpp src/start_control.cpp)
 add_dependencies(start_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(start_control ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
+target_link_libraries(start_control ${catkin_LIBRARIES} )
 
