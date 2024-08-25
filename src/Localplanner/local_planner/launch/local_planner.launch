@@ -3,8 +3,8 @@
   <arg name="pcd_path_rmuc" default="$(find map_manager)/pcd/rmuc.pcd" />
   <arg name="pcd_path_qingqing" default="$(find map_manager)/pcd/qingqing.pcd" />
   <arg name="min_intensity" default="0.2" />
-  <arg name="maxSpeed" default="1.0" />
-  <arg name="minSpeed" default="0.2" />                 <!--@-maxSpeed1，最大速度的最小速度-->
+  <arg name="maxSpeed" default="0.4" />
+  <arg name="minSpeed" default="0.1" />                 <!--@-maxSpeed1，最大速度的最小速度-->
   <arg name="close_direct_speed" default="0.5" />
   <arg name="curvature" default="9" />
   <arg name="autonomySpeed" default="$(arg maxSpeed)" /> <!--自然速度,应该比maxSpeed小-->
@@ -92,12 +92,12 @@
     <param name="slowBegin" value="3" />                            <!--@-根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好-->
     <param name="safetyStop" type="bool" value="false" />           <!--@-紧急刹车-->
     <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
-    <param name="maxAddAccel" type="double" value="5.0" />          <!--@-最大加速速度-->
-    <param name="maxSlowAccel" type="double" value="4.5" />         <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="60.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="100.0" />    <!--@-静止下的伪车头转动增益-->
-    <param name="maxYawRate" type="double" value="60.0" />          <!--车头最大转动角速度-->
-    <param name="maxStopYawRate" type="double" value="100.0" />     <!--低速下车头最大转动角速度,有过大保护-->
+    <param name="maxAddAccel" type="double" value="0.15" />          <!--@-最大加速速度-->
+    <param name="maxSlowAccel" type="double" value="0.2" />         <!--@-最大减速加速度-->
+    <param name="yawRateGain" type="double" value="15.0" />         <!--@-一般情况下的伪车头转动增益-->
+    <param name="stopYawRateGain" type="double" value="30.0" />    <!--@-静止下的伪车头转动增益-->
+    <param name="maxYawRate" type="double" value="30.0" />          <!--车头最大转动角速度-->
+    <param name="maxStopYawRate" type="double" value="45.0" />     <!--低速下车头最大转动角速度,有过大保护-->
     <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->
     <param name="use_MIDPlanning_slow" type="bool" value="true" />  <!--是否使用转弯点减速-->
     <param name="MIDPlanning_slow_rate" type="double" value="0.7" /><!--转弯点减速比例-->
