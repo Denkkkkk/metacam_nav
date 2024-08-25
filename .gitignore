@@ -1,0 +1,47 @@
+build
+build_clion
+devel
+install
+Gazebo
+
+cmake-build-debug
+.catkin_workspace
+.vscode
+.idea
+.DS_Store
+.active
+*~
+
+src/vehicle_simulator/mesh/*
+src/vehicle_simulator/mesh/matterport/meshes/*
+src/vehicle_simulator/mesh/matterport/segmentations/*
+src/vehicle_simulator/mesh/matterport/preview/*
+
+src/vehicle_simulator/log/*
+
+!download_environments.sh
+!src/vehicle_simulator/mesh/matterport
+!readme.txt
+
+*.png
+*.jpg
+*.PCD
+*.gif
+*.pyc
+*.zip
+
+path_config.h
+
+myRosbag
+*bag.active
+
+#Other files
+# qt project files
+# *.txt.user*
+# # kDevelop project files
+# .kdev4
+# *.kdev4
+# # Version control
+# .svn
+decision_xml_config.h
+fishros
