@@ -37,10 +37,10 @@
     <param name="use_fail_closemap" type="bool" value="true" />          <!--开启规划失败就关闭点云地图-->
     <!--速度控制和对规划范围的影响，pathRange小的时候速度一定也得小，因为路径短，速度一大两下就会超出路点的尽头导致抽搐-->
     <param name="autonomySpeed" value="$(arg autonomySpeed)" />    <!--默认控制车体的运动速度，应该小于maxSpeed-->
-    <param name="adjacentRange" type="double" value="3.0" />       <!--@-第一次裁剪规划点云的范围-->
-    <param name="pathRangeStep" type="double" value="0.4" />       <!--上面这个系数的缩小步长-->
+    <param name="adjacentRange" type="double" value="2.8" />       <!--@-第一次裁剪规划点云的范围-->
+    <param name="pathRangeStep" type="double" value="0.5" />       <!--上面这个系数的缩小步长-->
     <param name="minSpeedRange" type="double" value="1.2" />
-    <param name="minPathRange" type="double" value="0.55" />       <!--速度越慢，路径范围就越小，再小都小不过这个值-->
+    <param name="minPathRange" type="double" value="0.5" />        <!--速度越慢，路径范围就越小，再小都小不过这个值-->
     <param name="pathRangeBySpeed" type="bool" value="false" />    <!--根据速度调整规划范围-->
     <param name="slow_dis" type="double" value="0.6" />
     <!--障碍物高度相关控制-->
@@ -57,8 +57,8 @@
     <param name="dirThre" type="double" value="70" />              <!--@-规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑-->
     <param name="detourWei" type="double" value="1.8" />           <!--绕行系数，越大绕行越明显，拐弯处会越远离障碍物，但是左右摆动越明显-->
     <param name="pathCropByGoal" type="bool" value="true" />       <!--删除路径点到车体的距离超过了车体到目标点的圆形区域外加goalClearRange延长环，这些路径点都不会碰到，不会到达-->
-    <param name="goalClearRange" type="double" value="0.8" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
-    <param name="goalClearRange_global" type="double" value="0.6" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
+    <param name="goalClearRange" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
+    <param name="goalClearRange_global" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
     <!-- scale点云收拢比例控制 -->
     <param name="usePathScale" type="bool" value="false" />
     <param name="defPathScale" type="double" value="1.0" />        <!--@-默认缩放范围-->
