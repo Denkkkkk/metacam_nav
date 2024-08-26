@@ -147,17 +147,17 @@ int main(int argc, char **argv)
             stop_pub.publish(stop);
             if (nav_model.points.empty())
             {
-                ROS_INFO("NO Navigation Point!");
+                ROS_WARN("NO Navigation Point!");
                 continue;
             }
             else if (nav_model.parameters.empty())
             {
-                ROS_INFO("nav_model Parameters Is Empty!");
+                ROS_WARN("nav_model Parameters Is Empty!");
                 continue;
             }
             else if (nav_model.parameters[0] <= 0)
             {
-                ROS_INFO("nav_model.parameters[0] <= 0 !");
+                ROS_WARN("nav_model.parameters[0]为 :%d !", nav_model.parameters[0]);
                 continue;
             }
             else
