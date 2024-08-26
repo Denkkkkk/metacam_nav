@@ -157,7 +157,7 @@ int main(int argc, char **argv)
             }
             else if (nav_model.parameters[0] <= 0)
             {
-                ROS_WARN("nav_model.parameters[0] :%d !", nav_model.parameters[0]);
+                ROS_WARN("nav_model.parameters[0] :%f !", nav_model.parameters[0]);
                 continue;
             }
             else

@@ -112,7 +112,7 @@ private:
     double maxSpeed1 = 0;
     float cloudToSpeedK = 0;
     float cloudToSpeedB = 0;
-    double switchTimeThre = 0.5; // 允许0.5s翻转一次车头方向
+    double switchTimeThre = 1.5; // 允许1.5s翻转一次车头方向
     std::string cmdTopic;
     geometry_msgs::PoseStamped goal_point;
     geometry_msgs::PoseStamped way_point;

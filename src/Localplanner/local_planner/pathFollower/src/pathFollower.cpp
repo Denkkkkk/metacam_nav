@@ -35,7 +35,7 @@ RoboCtrl::RoboCtrl()
     {
         pubVirHeadDir = nh.advertise<std_msgs::Float32>("/vir_head_dir", 1);
     }
-    subPath = nh.subscribe<nav_msgs::Path>("/path", 1, &RoboCtrl::pathHandler, this);
+    subPath = nh.subscribe<nav_msgs::Path>("/local_path", 1, &RoboCtrl::pathHandler, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &RoboCtrl::stopHandler, this);
     subGoal = nh.subscribe<geometry_msgs::PoseStamped>("/way_point", 5, &RoboCtrl::goalHandler, this);
     subLplannerData = nh.subscribe<pfollower_reconfigure::pfollower_control>("/pfollower_control_data", 5, &RoboCtrl::pfollowerControlHandler, this);

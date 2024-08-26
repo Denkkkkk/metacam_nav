@@ -102,7 +102,7 @@
     <param name="use_MIDPlanning_slow" type="bool" value="true" />  <!--是否使用转弯点减速-->
     <param name="MIDPlanning_slow_rate" type="double" value="0.7" /><!--转弯点减速比例-->
     <param name="MIDPlanning_minSpeed" type="double" value="1.0" />
-    <param name="dirDiffThre" type="double" value="0.1" />         <!--@-角度差-->
+    <param name="dirDiffThre" type="double" value="0.15" />         <!--@-角度差-->
     <param name="use_closeGoal_direct" type="bool" value="false" />  <!--@-开启到目标点附近直接冲向目标点-->
     <param name="closeGoal_direct_dis" type="double" value="0.2" /><!--@-到目标点附近直冲的阈值-->
     <param name="close_direct_speed" type="double" value="$(arg close_direct_speed)" />
