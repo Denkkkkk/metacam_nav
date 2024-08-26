@@ -86,7 +86,7 @@ void LpNode::pubPath_fromStartPaths(int &selectedGroupID)
             break;
         }
     }
-    path.header.stamp = ros::Time().fromSec(odomTime);
+    path.header.stamp = ros::Time().now();
     path.header.frame_id = robotFrame;
     pubPath.publish(path);
 

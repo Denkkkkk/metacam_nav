@@ -199,7 +199,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloud2)
         // ROS_WARN("point.intensity:%f:", point.intensity);
         float pointX = point.x;
         float pointY = point.y;
-        float pointZ = point.z + 0.3;
+        float pointZ = point.z;
         // 计算点云到车体的的距离
         float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) +
                          (pointY - vehicleY) * (pointY - vehicleY));

@@ -78,7 +78,7 @@
     <param name="pathSlowDisThre" type="double" value="0.35" />    <!--@-局部路径跟踪开始减速的距离阈值,局部路径最长就1m-->
     <param name="getPath_speed" type="double" value="0.1" />       <!--@-追踪到局部路径末端时的速度-->
     <param name="path_zero_bias" type="double" value="0.01" />     <!--@-追踪路径减速的零点偏移-->
-    <param name="goalSlowDisThre" type="double" value="1.5" />     <!--@-靠近全局目标点时减速-->
+    <param name="goalSlowDisThre" type="double" value="1.0" />     <!--@-靠近全局目标点时减速-->
     <param name="getGoal_speed" type="double" value="$(arg close_direct_speed)" />      <!--@-刚好追踪到目标点时的速度 -->
     <param name="goal_zero_bias" type="double" value="0.0" />      <!--@-到点减速的零点偏移-->
     <param name="spinSpeed" value="0" />                            <!--@-小陀螺转速-->
@@ -94,8 +94,8 @@
     <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
     <param name="maxAddAccel" type="double" value="0.15" />          <!--@-最大加速速度-->
     <param name="maxSlowAccel" type="double" value="0.2" />         <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="15.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="30.0" />    <!--@-静止下的伪车头转动增益-->
+    <param name="yawRateGain" type="double" value="12.0" />         <!--@-一般情况下的伪车头转动增益-->
+    <param name="stopYawRateGain" type="double" value="20.0" />    <!--@-静止下的伪车头转动增益-->
     <param name="maxYawRate" type="double" value="30.0" />          <!--车头最大转动角速度-->
     <param name="maxStopYawRate" type="double" value="45.0" />     <!--低速下车头最大转动角速度,有过大保护-->
     <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->
@@ -108,7 +108,7 @@
     <param name="close_direct_speed" type="double" value="$(arg close_direct_speed)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->
-    <param name="quick_turn_N" type="double" value="6.0" />        <!--减速到这个*maxAddAccel/100就允许快速转向-->
+    <param name="quick_turn_N" type="double" value="1.0" />        <!--减速到这个*maxAddAccel/100就允许快速转向-->
     <param name="update_begin_dis_goalPoint" value="$(arg update_begin_dis_goalPoint)" />
     <param name="update_begin_dis_vehicleDis" value="$(arg update_begin_dis_vehicleDis)" />
     <param name="use_virtual_head" value="false" />

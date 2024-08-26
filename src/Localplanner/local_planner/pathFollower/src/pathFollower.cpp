@@ -545,7 +545,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "pathFollower");
     RoboCtrl roboctrl;
-    ros::Rate rate(100);
+    ros::Rate rate(10);
     bool status = ros::ok();
     while (status)
     {

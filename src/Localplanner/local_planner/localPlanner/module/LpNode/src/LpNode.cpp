@@ -354,7 +354,7 @@ void LpNode::fail_local_planner()
     path.poses[0].pose.position.x = 0;
     path.poses[0].pose.position.y = 0;
     path.poses[0].pose.position.z = 0;
-    path.header.stamp = ros::Time().fromSec(odomTime);
+    path.header.stamp = ros::Time().now();
     path.header.frame_id = robotFrame;
     pubPath.publish(path);
 
@@ -369,7 +369,7 @@ void LpNode::fail_local_planner()
     freePaths->clear();
     sensor_msgs::PointCloud2 freePaths2;
     pcl::toROSMsg(*freePaths, freePaths2);
-    freePaths2.header.stamp = ros::Time().fromSec(odomTime);
+    freePaths2.header.stamp = ros::Time().now();
     freePaths2.header.frame_id = robotFrame;
     pubFreePaths.publish(freePaths2);
 #endif

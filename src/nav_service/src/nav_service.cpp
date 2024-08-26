@@ -132,13 +132,13 @@ int main(int argc, char **argv)
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
 
-    ros::Rate loop_rate(20);
+    ros::Rate loop_rate(10);
     geometry_msgs::PoseStamped way_point;
     while (ros::ok())
     {
         loop_rate.sleep();
         ros::spinOnce();
-        // 导航点出栈并发布到way_point，到点后再出栈下一个
+        // 导航点出栈并发布到way_point，到点后再指向下一个
         if (is_running)
         {
             // 恢复停止标志位
@@ -157,7 +157,7 @@ int main(int argc, char **argv)
             }
             else if (nav_model.parameters[0] <= 0)
             {
-                ROS_WARN("nav_model.parameters[0]为 :%d !", nav_model.parameters[0]);
+                ROS_WARN("nav_model.parameters[0] :%d !", nav_model.parameters[0]);
                 continue;
             }
             else
