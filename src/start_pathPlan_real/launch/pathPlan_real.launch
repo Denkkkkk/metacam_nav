@@ -10,8 +10,8 @@
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
-    <arg name="min_intensity" default="0.2" />
-    <arg name="min_intensity_global" default="0.22" />
+    <arg name="min_intensity" default="0.12" />
+    <arg name="min_intensity_global" default="0.17" />
     <arg name="min_intensity_blind" default="0.35" />
     <arg name="map_file" default="$(find map_manager)/map/NO.yaml" />
     <arg name="pcd_path" default="$(find map_manager)/pcd/NO.pcd" />

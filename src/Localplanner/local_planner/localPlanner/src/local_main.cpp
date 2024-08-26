@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "localPlanner");
     LpNode LocalPanner;          // 实例化局部规划器
     LocalPanner.read_pathfile(); // 初始化容器，并读取保存各个path数据文件
-    ros::Rate rate(100);
+    ros::Rate rate(20);
     bool status = ros::ok();
     while (status)
     {
