@@ -41,7 +41,7 @@ RoboCtrl::RoboCtrl()
     subLplannerData = nh.subscribe<pfollower_reconfigure::pfollower_control>("/pfollower_control_data", 5, &RoboCtrl::pfollowerControlHandler, this);
     subControlMode = nh.subscribe("/control_mode", 5, &RoboCtrl::controlModeCallback, this);
     // subIMU = nh.subscribe<sensor_msgs::Imu>("/livox/imu_192_168_1_100", 5, &RoboCtrl::imuCallback, this);
-    
+
     pubCmd_vel = nh.advertise<geometry_msgs::Twist>(cmdTopic, 5);
     pubSpeed = nh.advertise<std_msgs::Float32>("/speed", 5);
     pubGoalPathDir = nh.advertise<geometry_msgs::PoseStamped>("/goal_path_dir", 5);
@@ -145,14 +145,24 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
 void RoboCtrl::slowStop()
 {
     if (vehicleSpeed < 0)
-        vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
-    else if (vehicleSpeed > 0)
-        vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
-    if (fabs(vehicleSpeed) < pctlPtr->param.minSpeed)
     {
-        vehicleSpeed = 0;
-        vehicleYawRate = 0;
+        vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
+        if (vehicleSpeed >= -pctlPtr->param.minSpeed)
+        {
+            vehicleSpeed = 0;
+            vehicleYawRate = 0;
+        }
     }
+    else if (vehicleSpeed > 0)
+    {
+        vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
+        if (vehicleSpeed <= pctlPtr->param.minSpeed)
+        {
+            vehicleSpeed = 0;
+            vehicleYawRate = 0;
+        }
+    }
+
     pubVehicleSpeed(vehicleSpeed);
 }
 
@@ -269,6 +279,7 @@ void RoboCtrl::pure_persuit()
      */
     if (pctlPtr->param.safetyStop)
     {
+        vehicleYawRate = 0;
         slowStop();
         pathInit = false;
         ROS_INFO("SafetyStop!");
@@ -280,6 +291,7 @@ void RoboCtrl::pure_persuit()
      */
     else if (no_odom_flag || pathSize < 2 || get_goal.data || !pathInit)
     {
+        vehicleYawRate = 0;
         slowStop();
         if (get_goal.data)
         {

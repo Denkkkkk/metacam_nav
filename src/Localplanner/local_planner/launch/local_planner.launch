@@ -3,7 +3,7 @@
   <arg name="pcd_path_rmuc" default="$(find map_manager)/pcd/rmuc.pcd" />
   <arg name="pcd_path_qingqing" default="$(find map_manager)/pcd/qingqing.pcd" />
   <arg name="min_intensity" default="0.2" />
-  <arg name="maxSpeed" default="1.0" />
+  <arg name="maxSpeed" default="0.6" />
   <arg name="minSpeed" default="0.2" />                 <!--@-maxSpeed1，最大速度的最小速度-->
   <arg name="close_direct_speed" default="0.5" />
   <arg name="curvature" default="9" />
