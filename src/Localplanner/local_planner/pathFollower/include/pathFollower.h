@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/sync_policies/approximate_time.h>
@@ -43,6 +45,7 @@ class RoboCtrl
 {
 public:
     ParamControl *pctlPtr;
+    int pub_rate;
     RoboCtrl();
     ~RoboCtrl() { delete pctlPtr; }
     void pure_persuit();

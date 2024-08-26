@@ -44,15 +44,21 @@ void RoboCtrl::pathHandler(const nav_msgs::Path::ConstPtr &pathIn)
     int pathSize = pathIn->poses.size();
     path.poses.resize(pathSize);
     // 转到虚拟车头
-    for (int i = 0; i < pathSize; i++)
+    if (pctlPtr->param.use_virtual_head)
     {
-        double pointX = pathIn->poses[i].pose.position.x;
-        double pointY = pathIn->poses[i].pose.position.y;
-        double v_to_vh = virture_headDir - vehicleYaw;
+        vehicleYawRec = virture_headDir;
+        for (int i = 0; i < pathSize; i++)
+        {
+            double pointX = pathIn->poses[i].pose.position.x;
+            double pointY = pathIn->poses[i].pose.position.y;
+            double v_to_vh = virture_headDir - vehicleYaw;
 
-        path.poses[i].pose.position.x = pointX * cos(v_to_vh) + pointY * sin(v_to_vh);
-        path.poses[i].pose.position.y = -pointX * sin(v_to_vh) + pointY * cos(v_to_vh);
+            path.poses[i].pose.position.x = pointX * cos(v_to_vh) + pointY * sin(v_to_vh);
+            path.poses[i].pose.position.y = -pointX * sin(v_to_vh) + pointY * cos(v_to_vh);
+        }
     }
+    else
+        vehicleYawRec = vehicleYaw;
 
     // 记录获取到路径信息瞬间的车体位置和姿态
     vehicleXRec = vehicleX;
@@ -60,11 +66,6 @@ void RoboCtrl::pathHandler(const nav_msgs::Path::ConstPtr &pathIn)
     vehicleZRec = vehicleZ;
     vehicleRollRec = vehicleRoll;
     vehiclePitchRec = vehiclePitch;
-    if (pctlPtr->param.use_virtual_head)
-        vehicleYawRec = virture_headDir;
-    else
-        vehicleYawRec = vehicleYaw;
-
     pathPointID = 0;
     pathInit = true;
 }
@@ -79,22 +80,48 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
     nav_msgs::Path goal_path_temp;
     int pathSize = pathIn->poses.size();
     goal_path_temp.poses.resize(pathSize);
-    for (int i = 0; i < pathSize; i++)
+    if (pctlPtr->param.use_virtual_head)
     {
-        double pointX = pathIn->poses[i].pose.position.x - vehicleX;
-        double pointY = pathIn->poses[i].pose.position.y - vehicleY;
-        // 将全局路径转换到车体坐标系
-        goal_path_temp.poses[i].pose.position.x = pointX * cos(virture_headDir) + pointY * sin(virture_headDir);
-        goal_path_temp.poses[i].pose.position.y = -pointX * sin(virture_headDir) + pointY * cos(virture_headDir);
-        double dis = sqrt(pow(goal_path_temp.poses[i].pose.position.x, 2) + pow(goal_path_temp.poses[i].pose.position.y, 2));
-        if (dis > 2.0 || i == pathSize - 1)
+        vehicleYawRec = virture_headDir;
+        for (int i = 0; i < pathSize; i++)
         {
-            goal_path.poses.resize(i + 1);
-            for (int j = 0; j < i + 1; j++)
+            double pointX = pathIn->poses[i].pose.position.x - vehicleX;
+            double pointY = pathIn->poses[i].pose.position.y - vehicleY;
+            // 将全局路径转换到车体坐标系
+            goal_path_temp.poses[i].pose.position.x = pointX * cos(virture_headDir) + pointY * sin(virture_headDir);
+            goal_path_temp.poses[i].pose.position.y = -pointX * sin(virture_headDir) + pointY * cos(virture_headDir);
+            double dis = sqrt(pow(goal_path_temp.poses[i].pose.position.x, 2) + pow(goal_path_temp.poses[i].pose.position.y, 2));
+            if (dis > 2.0 || i == pathSize - 1)
             {
-                goal_path.poses[j] = goal_path_temp.poses[j];
+                goal_path.poses.resize(i + 1);
+                for (int j = 0; j < i + 1; j++)
+                {
+                    goal_path.poses[j] = goal_path_temp.poses[j];
+                }
+                break;
             }
-            break;
+        }
+    }
+    else
+    {
+        vehicleYawRec = vehicleYaw;
+        for (int i = 0; i < pathSize; i++)
+        {
+            double pointX = pathIn->poses[i].pose.position.x - vehicleX;
+            double pointY = pathIn->poses[i].pose.position.y - vehicleY;
+            // 将全局路径转换到车体坐标系
+            goal_path_temp.poses[i].pose.position.x = pointX * cos(vehicleYaw) + pointY * sin(vehicleYaw);
+            goal_path_temp.poses[i].pose.position.y = -pointX * sin(vehicleYaw) + pointY * cos(vehicleYaw);
+            double dis = sqrt(pow(goal_path_temp.poses[i].pose.position.x, 2) + pow(goal_path_temp.poses[i].pose.position.y, 2));
+            if (dis > 2.0 || i == pathSize - 1)
+            {
+                goal_path.poses.resize(i + 1);
+                for (int j = 0; j < i + 1; j++)
+                {
+                    goal_path.poses[j] = goal_path_temp.poses[j];
+                }
+                break;
+            }
         }
     }
     // 记录获取到路径信息瞬间的车体位置和姿态
@@ -103,10 +130,6 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
     vehicleZRec = vehicleZ;
     vehicleRollRec = vehicleRoll;
     vehiclePitchRec = vehiclePitch;
-    if (pctlPtr->param.use_virtual_head)
-        vehicleYawRec = virture_headDir;
-    else
-        vehicleYawRec = vehicleYaw;
 
     pathPointID = 0;
     pathInit = true;

@@ -71,7 +71,7 @@
   </node>
 
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">
-    <param name="lookAheadDis" type="double" value="0.6" />        <!--@-每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向-->
+    <param name="lookAheadDis" type="double" value="0.5" />        <!--@-每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向-->
     <param name="maxSpeed" value="$(arg maxSpeed)" />
     <param name="useLoaclSlow" type="bool" value="true" />         <!--@-启用局部路径跟踪减速-->
     <param name="endPathDis" value="0.02" />                       <!--@-跟踪到局部路径的末尾多少距离内就不再跟踪-->
@@ -92,10 +92,10 @@
     <param name="slowBegin" value="3" />                            <!--@-根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好-->
     <param name="safetyStop" type="bool" value="false" />           <!--@-紧急刹车-->
     <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
-    <param name="maxAddAccel" type="double" value="0.15" />          <!--@-最大加速速度-->
-    <param name="maxSlowAccel" type="double" value="0.2" />         <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="6.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="10.0" />    <!--@-静止下的伪车头转动增益-->
+    <param name="maxAddAccel" type="double" value="0.3" />          <!--@-最大加速速度-->
+    <param name="maxSlowAccel" type="double" value="0.3" />         <!--@-最大减速加速度-->
+    <param name="yawRateGain" type="double" value="2.0" />         <!--@-一般情况下的伪车头转动增益-->
+    <param name="stopYawRateGain" type="double" value="4.0" />    <!--@-静止下的伪车头转动增益-->
     <param name="maxYawRate" type="double" value="20.0" />         <!--车头最大转动角速度-->
     <param name="maxStopYawRate" type="double" value="35.0" />     <!--低速下车头最大转动角速度,有过大保护-->
     <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->

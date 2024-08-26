@@ -55,6 +55,7 @@ RoboCtrl::RoboCtrl()
     pubGoalPathDir = nh.advertise<geometry_msgs::PoseStamped>("/goal_path_dir", 5);
     pubGetGoal = nh.advertise<std_msgs::Bool>("/get_goal", 1);
     maxSpeed1 = pctlPtr->param.maxSpeed;
+    pub_rate = 12;
 }
 
 /**
@@ -69,7 +70,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
         // 速度太小直接赋为0
         double vh_to_v;
         car_speed.data = vehicleSpeed;
-        if (fabs(vehicleSpeed) < pctlPtr->param.maxSlowAccel / 100.0)
+        if (fabs(vehicleSpeed) < pctlPtr->param.maxSlowAccel / pub_rate)
         {
             cmd_vel.linear.x = 0;
             cmd_vel.linear.y = 0;
@@ -91,7 +92,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     }
     else
     {
-        if (fabs(vehicleSpeed) <= pctlPtr->param.maxAddAccel / 100.0)
+        if (fabs(vehicleSpeed) <= pctlPtr->param.maxAddAccel / pub_rate)
         {
             cmd_vel.linear.x = 0; // 速度太小直接赋为0
         }
@@ -117,7 +118,7 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
     car_speed.data = vehicleSpeed;
     if (pctlPtr->param.use_virtual_head)
     {
-        if (fabs(vehicleSpeed) < pctlPtr->param.maxSlowAccel / 100.0)
+        if (fabs(vehicleSpeed) < pctlPtr->param.maxSlowAccel / pub_rate)
         {
             cmd_vel.linear.x = 0;
             cmd_vel.linear.y = 0;
@@ -152,9 +153,9 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
 void RoboCtrl::slowStop()
 {
     if (vehicleSpeed < 0)
-        vehicleSpeed += pctlPtr->param.maxAddAccel / 100.0;
+        vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
     else if (vehicleSpeed > 0)
-        vehicleSpeed -= pctlPtr->param.maxSlowAccel / 100.0;
+        vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
     if (fabs(vehicleSpeed) < pctlPtr->param.minSpeed)
     {
         vehicleSpeed = 0;
@@ -349,15 +350,13 @@ void RoboCtrl::pure_persuit()
         {
             dirDiff = vehicleYaw - vehicleYawRec - pathDir;
         }
-        // 调整偏差角到合理的范围，调用两次是可能出现两周的冗余
-        if (dirDiff > PI)
-            dirDiff -= 2 * PI;
-        else if (dirDiff < -PI)
-            dirDiff += 2 * PI;
-        if (dirDiff > PI)
-            dirDiff -= 2 * PI;
-        else if (dirDiff < -PI)
-            dirDiff += 2 * PI;
+        while (dirDiff > M_PI || dirDiff < -M_PI)
+        {
+            if (dirDiff > M_PI)
+                dirDiff -= 2 * M_PI;
+            else if (dirDiff < -M_PI)
+                dirDiff += 2 * M_PI;
+        }
         double time = ros::Time::now().toSec();
         // 如果机器人当前的 dirDiff 大于 π/2（90度）并且机器人正朝前行驶 (navFwd)，并且距离上一次切换方向的时间超过阈值 switchTimeThre
         if (fabs(dirDiff) > PI / 2 && navFwd && time - switchTime > switchTimeThre)
@@ -383,7 +382,7 @@ void RoboCtrl::pure_persuit()
         {
             vehicleYawRate = 0.0;
         }
-        else if (fabs(vehicleSpeed) < pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / 100.0)
+        else if (fabs(vehicleSpeed) < pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate)
         {
             if (abs(dirDiff) < PI / 4)
             {
@@ -398,9 +397,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxStopYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxStopYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate / 100) > fabs(dirDiff))
+            if (fabs(vehicleYawRate / pub_rate) > fabs(dirDiff))
             {
-                vehicleYawRate = -dirDiff * 100;
+                vehicleYawRate = -dirDiff * pub_rate;
             }
         }
         else
@@ -418,9 +417,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate / 100) > fabs(dirDiff))
+            if (fabs(vehicleYawRate / pub_rate) > fabs(dirDiff))
             {
-                vehicleYawRate = -dirDiff * 100;
+                vehicleYawRate = -dirDiff * pub_rate;
             }
         }
         ROS_WARN("vehicleYawRate: %f", vehicleYawRate);
@@ -445,9 +444,9 @@ void RoboCtrl::pure_persuit()
         if (fabs(dirDiff) < pctlPtr->param.dirDiffThre)
         {
             if (vehicleSpeed < joySpeed2)
-                vehicleSpeed += pctlPtr->param.maxAddAccel / 100.0;
+                vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
             else if (vehicleSpeed > joySpeed2)
-                vehicleSpeed -= pctlPtr->param.maxSlowAccel / 100.0;
+                vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
 
             // 速度小允许跳变
             if (fabs(vehicleSpeed) < pctlPtr->param.minSpeed)
@@ -469,15 +468,15 @@ void RoboCtrl::pure_persuit()
         // 偏差较大减速，先转到对应方向再向前
         else
         {
-            if (vehicleSpeed > (pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / 100.0))
-                vehicleSpeed -= pctlPtr->param.maxSlowAccel / 100.0;
-            else if (vehicleSpeed < -(pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / 100.0))
-                vehicleSpeed += pctlPtr->param.maxAddAccel / 100.0;
+            if (vehicleSpeed > (pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate))
+                vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
+            else if (vehicleSpeed < -(pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate))
+                vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
         }
         // 角速度
         if (pctlPtr->param.use_virtual_head)
         {
-            virture_headDir = virture_headDir + vehicleYawRate / 100;
+            virture_headDir = virture_headDir + vehicleYawRate / pub_rate;
             while (virture_headDir > M_PI || virture_headDir < -M_PI)
             {
                 if (virture_headDir > M_PI)
@@ -545,7 +544,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "pathFollower");
     RoboCtrl roboctrl;
-    ros::Rate rate(12);
+    ros::Rate rate(roboctrl.pub_rate);
     bool status = ros::ok();
     while (status)
     {
