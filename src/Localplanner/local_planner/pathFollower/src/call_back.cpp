@@ -58,7 +58,15 @@ void RoboCtrl::pathHandler(const nav_msgs::Path::ConstPtr &pathIn)
         }
     }
     else
+    {
         vehicleYawRec = vehicleYaw;
+        for (int i = 0; i < pathSize; i++)
+        {
+            path.poses[i].pose.position.x = pathIn->poses[i].pose.position.x;
+            path.poses[i].pose.position.y = pathIn->poses[i].pose.position.y;
+            path.poses[i].pose.position.z = pathIn->poses[i].pose.position.z;
+        }
+    }
 
     // 记录获取到路径信息瞬间的车体位置和姿态
     vehicleXRec = vehicleX;
@@ -202,23 +210,6 @@ void RoboCtrl::slowDownHandler(const std_msgs::Float32::ConstPtr &slowDown)
 {
     slowDown1 = slowDown->data;
     slowDown1_update_time = ros::Time::now().toSec();
-}
-
-void RoboCtrl::slowDown()
-{
-    double slowDown1_update_duaration = ros::Time::now().toSec() - slowDown1_update_time;
-    if (slowDown1_update_duaration > 1.5)
-    {
-        slowDown1 = 0;
-    }
-    int slowDown2 = slowDown1;
-    if (slowDown2 <= pctlPtr->param.slowBegin)
-        slowDown2 = 0;
-    else
-        slowDown2 -= pctlPtr->param.slowBegin;
-    maxSpeed1 = cloudToSpeedK / (slowDown2 + pctlPtr->param.curvature) + cloudToSpeedB; // 反比例曲线
-    if (maxSpeed1 < pctlPtr->param.cloudSlow_minSpeed)
-        maxSpeed1 = pctlPtr->param.cloudSlow_minSpeed;
 }
 
 void RoboCtrl::imuCallback(const sensor_msgs::Imu::ConstPtr &imu)

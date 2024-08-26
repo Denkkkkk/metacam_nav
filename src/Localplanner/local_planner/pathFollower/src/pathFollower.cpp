@@ -41,15 +41,7 @@ RoboCtrl::RoboCtrl()
     subLplannerData = nh.subscribe<pfollower_reconfigure::pfollower_control>("/pfollower_control_data", 5, &RoboCtrl::pfollowerControlHandler, this);
     subControlMode = nh.subscribe("/control_mode", 5, &RoboCtrl::controlModeCallback, this);
     // subIMU = nh.subscribe<sensor_msgs::Imu>("/livox/imu_192_168_1_100", 5, &RoboCtrl::imuCallback, this);
-    if (pctlPtr->param.endPathDis)
-    {
-        subSlowDown = nh.subscribe<std_msgs::Float32>("/slow_down", 1, &RoboCtrl::slowDownHandler, this);
-        // 计算K值
-        cloudToSpeedK = (pctlPtr->param.maxSpeed - pctlPtr->param.minSpeed) / (1 / pctlPtr->param.curvature - 1 / (18 + pctlPtr->param.curvature));
-        cloudToSpeedB = pctlPtr->param.maxSpeed - cloudToSpeedK / pctlPtr->param.curvature;
-        ROS_WARN("cloudToSpeedK: %f", cloudToSpeedK);
-        ROS_WARN("cloudToSpeedB: %f", cloudToSpeedB);
-    }
+    
     pubCmd_vel = nh.advertise<geometry_msgs::Twist>(cmdTopic, 5);
     pubSpeed = nh.advertise<std_msgs::Float32>("/speed", 5);
     pubGoalPathDir = nh.advertise<geometry_msgs::PoseStamped>("/goal_path_dir", 5);
@@ -229,7 +221,6 @@ void RoboCtrl::pure_persuit()
      * @brief 转弯点减速
      *
      */
-    slowDown(); // 先更新障碍物减速速度
     if (pctlPtr->param.use_move_base)
     {
         if (control_mode == MIDPlanning && pctlPtr->param.use_MIDPlanning_slow)
