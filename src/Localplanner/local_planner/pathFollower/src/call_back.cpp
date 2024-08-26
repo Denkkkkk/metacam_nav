@@ -8,7 +8,6 @@
 void RoboCtrl::odomHandler(const nav_msgs::Odometry::ConstPtr &odomIn)
 {
     odomTime = odomIn->header.stamp.toSec();
-    robot_pose = odomIn->pose.pose;
     double roll, pitch, yaw;
     geometry_msgs::Quaternion geoQuat = odomIn->pose.pose.orientation;
     tf::Matrix3x3(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w)).getRPY(roll, pitch, yaw);
@@ -61,7 +60,10 @@ void RoboCtrl::pathHandler(const nav_msgs::Path::ConstPtr &pathIn)
     vehicleZRec = vehicleZ;
     vehicleRollRec = vehicleRoll;
     vehiclePitchRec = vehiclePitch;
-    vehicleYawRec = virture_headDir;
+    if (pctlPtr->param.use_virtual_head)
+        vehicleYawRec = virture_headDir;
+    else
+        vehicleYawRec = vehicleYaw;
 
     pathPointID = 0;
     pathInit = true;
@@ -101,7 +103,10 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
     vehicleZRec = vehicleZ;
     vehicleRollRec = vehicleRoll;
     vehiclePitchRec = vehiclePitch;
-    vehicleYawRec = virture_headDir;
+    if (pctlPtr->param.use_virtual_head)
+        vehicleYawRec = virture_headDir;
+    else
+        vehicleYawRec = vehicleYaw;
 
     pathPointID = 0;
     pathInit = true;

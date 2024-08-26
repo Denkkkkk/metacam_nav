@@ -120,7 +120,6 @@ private:
     std_msgs::Bool path_status;
     nav_msgs::Path goal_path;
     geometry_msgs::PoseStamped goal_path_dir;
-    geometry_msgs::Pose robot_pose;
     float endPathDis_now;
     float endGoalDis_now;
     float virture_endGoalDis_now;
