@@ -350,19 +350,25 @@ void LpNode::fail_local_planner()
 {
     ROS_INFO("Path not found!");
     nav_msgs::Path path;
+    path.header.stamp = ros::Time().now();
+    path.header.frame_id = robotFrame;
     path.poses.resize(1); // 路径规划失败，只发布一个原地点
     path.poses[0].pose.position.x = 0;
     path.poses[0].pose.position.y = 0;
     path.poses[0].pose.position.z = 0;
-    path.header.stamp = ros::Time().now();
-    path.header.frame_id = robotFrame;
+    path.poses[0].pose.orientation.w = 1;
+    path.poses[0].header.frame_id = robotFrame;
+    path.poses[0].header.stamp = ros::Time().now();
     pubPath.publish(path);
 
     // 转成世界坐标系后重新发布，方便可视化
+    path.header.frame_id = "map";
     path.poses[0].pose.position.x = vehicleX;
     path.poses[0].pose.position.y = vehicleY;
     path.poses[0].pose.position.z = vehicleZ;
-    path.header.frame_id = "map";
+    path.poses[0].pose.orientation.w = 1;
+    path.poses[0].header.frame_id = "map";
+    path.poses[0].header.stamp = ros::Time().now();
     pubGlobalPath.publish(path);
 
 #if PLOTPATHSET == 1

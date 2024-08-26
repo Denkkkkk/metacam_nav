@@ -6,13 +6,13 @@
           type="static_transform_publisher"
           name="vehicleTObody"
           output="screen"
-          args="0.0 0.0 0 0 0 0 body $(arg ns)/vehicle  40" respawn="true" />
+          args="0.0 0.0 0 0 0 0 body $(arg ns)/vehicle  12" respawn="true" />
 
      <node pkg="tf"
           type="static_transform_publisher"
           name="camera_initTOodom"
           output="screen"
-          args="0.0 0.0 0.0 0.0 0.0 0.0  $(arg ns)/odom camera_init 40" respawn="true" />
+          args="0.0 0.0 0.0 0.0 0.0 0.0  $(arg ns)/odom camera_init 12" respawn="true" />
 
 
 </launch>

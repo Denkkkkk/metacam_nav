@@ -76,9 +76,12 @@ void LpNode::pubPath_fromStartPaths(int &selectedGroupID)
         // 局部路径的范围，小于等于预设路径的范围。因为除此之外，还要满足小于设定的pathRange
         if (dis <= pathRange / pathScale && dis <= relativeGoalDis)
         {
+            path.poses[i].header.frame_id = robotFrame;
+            path.poses[i].header.stamp = ros::Time().now();
             path.poses[i].pose.position.x = (cos(rotAng) * x - sin(rotAng) * y) / pathScale; // 叠加上路径最相对车头的方向，目标以车头为系
             path.poses[i].pose.position.y = (sin(rotAng) * x + cos(rotAng) * y) / pathScale;
             path.poses[i].pose.position.z = z;
+            path.poses[i].pose.orientation.w = 1;
         }
         else
         {
@@ -98,8 +101,10 @@ void LpNode::pubPath_fromStartPaths(int &selectedGroupID)
         path.poses[j].pose.position.x = cos(vehicleYaw) * x - sin(vehicleYaw) * y + vehicleX;
         path.poses[j].pose.position.y = sin(vehicleYaw) * x + cos(vehicleYaw) * y + vehicleY;
         path.poses[j].pose.position.z = vehicleZ;
+        path.poses[j].header.frame_id = "map";
+        path.poses[j].header.stamp = ros::Time().now();
     }
-    path.header.stamp = ros::Time().fromSec(odomTime);
+    path.header.stamp = ros::Time().now();
     path.header.frame_id = "map";
     pubGlobalPath.publish(path);
 }
@@ -115,4 +120,3 @@ void LpNode::pub_Map()
         pubMap.publish(terrainMapRecord_protect);
     }
 }
-
