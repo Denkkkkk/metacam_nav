@@ -5,6 +5,7 @@
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
 #include <std_srvs/Trigger.h>
 
 #include "types.h"
@@ -118,6 +119,28 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
     vehicle_y = msg->pose.pose.position.y;
 }
 
+void navStatusPub(ros::Publisher &nav_status_pub)
+{
+    NavStatus nav_status;
+    nav_status.version = "v1.0";
+    nav_status.is_running = is_running;
+    nav_status.target_index = nav_index;
+    if (!nav_model.points.empty())
+    {
+        const auto &point = nav_model.points.at(nav_index);
+        nav_status.target_pose = {point.x, point.y, point.z, 0, 0, 0};
+    }
+    else
+    {
+        nav_status.target_pose = {0, 0, 0, 0, 0, 0};
+    }
+    std::string json_str;
+    NavStatus_to_json(nav_status, json_str);
+    std_msgs::String status;
+    status.data = json_str;
+    nav_status_pub.publish(status);
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "nav_service");
@@ -131,6 +154,8 @@ int main(int argc, char **argv)
     ros::Publisher way_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 2);
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
+    // 发布导航状态
+    ros::Publisher nav_status_pub = nh.advertise<std_msgs::String>("/nav/status", 2);
 
     ros::Rate loop_rate(10);
     geometry_msgs::PoseStamped way_point;
@@ -138,7 +163,8 @@ int main(int argc, char **argv)
     {
         loop_rate.sleep();
         ros::spinOnce();
-        // 导航点出栈并发布到way_point，到点后再指向下一个
+        navStatusPub(nav_status_pub);
+        // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
             // 恢复停止标志位
