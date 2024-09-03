@@ -14,8 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
 )
 
-# find_package(PCL REQUIRED)
-
 ###################################
 ## catkin specific configuration ##
 ###################################
