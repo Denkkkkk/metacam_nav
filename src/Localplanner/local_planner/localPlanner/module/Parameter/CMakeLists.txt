@@ -6,3 +6,11 @@ find_package(catkin REQUIRED COMPONENTS
 add_library(localPlanner_param src/parameters.cpp)
 target_include_directories(localPlanner_param PUBLIC ${catkin_INCLUDE_DIRS} include)
 target_link_libraries(localPlanner_param ${catkin_LIBRARIES})
+
+install(
+  TARGETS
+  localPlanner_param
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

@@ -13,10 +13,7 @@
     <arg name="min_intensity" default="0.12" />
     <arg name="min_intensity_global" default="0.17" />
     <arg name="min_intensity_blind" default="0.35" />
-    <arg name="map_file" default="$(find map_manager)/map/NO.yaml" />
-    <arg name="pcd_path" default="$(find map_manager)/pcd/NO.pcd" />
-    <!-- <arg name="map_file" default="$(find map_manager)/map/white_test.yaml" />
-    <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" /> -->
+    <arg name="pcd_path" default="" />
     <param name="use_sim_time" value="false" />
 
     <include file="$(find map_to_odom)/launch/map_to_odom.launch">

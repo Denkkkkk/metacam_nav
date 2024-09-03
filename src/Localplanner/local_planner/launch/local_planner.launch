@@ -1,7 +1,7 @@
 <launch>
-  <arg name="usual_pcd_path" default="$(find map_manager)/pcd/" />
-  <arg name="pcd_path_rmuc" default="$(find map_manager)/pcd/rmuc.pcd" />
-  <arg name="pcd_path_qingqing" default="$(find map_manager)/pcd/qingqing.pcd" />
+  <arg name="usual_pcd_path" default="" />
+  <arg name="pcd_path_rmuc" default="" />
+  <arg name="pcd_path_qingqing" default="" />
   <arg name="min_intensity" default="0.2" />
   <arg name="maxSpeed" default="0.75" />
   <arg name="minSpeed" default="0.3" />                 <!--@-maxSpeed1，最大速度的最小速度-->
@@ -13,7 +13,7 @@
   <arg name="vehicleY" default="0" />
   <arg name="goalX" default="$(arg vehicleX)" />
   <arg name="goalY" default="$(arg vehicleY)" />
-  <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" />
+  <arg name="pcd_path" default="" />
   <arg name="robotFrame" default="Sentry/vehicle" />
   <arg name="cmdTopic" default="/cmd_vel" />
   <arg name="use_map" default="false" />

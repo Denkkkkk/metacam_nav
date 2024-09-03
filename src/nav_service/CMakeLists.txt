@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
         geometry_msgs
         std_srvs
         nav_msgs
-        )
+)
 
 catkin_package(
         CATKIN_DEPENDS
@@ -25,7 +25,16 @@ include_directories(
 )
 
 add_executable(nav_service src/nav_service.cpp)
+target_link_libraries(nav_service ${catkin_LIBRARIES})
 
+install(
+        TARGETS
+        nav_service
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
-
-target_link_libraries(nav_service ${catkin_LIBRARIES} )
+install(DIRECTORY launch/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)

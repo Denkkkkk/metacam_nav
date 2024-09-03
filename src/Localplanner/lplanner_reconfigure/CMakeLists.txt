@@ -10,23 +10,24 @@ find_package(catkin REQUIRED COMPONENTS
 
 # 生成msg消息文件
 add_message_files(
-        DIRECTORY msg
+  DIRECTORY msg
 )
 generate_messages(
-        DEPENDENCIES
-        std_msgs
+  DEPENDENCIES
+  std_msgs
 )
-#generate_dynamic_reconfigure_options() 必须放到catkin_package()之前
+
+# generate_dynamic_reconfigure_options() 必须放到catkin_package()之前
 generate_dynamic_reconfigure_options(
-        cfg/lpdata.cfg
+  cfg/lpdata.cfg
 )
 
 catkin_package(
-    CATKIN_DEPENDS 
-    dynamic_reconfigure 
-    roscpp 
-    std_msgs 
-    message_runtime
+  CATKIN_DEPENDS
+  dynamic_reconfigure
+  roscpp
+  std_msgs
+  message_runtime
 )
 
 include_directories(
@@ -37,3 +38,10 @@ add_executable(lpdata_config src/lpdata_config.cpp)
 add_dependencies(lpdata_config ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
 target_link_libraries(lpdata_config ${catkin_LIBRARIES})
 
+install(
+  TARGETS
+  lpdata_config
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
