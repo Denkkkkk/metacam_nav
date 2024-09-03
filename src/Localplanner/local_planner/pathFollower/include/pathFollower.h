@@ -146,4 +146,5 @@ private:
     std::string ns;
     std::string robot_frame;
     double odom_update_time = 0;
+    bool use_two_forward = false;
 };

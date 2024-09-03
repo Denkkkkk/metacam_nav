@@ -53,8 +53,8 @@
     <!-- 目标点或转弯等方向信息的控制 -->
     <param name="goalX" type="double" value="$(arg goalX)" />
     <param name="goalY" type="double" value="$(arg goalY)" />
-    <param name="dirWeight" type="double" value="60" />            <!--@-只允许路径终点在这个转弯角度内的路径通过-->
-    <param name="dirThre" type="double" value="70" />              <!--@-规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑-->
+    <param name="dirWeight" type="double" value="80" />            <!--@-只允许路径终点在这个转弯角度内的路径通过-->
+    <param name="dirThre" type="double" value="85" />              <!--@-规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑-->
     <param name="detourWei" type="double" value="1.7" />           <!--绕行系数，越大绕行越明显，拐弯处会越远离障碍物，但是左右摆动越明显-->
     <param name="pathCropByGoal" type="bool" value="true" />       <!--删除路径点到车体的距离超过了车体到目标点的圆形区域外加goalClearRange延长环，这些路径点都不会碰到，不会到达-->
     <param name="goalClearRange" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
@@ -94,10 +94,10 @@
     <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
     <param name="maxAddAccel" type="double" value="4.0" />         <!--@-最大加速速度-->
     <param name="maxSlowAccel" type="double" value="4.0" />        <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="4.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="6.0" />     <!--@-静止下的伪车头转动增益-->
-    <param name="maxYawRate" type="double" value="20.0" />         <!--车头最大转动角速度-->
-    <param name="maxStopYawRate" type="double" value="40.0" />     <!--低速下车头最大转动角速度,有过大保护-->
+    <param name="yawRateGain" type="double" value="6.0" />         <!--@-一般情况下的伪车头转动增益-->
+    <param name="stopYawRateGain" type="double" value="10.0" />     <!--@-静止下的伪车头转动增益-->
+    <param name="maxYawRate" type="double" value="25.0" />         <!--车头最大转动角速度-->
+    <param name="maxStopYawRate" type="double" value="60.0" />     <!--低速下车头最大转动角速度,有过大保护-->
     <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->
     <param name="use_MIDPlanning_slow" type="bool" value="true" />  <!--是否使用转弯点减速-->
     <param name="MIDPlanning_slow_rate" type="double" value="0.7" /><!--转弯点减速比例-->
@@ -108,7 +108,7 @@
     <param name="close_direct_speed" type="double" value="$(arg close_direct_speed)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->
-    <param name="quick_turn_N" type="double" value="1.0" />        <!--减速到这个*maxAddAccel/100就允许快速转向-->
+    <param name="quick_turn_N" type="double" value="0.03" />        <!--减速到这个*maxAddAccel/100就允许快速转向-->
     <param name="update_begin_dis_goalPoint" value="$(arg update_begin_dis_goalPoint)" />
     <param name="update_begin_dis_vehicleDis" value="$(arg update_begin_dis_vehicleDis)" />
     <param name="use_virtual_head" value="false" />

@@ -361,16 +361,22 @@ void RoboCtrl::pure_persuit()
                 dirDiff += 2 * M_PI;
         }
         double time = ros::Time::now().toSec();
-        // 如果机器人当前的 dirDiff 大于 π/2（90度）并且机器人正朝前行驶 (navFwd)，并且距离上一次切换方向的时间超过阈值 switchTimeThre
-        if (fabs(dirDiff) > PI / 2 && navFwd && time - switchTime > switchTimeThre)
+        if(use_two_forward)
         {
-            navFwd = false;
-            switchTime = time;
+            // 如果机器人当前的 dirDiff 大于 π/2（90度）并且机器人正朝前行驶 (navFwd)，并且距离上一次切换方向的时间超过阈值 switchTimeThre
+            if (fabs(dirDiff) > PI / 2 && navFwd && time - switchTime > switchTimeThre)
+            {
+                navFwd = false;
+                switchTime = time;
+            }
+            else if (fabs(dirDiff) < PI / 2 && !navFwd && time - switchTime > switchTimeThre)
+            {
+                navFwd = true;
+                switchTime = time;
+            }
         }
-        else if (fabs(dirDiff) < PI / 2 && !navFwd && time - switchTime > switchTimeThre)
-        {
+        else{
             navFwd = true;
-            switchTime = time;
         }
         float joySpeed2 = maxSpeed1;
         if (!navFwd)
@@ -407,7 +413,7 @@ void RoboCtrl::pure_persuit()
         }
         else
         {
-            if (abs(dirDiff) < PI / 9) // 22.5度误差内
+            if (abs(dirDiff) < PI / 7) // 25.5度误差内
             {
                 vehicleYawRate = -pctlPtr->param.yawRateGain * dirDiff / 2.0; // 偏差角较小时不用转这么快
             }

@@ -69,3 +69,7 @@ install(
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
+
+install(DIRECTORY localPlanner/paths/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/localPlanner/paths
+)
