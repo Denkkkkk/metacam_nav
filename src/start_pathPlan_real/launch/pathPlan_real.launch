@@ -10,9 +10,8 @@
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
-    <arg name="min_intensity" default="0.12" />
+    <arg name="min_intensity" default="0.1" />
     <arg name="min_intensity_global" default="0.17" />
-    <arg name="min_intensity_blind" default="0.35" />
     <arg name="pcd_path" default="" />
     <param name="use_sim_time" value="false" />
 
@@ -38,7 +37,6 @@
     <group if="$(arg use_global_planner)">
         <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
             <arg name="min_intensity" value="$(arg min_intensity_global)" />
-            <arg name="min_intensity_blind" value="$(arg min_intensity_blind)" />
         </include>
         <!-- Map server -->
         <group if="$(arg use_map)">
