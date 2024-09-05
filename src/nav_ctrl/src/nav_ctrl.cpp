@@ -3,8 +3,8 @@
 
 #include "OSDK_Vehicle.hpp"
 // #include "diablo_sdk/Diablo_Ctrl.h"
-#include <boost/thread/thread.hpp>
 #include <boost/chrono.hpp>
+#include <boost/thread/thread.hpp>
 #include <geometry_msgs/Twist.h>
 
 #define head_control_mode 1
@@ -145,8 +145,10 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "nav_ctrl");
     ros::NodeHandle nh("~");
 
-    DIABLO::OSDK::HAL_Serial Hal;           // Initialize HAL driver
-    Hal.initSerial("/dev/ttyUSB0", 115200); // Initialize serial port
+    DIABLO::OSDK::HAL_Serial Hal; // Initialize HAL driver
+    std::string port;
+    nh.param("/serial_port", port, "/dev/ttyTHS0");
+    Hal.initSerial(port, 115200); // Initialize serial port
 
     DIABLO::OSDK::Vehicle vehicle(&Hal); // Initialize Onboard SDK
     if (vehicle.init())

@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="nav_ctrl" type="nav_ctrl" name="nav_ctrl" output="screen" respawn="true">
+        <param name="serial_port" type="string" value="/dev/ttyTHS0" />        <!--@-每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向-->
+    </node>
+</launch>
