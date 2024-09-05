@@ -147,8 +147,8 @@ int main(int argc, char **argv)
 
     DIABLO::OSDK::HAL_Serial Hal; // Initialize HAL driver
     std::string port;
-    nh.param("/serial_port", port, "/dev/ttyTHS0");
-    Hal.initSerial(port, 115200); // Initialize serial port
+    nh.param<std::string>("/serial_port", port, "/dev/ttyTHS0");
+    Hal.initSerial(port, 460800); // Initialize serial port
 
     DIABLO::OSDK::Vehicle vehicle(&Hal); // Initialize Onboard SDK
     if (vehicle.init())
