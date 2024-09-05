@@ -142,7 +142,7 @@ void init_control_mode()
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "diablo_ctrl");
+    ros::init(argc, argv, "nav_ctrl");
     ros::NodeHandle nh("~");
 
     DIABLO::OSDK::HAL_Serial Hal;           // Initialize HAL driver
