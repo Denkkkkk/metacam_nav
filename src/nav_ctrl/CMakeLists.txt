@@ -1,6 +1,9 @@
 
 cmake_minimum_required(VERSION 2.8)
 project(nav_ctrl)
+
+set(CMAKE_BUILD_TYPE "Debug")
+
 add_compile_options(-std=c++17)
 add_definitions(-D_WITH_SERIAL)
 find_package(catkin REQUIRED COMPONENTS
@@ -27,6 +30,7 @@ target_link_libraries(${PROJECT_NAME}
   diablo_sdk
   ${catkin_LIBRARIES}
 )
+# target_link_libraries(${PROJECT_NAME} -ldw -lbfd)
 add_dependencies(${PROJECT_NAME} diablo_sdk_generate_messages_cpp)
 #############
 ## Install ##

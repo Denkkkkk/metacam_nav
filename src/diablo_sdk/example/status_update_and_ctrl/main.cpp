@@ -1,6 +1,7 @@
-#include "nav_ctrl/nav_ctrl.h"
+#include "main.hpp"
 
-namespace info_update_and_ctrl {
+namespace info_update_and_ctrl
+{
     int InfoUpdateAndCtrl::SubscribeAndPublish()
     {
         DIABLO::OSDK::HAL_Pi Hal;
@@ -14,9 +15,9 @@ namespace info_update_and_ctrl {
         vehicle->telemetry->activate();
 
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_POWER, OSDK_PUSH_DATA_10Hz);
-        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_QUATERNION, OSDK_PUSH_DATA_10Hz);
-        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_ACCL, OSDK_PUSH_DATA_10Hz);
-        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_GYRO, OSDK_PUSH_DATA_10Hz);
+        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_QUATERNION, OSDK_PUSH_DATA_50Hz);
+        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_ACCL, OSDK_PUSH_DATA_50Hz);
+        vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_GYRO, OSDK_PUSH_DATA_50Hz);
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_MOTOR, OSDK_PUSH_DATA_10Hz);
 
         vehicle->telemetry->configUpdate();
@@ -32,13 +33,14 @@ namespace info_update_and_ctrl {
         STATUSPublisher = n_.advertise<diablo_sdk::OSDK_STATUS>("diablo_ros_STATUS_b", 10);
 
         // Topic you want to subscribe
-        sub_ = n_.subscribe("/DJ_teleop", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
+        sub_ = n_.subscribe("/DJ_teleop", 1, &InfoUpdateAndCtrl::teleopCtrlCallBack, this);
 
         ros::spin();
     }
 
-    void InfoUpdateAndCtrl::navCtrlCallBack(const geometry_msgs::Twist::ConstPtr &msg)
+    void InfoUpdateAndCtrl::teleopCtrlCallBack(const std_msgs::String::ConstPtr &msg)
     {
+
         if (!movement_ctrl_->in_control())
         {
             printf("Try to get the control of robot movement!.\n");
@@ -49,31 +51,99 @@ namespace info_update_and_ctrl {
             movement_ctrl_->ctrl_data.up = 0.0f;
         movement_ctrl_->ctrl_data.forward = 0.0f;
         movement_ctrl_->ctrl_data.left = 0.0f;
-
-        if (fabs(msg->linear.x) > 1.5)
+        for (const char &c : msg->data)
         {
-            movement_ctrl_->ctrl_data.forward = msg->linear.x > 0 ? 1.5 : -1.5;
-        }
-        else
-        {
-            movement_ctrl_->ctrl_data.forward = msg->linear.x;
+            switch (c)
+            {
+            case 'w':
+                movement_ctrl_->ctrl_data.forward = 1.0f; // vel ctrl
+                break;
+            case 'a':
+                movement_ctrl_->ctrl_data.left = 1.0f; // angular_vel ctrl
+                break;
+            case 's':
+                movement_ctrl_->ctrl_data.forward = -1.0f; // vel ctrl
+                break;
+            case 'd':
+                movement_ctrl_->ctrl_data.left = -1.0f; // angular_vel ctrl
+                break;
+            case 'q':
+                movement_ctrl_->ctrl_data.roll = -0.1f; // pos ctrl
+                break;
+            case 'e':
+                movement_ctrl_->ctrl_data.roll = 0.1f; // pos ctrl
+                break;
+            case 'r':
+                movement_ctrl_->ctrl_data.roll = 0.0f; // pos ctrl
+                break;
+
+            case 'h':
+                movement_ctrl_->ctrl_data.up = -0.5f;
+                break;
+            case 'j':
+                movement_ctrl_->ctrl_data.up = 1.0f;
+                break;
+            case 'k':
+                movement_ctrl_->ctrl_data.up = 0.5f;
+                break;
+            case 'l':
+                movement_ctrl_->ctrl_data.up = 0.0f;
+                break;
+
+            case 'u':
+                movement_ctrl_->ctrl_data.pitch = 0.5f;
+                break;
+            case 'i':
+                movement_ctrl_->ctrl_data.pitch = 0.0f;
+                break;
+            case 'o':
+                movement_ctrl_->ctrl_data.pitch = -0.5f;
+                break;
+
+            case 'v':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->ctrl_mode_data.height_ctrl_mode = 1;
+                break;
+            case 'b':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->ctrl_mode_data.height_ctrl_mode = 0;
+                break;
+            case 'n':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->ctrl_mode_data.pitch_ctrl_mode = 1;
+                break;
+            case 'm':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->ctrl_mode_data.pitch_ctrl_mode = 0;
+                break;
+
+            case 'z':
+                movement_ctrl_->SendTransformUpCmd();
+                movement_ctrl_->ctrl_data.up = 1.0f;
+                break;
+            case 'x':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->SendTransformDownCmd();
+                break;
+            case 'c':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->SendJumpCmd(true);
+                sleep(1); // wait for jump charge!
+                break;
+            case 'f':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->SendDanceCmd(true);
+                break;
+            case 'g':
+                movement_ctrl_->ctrl_mode_cmd = true;
+                movement_ctrl_->SendDanceCmd(false);
+                break;
+            default:
+                movement_ctrl_->ctrl_mode_cmd = false;
+                movement_ctrl_->SendJumpCmd(false);
+            }
         }
 
-        if (fabs(msg->angular.z) > 2.4)
-        {
-            movement_ctrl_->ctrl_data.left = msg->angular.z > 0 ? 2.4 : -2.4;
-        }
-        else
-        {
-            movement_ctrl_->ctrl_data.left = msg->angular.z;
-        }
-
-        movement_ctrl_->ctrl_data.roll = 0.0f;
-        movement_ctrl_->ctrl_data.pitch = 0.0f;
-        movement_ctrl_->ctrl_data.up = 0.0f;
-        movement_ctrl_->ctrl_data.pitch = 0.0f;
-
-        movement_ctrl_->ctrl_mode_cmd = false;
         if (movement_ctrl_->ctrl_mode_cmd)
         {
             uint8_t result = movement_ctrl_->SendMovementModeCtrlCmd();
@@ -194,3 +264,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+
+

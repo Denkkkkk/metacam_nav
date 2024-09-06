@@ -1,31 +1,38 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.0)
 project(diablo_sdk)
 
-add_compile_options(-std=c++17)
-
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(Boost REQUIRED COMPONENTS system thread chrono)
-
-include_directories(
-    api/inc
-    bridge/inc
-    ${Boost_INCLUDE_DIRS}
+add_compile_options(
+		-std=c++17
+		-Wno-psabi
 )
 
-link_libraries(
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_CHRONO_LIBRARY}
-)
 
 set(WITH_ROS    1)
-set(WITH_SERIAL 1)
-set(WITH_PI     0)
-set(WITH_LOG_FILE 0)
-set(WITH_CONSOLE_LOG 1)
+set(library_name ${PROJECT_NAME})
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+find_package(Threads REQUIRED)
+add_definitions(-D_LOG_CONSOLE)
+
+FILE(GLOB OSDK_LIB_SRCS
+        diablo_utils/src/*.cpp
+    )
+    
+add_library(
+    ${library_name}
+    SHARED
+    ${OSDK_LIB_SRCS}
+)
+target_include_directories(
+    ${library_name}
+    PUBLIC
+    include
+)
+
+
+include_directories(
+    include
+)
 
 if (WITH_ROS)
     add_definitions(-D_WITH_ROS)
@@ -36,7 +43,7 @@ if (WITH_ROS)
         roscpp
         rospy
         std_msgs
-        geometry_msgs 
+        geometry_msgs
         #roslib
     )
 
@@ -47,23 +54,21 @@ if (WITH_ROS)
         OSDK_LEGMOTORS.msg
         OSDK_POWER.msg
         OSDK_QUATERNION.msg
-        OSDK_RC.msg
         OSDK_STATUS.msg
-        Diablo_Ctrl.msg
     )
 
     generate_messages(
         DEPENDENCIES
         std_msgs
-        geometry_msgs 
+        geometry_msgs
     )
 
     catkin_package(
         #  INCLUDE_DIRS include
-        #  LIBRARIES 
-        CATKIN_DEPENDS 
+        #  LIBRARIES
+        CATKIN_DEPENDS
         message_runtime
-        DEPENDS system_lib
+		# DEPENDS system_lib
     )
 
     include_directories(
@@ -73,82 +78,25 @@ if (WITH_ROS)
     link_libraries(
         ${catkin_LIBRARIES}
     )
+
+	add_executable(movement_ctrl_example ${OSDK_LIB_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/example/movement_ctrl/main.cpp)
+    add_dependencies(movement_ctrl_example diablo_sdk_generate_messages_cpp)
+	target_link_libraries(movement_ctrl_example PRIVATE Threads::Threads)
+    
+	add_executable(robot_status_example ${OSDK_LIB_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/example/robot_status/main.cpp)
+    add_dependencies(robot_status_example diablo_sdk_generate_messages_cpp)
+	target_link_libraries(robot_status_example PRIVATE Threads::Threads)
+
+    add_executable(status_update_and_ctrl_example ${OSDK_LIB_SRCS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/example/status_update_and_ctrl/main.cpp)
+    add_dependencies(status_update_and_ctrl_example diablo_sdk_generate_messages_cpp)
+	target_link_libraries(status_update_and_ctrl_example PRIVATE Threads::Threads)
+    
+else()
+	add_executable(diablo_source main.cpp)
+	install(TARGETS diablo_source RUNTIME DESTINATION bin)
+	target_link_libraries(diablo_source PRIVATE Threads::Threads ${library_name})
+
 endif (WITH_ROS)
-
-if (WITH_SERIAL)
-    add_definitions(-D_WITH_SERIAL)
-
-    find_package(
-        serial
-    )
-
-    include_directories(
-        serial/include
-    )
-
-    link_libraries(
-        ${serial_LIBRARIES}
-    )
-endif (WITH_SERIAL)
-
-if (WITH_PI)
-    add_definitions(-D_WITH_PI)
-    find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
-    find_path(WIRINGPI_INCLUDE_DIRS NAMES wiringPi.h)
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(wiringPi DEFAULT_MSG WIRINGPI_LIBRARIES WIRINGPI_INCLUDE_DIRS)
-
-    link_libraries(
-        ${WIRINGPI_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
-    )
-endif (WITH_PI)
-
-if (WITH_LOG_FILE)
-    add_definitions(-D_LOG_FILE)
-endif (WITH_LOG_FILE)
-
-if (WITH_CONSOLE_LOG)
-    add_definitions(-D_LOG_CONSOLE)
-endif(WITH_CONSOLE_LOG)
-
-## Declare a C++ library
-## Source code for OSDK CORE
-FILE(GLOB OSDK_LIB_SRCS
-        api/src/*.cpp
-        bridge/src/*.cpp
-    )
-
-add_library(${PROJECT_NAME}
-    SHARED
-    ${OSDK_LIB_SRCS}
-)
-target_include_directories(${PROJECT_NAME}
-    PUBLIC
-    api/inc
-    bridge/inc
-    ${Boost_INCLUDE_DIRS}
-)
-add_dependencies(${PROJECT_NAME} diablo_sdk_generate_messages_cpp)
-
-
-# add_executable(virtual_rc_example ${OSDK_LIB_SRCS}
-#     ${CMAKE_CURRENT_SOURCE_DIR}/example/virtual_rc/main.cpp)
-# add_dependencies(virtual_rc_example diablo_sdk_generate_messages_cpp)
-
-# add_executable(osdk_movement_ctrl_example ${OSDK_LIB_SRCS}
-#     ${CMAKE_CURRENT_SOURCE_DIR}/example/movement_ctrl/main.cpp)
-# add_dependencies(osdk_movement_ctrl_example diablo_sdk_generate_messages_cpp)
-
-# add_executable(callback_example ${OSDK_LIB_SRCS}
-#     ${CMAKE_CURRENT_SOURCE_DIR}/example/callback_test/main.cpp)
-# add_dependencies(callback_example diablo_sdk_generate_messages_cpp)
-
-# add_executable(ros_bridge_example ${OSDK_LIB_SRCS}
-#     ${CMAKE_CURRENT_SOURCE_DIR}/example/ros_bridge/main.cpp)
-# add_dependencies(ros_bridge_example diablo_sdk_generate_messages_cpp)
-
-# add_executable(bridge_receiver ${OSDK_LIB_SRCS}
-#    ${CMAKE_CURRENT_SOURCE_DIR}/example/bridge_receiver/main.cpp)
-# add_dependencies(bridge_receiver diablo_sdk_generate_messages_cpp)
