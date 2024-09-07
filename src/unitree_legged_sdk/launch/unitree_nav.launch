@@ -1,0 +1,8 @@
+<launch>
+    <node
+        name="unitree_nav"
+        pkg="unitree_legged_sdk"
+        type="unitree_nav"
+        output="screen"
+    />
+</launch>
