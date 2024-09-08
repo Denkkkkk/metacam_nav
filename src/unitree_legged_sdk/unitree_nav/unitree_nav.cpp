@@ -7,6 +7,7 @@
 #include <iostream>
 #include <math.h>
 #include <ros/ros.h>
+#include <std_msgs/String.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -19,10 +20,14 @@ public:
                             udp(level, 8090, "192.168.19.10", 8082)
     {
         udp.InitCmdData(cmd);
+        sub_cmd_vel = nh.subscribe<geometry_msgs::Twist>("/cmd_vel", 1, &cmd_vel_callback, this);
+        sub_test_string = nh.subscribe<std_msgs::String>("/test_string", 1, &test_string_callback, this);
     }
     void UDPRecv();
     void UDPSend();
     void RobotControl();
+    void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr &msg);
+    void test_string_callback(const std_msgs::String::ConstPtr &msg);
 
     Safety safe;
     UDP udp;
@@ -30,8 +35,9 @@ public:
     HighState state = {0};
     int motiontime = 0;
     float dt = 0.01; // 0.001~0.01
-
-    void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr &msg);
+    ros::NodeHandle nh;
+    ros::Subscriber sub_cmd_vel;
+    ros::Subscriber sub_test_string;
 };
 
 void Custom::cmd_vel_callback(const geometry_msgs::Twist::ConstPtr &msg)
@@ -50,6 +56,76 @@ void Custom::cmd_vel_callback(const geometry_msgs::Twist::ConstPtr &msg)
     udp.SetSend(cmd);
 }
 
+void Custom::test_string_callback(const std_msgs::String::ConstPtr &msg)
+{
+    for (const char &c : msg->data)
+    {
+        switch (c)
+        {
+        case 'w':
+            cmd.mode = 2;
+            cmd.gaitType = 1;
+            cmd.velocity[0] = 0.2f;
+            cmd.bodyHeight = 0.1;
+            break;
+        case 'a':
+            cmd.mode = 2;
+            cmd.gaitType = 1;
+            cmd.velocity[1] = 0.2f;
+            cmd.bodyHeight = 0.1;
+            break;
+        case 's':
+            cmd.mode = 2;
+            cmd.gaitType = 1;
+            cmd.velocity[0] = -0.2f;
+            cmd.bodyHeight = 0.1;
+            break;
+        case 'd':
+            cmd.mode = 2;
+            cmd.gaitType = 1;
+            cmd.velocity[1] = -0.2f;
+            cmd.bodyHeight = 0.1;
+            break;
+        case 'z':
+            cmd.mode = 0;
+            break;
+        case 'x':
+            cmd.mode = 1;
+            break;
+        case 'c':
+            cmd.mode = 2;
+            break;
+
+        case 'v':
+            cmd.mode = 3;
+            break;
+        case 'b':
+            cmd.mode = 4;
+            break;
+        case 'n':
+            cmd.mode = 5;
+            break;
+        case 'm':
+            cmd.mode = 6;
+            break;
+        default:
+            cmd.mode = 0;     // 0:idle, default stand      1:forced stand     2:walk continuously
+            cmd.gaitType = 0; // 行走类型，0:行走 1:奔跑 2:攀爬
+            cmd.speedLevel = 0;
+            cmd.footRaiseHeight = 0;
+            cmd.bodyHeight = 0;
+            cmd.euler[0] = 0;
+            cmd.euler[1] = 0;
+            cmd.euler[2] = 0;
+            cmd.velocity[0] = 0.0f;
+            cmd.velocity[1] = 0.0f;
+            cmd.yawSpeed = 0.0f;
+            cmd.reserve = 0;
+        }
+        ros::Duration(1.0).sleep();
+    }
+}
+
 void Custom::UDPRecv()
 {
     udp.Recv();
@@ -65,8 +141,8 @@ void Custom::RobotControl()
     motiontime += 2;
     udp.GetRecv(state);
     //   printf("%d   %f\n", motiontime, state.imu.quaternion[2]);
-    cmd.mode = 0; // 0:idle, default stand      1:forced stand     2:walk continuously
-    cmd.gaitType = 0;
+    cmd.mode = 0;     // 0:idle, default stand      1:forced stand     2:walk continuously
+    cmd.gaitType = 0; // 行走类型，0:行走 1:奔跑 2:攀爬
     cmd.speedLevel = 0;
     cmd.footRaiseHeight = 0;
     cmd.bodyHeight = 0;
@@ -187,23 +263,23 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "unitree_nav");
     ros::NodeHandle nh;
-    std::cout << "Communication level is set to HIGH-level." << std::endl
-              << "WARNING: Make sure the robot is standing on the ground." << std::endl
-              << "Press Enter to continue..." << std::endl;
-    std::cin.ignore();
 
     Custom custom(HIGHLEVEL);
     // 设置定时器运行函数，每隔custom.dt即0.01秒运行一次（100hz）
     // LoopFunc loop_control("control_loop", custom.dt, boost::bind(&Custom::RobotControl, &custom));
     LoopFunc loop_udpSend("udp_send", custom.dt, 3, boost::bind(&Custom::UDPSend, &custom));
     LoopFunc loop_udpRecv("udp_recv", custom.dt, 3, boost::bind(&Custom::UDPRecv, &custom));
-    nh.subscribe<geometry_msgs::Twist>("cmd_vel", 1, &Custom::cmd_vel_callback, &custom);
 
     loop_udpSend.start();
     loop_udpRecv.start();
     // loop_control.start();
-
-    ros::spin();
+    ROS_INFO("Unitree_nav node get into spin().");
+    ros::Rate rate(100);
+    while (ros::ok())
+    {
+        ros::spinOnce();
+        rate.sleep();
+    }
 
     return 0;
 }

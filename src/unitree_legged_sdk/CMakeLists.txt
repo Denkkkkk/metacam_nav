@@ -7,6 +7,15 @@ find_package(catkin REQUIRED COMPONENTS
         geometry_msgs
 )
 
+catkin_package(
+        CATKIN_DEPENDS
+        roscpp
+        std_msgs
+        
+        INCLUDE_DIRS include
+        LIBRARIES ${PROJECT_SOURCE_DIR}/lib/cpp/${ARCH}/libunitree_legged_sdk.a
+)
+
 # check arch and os
 message("-- CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
 if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
@@ -28,15 +37,7 @@ set(EXTRA_LIBS -pthread libunitree_legged_sdk.a)
 set(CMAKE_CXX_FLAGS "-O3 -fPIC")
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(catkin QUIET)
-if(${catkin_FOUND})
-  catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_SOURCE_DIR}/lib/cpp/${ARCH}/libunitree_legged_sdk.a
-  )
-endif()
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # one pc one process
 add_executable(unitree_nav unitree_nav/unitree_nav.cpp)

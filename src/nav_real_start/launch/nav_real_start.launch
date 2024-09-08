@@ -64,7 +64,7 @@
     <include file="$(find nav_service)/launch/nav_service.launch" />
 
     <!-- 补充的tf转换-->
-    <include file="$(find start_pathPlan_real)/launch/tf_real.launch">
+    <include file="$(find nav_real_start)/launch/tf_real.launch">
         <arg name="ns" value="$(arg ns)" />
     </include>
 
