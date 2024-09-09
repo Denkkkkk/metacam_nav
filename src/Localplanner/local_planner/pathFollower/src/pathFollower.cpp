@@ -93,6 +93,10 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
         }
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
     }
+    if (pctlPtr->param.safetyStop)
+    {
+        cmd_vel.angular.x = -1.0;
+    }
     // ROS_INFO("TEST:%f, vehicleYaw: %f, pctlPtr->param.spinSpeed:%f", vh_to_v, vehicleYaw, pctlPtr->param.spinSpeed);
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
