@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(unitree_legged_sdk)
 
+set(USE_UNITREE OFF)
+if(NOT USE_UNITREE)
+    return()
+endif()
+
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs

@@ -6,6 +6,10 @@ add_compile_options(
 		-Wno-psabi
 )
 
+set(USE_DIABLO OFF)
+if(NOT USE_DIABLO)
+    return()
+endif()
 
 set(WITH_ROS    1)
 set(library_name ${PROJECT_NAME})
