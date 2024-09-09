@@ -38,8 +38,8 @@ Custom::Custom(uint8_t level) : safe(LeggedType::Go1),
                                 udp(level, 8090, "192.168.19.10", 8082)
 {
     udp.InitCmdData(cmd);
-    sub_cmd_vel = nh.subscribe<geometry_msgs::Twist>("/cmd_vel", 1, &cmd_vel_callback, this);
-    sub_test_string = nh.subscribe<std_msgs::String>("/test_string", 1, &test_string_callback, this);
+    sub_cmd_vel = nh.subscribe<geometry_msgs::Twist>("/cmd_vel", 1, &Custom::cmd_vel_callback, this);
+    sub_test_string = nh.subscribe<std_msgs::String>("/test_string", 1, &Custom::test_string_callback, this);
 }
 
 void Custom::cmd_vel_callback(const geometry_msgs::Twist::ConstPtr &msg)
