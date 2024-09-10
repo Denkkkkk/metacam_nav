@@ -203,7 +203,7 @@ int main(int argc, char **argv)
             }
             // 判断到点状态
             double dis = sqrt(pow(vehicle_x - way_point.pose.position.x, 2) + pow(vehicle_y - way_point.pose.position.y, 2));
-            if (dis < 0.3)
+            if (dis < 0.6)
             {
                 nav_index += 1;
                 if (nav_index == nav_model.points.size())
