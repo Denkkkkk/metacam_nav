@@ -6,7 +6,7 @@ add_compile_options(
 		-Wno-psabi
 )
 
-set(USE_DIABLO OFF)
+set(USE_DIABLO ON)
 if(NOT USE_DIABLO)
     return()
 endif()
