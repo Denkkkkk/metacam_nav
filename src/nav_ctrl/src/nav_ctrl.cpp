@@ -4,7 +4,7 @@ namespace info_update_and_ctrl {
     int InfoUpdateAndCtrl::SubscribeAndPublish()
     {
         DIABLO::OSDK::HAL_Pi Hal;
-        if (Hal.init())
+        if (Hal.init("/dev/ttyUSB0"))
             return -1;
 
         vehicle = new DIABLO::OSDK::Vehicle(&Hal); // Initialize Onboard SDK
