@@ -14,7 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   pcl_ros
-  msg_process
 )
 ###################################
 ## catkin specific configuration ##
@@ -47,22 +46,9 @@ link_directories(
 
 ## Declare executables
 add_executable(robotSimulator src/robotSimulator.cpp)
-add_executable(car_control src/car_control.cpp)
-add_executable(key_control src/key_control.cpp)
-add_dependencies(key_control ${catkin_EXPORTED_TARGETS} msg_process_generate_messages_cpp)
-add_dependencies(car_control ${catkin_EXPORTED_TARGETS} msg_process_generate_messages_cpp)
-
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(robotSimulator ${catkin_LIBRARIES})
-target_link_libraries(car_control ${catkin_LIBRARIES} )
-target_link_libraries(key_control ${catkin_LIBRARIES} )
-
-install(TARGETS car_control key_control robotSimulator
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch

@@ -15,39 +15,6 @@ void LpNode::closeMapHandler(const std_msgs::Bool::ConstPtr &msg)
 
 
 /**
- * @brief 动态调参器的参数
- *
- * @param msg
- */
-void LpNode::lplannerControlHandler(const lplanner_reconfigure::lplanner_control::ConstPtr &msg)
-{
-    if (fabs(detourWei - msg->detourWei) < 0.01)
-    {
-        need_read_path = true;
-    }
-    maxSpeed = msg->maxSpeed;
-    lctlPtr->param.vehicleRadius = msg->vehicleRadius;
-    terrainVoxelSize = msg->terrainVoxelSize;
-    lctlPtr->param.useMap = msg->useMap;
-    lctlPtr->param.close_map_time = msg->close_map_time;
-    lctlPtr->param.adjacentRange = msg->adjacentRange;
-    lctlPtr->param.pathRangeStep = msg->pathRangeStep;
-    lctlPtr->param.minSpeedRange = msg->minSpeedRange;
-    lctlPtr->param.minPathRange = msg->minPathRange;
-    lctlPtr->param.pathScaleBySpeed = msg->pathScaleBySpeed;
-    lctlPtr->param.obstacleHeightThre = msg->obstacleHeightThre;
-    lctlPtr->param.dirWeight = msg->dirWeight;
-    lctlPtr->param.dirThre = msg->dirThre;
-    detourWei = msg->detourWei;
-    lctlPtr->param.goalClearRange = msg->goalClearRange;
-    lctlPtr->param.usePathScale = msg->usePathScale;
-    lctlPtr->param.defpathScale = msg->pathScale;
-    lctlPtr->param.minPathScale = msg->minPathScale;
-    lctlPtr->param.pathScaleStep = msg->pathScaleStep;
-    lctlPtr->param.use_fail_closemap = msg->use_fail_closemap;
-}
-
-/**
  * @brief 全局目标点回调
  *
  * @param point

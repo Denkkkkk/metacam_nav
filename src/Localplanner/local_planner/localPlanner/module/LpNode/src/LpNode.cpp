@@ -50,7 +50,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
     subAddCloud = nh.subscribe<sensor_msgs::PointCloud2>("/laser_point", 5, &LpNode::addCloudHandler, this);
     // 控制是否根据用于的规划点云进行地形障碍检查
     subCheckObstacle = nh.subscribe<std_msgs::Bool>("/check_obstacle", 5, &LpNode::checkObstacleHandler, this);
-    subLplannerData = nh.subscribe<lplanner_reconfigure::lplanner_control>("/lplanner_control_data", 5, &LpNode::lplannerControlHandler, this);
     // 关闭局部地图标志位
     subCloseMap = nh.subscribe<std_msgs::Bool>("/close_map", 2, &LpNode::closeMapHandler, this);
     subGlobal_point = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 2, &LpNode::globalPointHandler, this);

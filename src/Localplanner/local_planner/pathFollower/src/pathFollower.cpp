@@ -38,7 +38,6 @@ RoboCtrl::RoboCtrl()
     subPath = nh.subscribe<nav_msgs::Path>("/local_path", 1, &RoboCtrl::pathHandler, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &RoboCtrl::stopHandler, this);
     subGoal = nh.subscribe<geometry_msgs::PoseStamped>("/way_point", 5, &RoboCtrl::goalHandler, this);
-    subLplannerData = nh.subscribe<pfollower_reconfigure::pfollower_control>("/pfollower_control_data", 5, &RoboCtrl::pfollowerControlHandler, this);
     subControlMode = nh.subscribe("/control_mode", 5, &RoboCtrl::controlModeCallback, this);
     // subIMU = nh.subscribe<sensor_msgs::Imu>("/livox/imu_192_168_1_100", 5, &RoboCtrl::imuCallback, this);
 
@@ -361,7 +360,7 @@ void RoboCtrl::pure_persuit()
                 dirDiff += 2 * M_PI;
         }
         double time = ros::Time::now().toSec();
-        if(use_two_forward)
+        if (use_two_forward)
         {
             // 如果机器人当前的 dirDiff 大于 π/2（90度）并且机器人正朝前行驶 (navFwd)，并且距离上一次切换方向的时间超过阈值 switchTimeThre
             if (fabs(dirDiff) > PI / 2 && navFwd && time - switchTime > switchTimeThre)
@@ -375,7 +374,8 @@ void RoboCtrl::pure_persuit()
                 switchTime = time;
             }
         }
-        else{
+        else
+        {
             navFwd = true;
         }
         float joySpeed2 = maxSpeed1;
@@ -512,41 +512,6 @@ void RoboCtrl::pure_persuit()
         }
     }
     maxSpeed1 = pctlPtr->param.maxSpeed; // 恢复最大速度
-}
-
-void RoboCtrl::pfollowerControlHandler(const pfollower_reconfigure::pfollower_control::ConstPtr &msg)
-{
-    pctlPtr->param.maxSpeed = msg->maxSpeed;
-    pctlPtr->param.useLoaclSlow = msg->useLoaclSlow;
-    pctlPtr->param.endPathDis = msg->endPathDis;
-    pctlPtr->param.pathSlowDisThre = msg->pathSlowDisThre;
-    pctlPtr->param.getPath_speed = msg->getPath_speed;
-    pctlPtr->param.path_zero_bias = msg->path_zero_bias;
-
-    pctlPtr->param.goalSlowDisThre = msg->goalSlowDisThre;
-    pctlPtr->param.getGoal_speed = msg->getGoal_speed;
-    pctlPtr->param.goal_zero_bias = msg->goal_zero_bias;
-
-    pctlPtr->param.spinSpeed = msg->spinSpeed;
-    pctlPtr->param.endPathDis = msg->useCloudSlowDown;
-    pctlPtr->param.minSpeed = msg->minSpeed;
-    pctlPtr->param.curvature = msg->curvature;
-    pctlPtr->param.slowBegin = msg->slowBegin;
-    pctlPtr->param.safetyStop = msg->safetyStop;
-    pctlPtr->param.maxAddAccel = msg->maxAddAccel;
-    pctlPtr->param.maxSlowAccel = msg->maxSlowAccel;
-    pctlPtr->param.yawRateGain = msg->yawRateGain;
-    pctlPtr->param.stopYawRateGain = msg->stopYawRateGain;
-    pctlPtr->param.maxYawRate = msg->maxYawRate;
-    pctlPtr->param.maxStopYawRate = msg->maxStopYawRate;
-    pctlPtr->param.goal_path_direct = msg->goal_path_direct;
-    pctlPtr->param.use_MIDPlanning_slow = msg->use_MIDPlanning_slow;
-    pctlPtr->param.MIDPlanning_slow_rate = msg->MIDPlanning_slow_rate;
-    pctlPtr->param.MIDPlanning_minSpeed = msg->MIDPlanning_minSpeed;
-    pctlPtr->param.dirDiffThre = msg->dirDiffThre;
-    pctlPtr->param.use_closeGoal_direct = msg->use_closeGoal_direct;
-    pctlPtr->param.closeGoal_direct_dis = msg->closeGoal_direct_dis;
-    pctlPtr->param.quick_turn_N = msg->quick_turn_N;
 }
 
 int main(int argc, char **argv)

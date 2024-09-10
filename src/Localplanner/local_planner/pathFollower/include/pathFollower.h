@@ -23,13 +23,11 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 
-#include "msg_process/send_data.h"
 #include "pathFollower/parameters.h"
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pfollower_reconfigure/pfollower_control.h>
 #include <sensor_msgs/JointState.h>
 
 enum ControlMode
@@ -59,7 +57,6 @@ private:
     void stopHandler(const std_msgs::Bool::ConstPtr &stop);
     void goalHandler(const geometry_msgs::PoseStamped::ConstPtr &goal);
     void slowDownHandler(const std_msgs::Float32::ConstPtr &slowDown);
-    void pfollowerControlHandler(const pfollower_reconfigure::pfollower_control::ConstPtr &msg);
     void goalPointCallback(const geometry_msgs::PoseStamped::ConstPtr &point);
     void pathStatusCallback(const std_msgs::Bool::ConstPtr &status);
     void goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn);

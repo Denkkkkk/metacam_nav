@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   pcl_ros
   geometry_msgs
-  msg_process
 )
 
 # find_package(Eigen3 REQUIRED)
@@ -24,7 +23,7 @@ catkin_package(
 include_directories(${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} include)
 
 add_executable(map_to_odom src/map_to_odom.cpp)
-add_dependencies(map_to_odom ${catkin_EXPORTED_TARGETS} msg_process_generate_messages_cpp)
+add_dependencies(map_to_odom ${catkin_EXPORTED_TARGETS})
 target_link_libraries(map_to_odom ${catkin_LIBRARIES} ${EIGEN3_LIBS})
 
 install(

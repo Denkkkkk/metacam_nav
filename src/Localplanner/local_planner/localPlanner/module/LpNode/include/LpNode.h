@@ -1,11 +1,9 @@
 #pragma once
 #include "Parts.h"
 #include "localPlanner/parameters.h"
-#include "msg_process/receive_data.h"
 #include <cmath>
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/PolygonStamped.h>
-#include <lplanner_reconfigure/lplanner_control.h>
 #include <pcl/io/pcd_io.h> //pcd 读写类相关的头文件。
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -93,7 +91,6 @@ private:
     void addCloudHandler(const sensor_msgs::PointCloud2ConstPtr &addPoints);
     // 控制是否开启障碍物检测的状态
     void checkObstacleHandler(const std_msgs::Bool::ConstPtr &checkObs);
-    void lplannerControlHandler(const lplanner_reconfigure::lplanner_control::ConstPtr &msg);
     void virHeadDirHandler(const std_msgs::Float32::ConstPtr &msg);
     void closeMapHandler(const std_msgs::Bool::ConstPtr &msg);
     void globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg);

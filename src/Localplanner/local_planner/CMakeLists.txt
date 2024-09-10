@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   pcl_ros
-  msg_process
 )
 
 # ## Find catkin macros and libraries
@@ -37,11 +36,7 @@ link_directories(
 )
 
 add_executable(localPlanner localPlanner/src/local_main.cpp)
-add_dependencies(localPlanner ${catkin_EXPORTED_TARGETS}
-  msg_process_generate_messages_cpp
-  lplanner_reconfigure_generate_messages_cpp
-  pfollower_reconfigure_generate_messages_cpp
-)
+add_dependencies(localPlanner ${catkin_EXPORTED_TARGETS})
 target_link_libraries(localPlanner LpNode ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(pathFollower
@@ -50,12 +45,7 @@ add_executable(pathFollower
 )
 
 # 为编译添加msssages包的依赖
-add_dependencies(pathFollower
-  ${catkin_EXPORTED_TARGETS}
-  msg_process_generate_messages_cpp
-  lplanner_reconfigure_generate_messages_cpp
-  pfollower_reconfigure_generate_messages_cpp
-)
+add_dependencies(pathFollower ${catkin_EXPORTED_TARGETS})
 target_link_libraries(pathFollower ${catkin_LIBRARIES} ${PCL_LIBRARIES} pathFollower_param)
 
 install(
