@@ -4,6 +4,10 @@ project(nav_ctrl)
 
 set(CMAKE_BUILD_TYPE "Debug")
 
+if(NOT USE_DIABLO)
+    return()
+endif()
+
 add_compile_options(-std=c++17)
 add_definitions(-D_WITH_SERIAL)
 find_package(catkin REQUIRED COMPONENTS
