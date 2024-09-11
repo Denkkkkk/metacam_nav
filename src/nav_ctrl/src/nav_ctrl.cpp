@@ -21,7 +21,7 @@ namespace info_update_and_ctrl {
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_GYRO, OSDK_PUSH_DATA_10Hz);
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_MOTOR, OSDK_PUSH_DATA_10Hz);
 
-        vehicle.telemetry->enableLog(DIABLO::OSDK::TOPIC_STATUS);
+        vehicle->telemetry->enableLog(DIABLO::OSDK::TOPIC_STATUS);
 
         vehicle->telemetry->configUpdate();
 

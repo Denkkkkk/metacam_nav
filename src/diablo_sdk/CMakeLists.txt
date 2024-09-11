@@ -101,6 +101,8 @@ if (WITH_ROS)
     install(
         TARGETS
         ${library_name}
+        movement_ctrl_example
+        status_update_and_ctrl_example
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
