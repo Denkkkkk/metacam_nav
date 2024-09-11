@@ -62,6 +62,7 @@
 
     <!-- 启动服务通信 -->
     <include file="$(find nav_service)/launch/nav_service.launch" />
+    <include file="$(find nav_ctrl)/launch/nav_ctrl.launch" />
 
     <!-- 补充的tf转换-->
     <include file="$(find nav_real_start)/launch/tf_real.launch">

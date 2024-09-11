@@ -3,8 +3,10 @@
 namespace info_update_and_ctrl {
     int InfoUpdateAndCtrl::SubscribeAndPublish()
     {
+        std::string serial_port = "/dev/ttyUSB0";
+        ros::param::get("/nav_ctrl/serial_port", serial_port);
         DIABLO::OSDK::HAL_Pi Hal;
-        if (Hal.init("/dev/ttyUSB0"))
+        if (Hal.init(serial_port))
             return -1;
 
         vehicle = new DIABLO::OSDK::Vehicle(&Hal); // Initialize Onboard SDK
@@ -19,6 +21,8 @@ namespace info_update_and_ctrl {
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_GYRO, OSDK_PUSH_DATA_10Hz);
         vehicle->telemetry->configTopic(DIABLO::OSDK::TOPIC_MOTOR, OSDK_PUSH_DATA_10Hz);
 
+        vehicle.telemetry->enableLog(DIABLO::OSDK::TOPIC_STATUS);
+
         vehicle->telemetry->configUpdate();
 
         movement_ctrl_ = vehicle->movement_ctrl;
@@ -32,6 +36,7 @@ namespace info_update_and_ctrl {
         STATUSPublisher = n_.advertise<diablo_sdk::OSDK_STATUS>("diablo_ros_STATUS_b", 10);
 
         // Topic you want to subscribe
+        sub_ = n_.subscribe("/TITA/cmd_vel", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
         sub_ = n_.subscribe("/TITA/cmd_vel", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
 
         ros::spin();
@@ -187,7 +192,7 @@ namespace info_update_and_ctrl {
 int main(int argc, char **argv)
 {
     // Initiate ROS
-    ros::init(argc, argv, "status_update_and_ctrl_example");
+    ros::init(argc, argv, "nav_ctrl");
 
     info_update_and_ctrl::InfoUpdateAndCtrl test;
     test.SubscribeAndPublish();

@@ -97,6 +97,14 @@ if (WITH_ROS)
     ${CMAKE_CURRENT_SOURCE_DIR}/example/status_update_and_ctrl/main.cpp)
     add_dependencies(status_update_and_ctrl_example diablo_sdk_generate_messages_cpp)
 	target_link_libraries(status_update_and_ctrl_example PRIVATE Threads::Threads)
+
+    install(
+        TARGETS
+        ${library_name}
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+      )
     
 else()
 	add_executable(diablo_source main.cpp)
