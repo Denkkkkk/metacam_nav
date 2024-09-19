@@ -29,6 +29,7 @@ void ParamControl::load_params()
     nhPrivate.getParam("close_map_time", param.close_map_time);
     nhPrivate.getParam("use_fail_closemap", param.use_fail_closemap);
     nhPrivate.getParam("goalClearRange_global", param.goalClearRange_global);
+    nhPrivate.getParam("add_point_radius", param.add_point_radius);
     param_origin = param;
 }
 

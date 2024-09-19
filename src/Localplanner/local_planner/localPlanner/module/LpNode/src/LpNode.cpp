@@ -62,6 +62,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
     pubMarker = nh.advertise<visualization_msgs::Marker>("/Goal_noClear_marker", 1);
     pubVirHeadDir = nh.advertise<geometry_msgs::PoseStamped>("/virture_head", 5);
     pubGlobalPath = nh.advertise<nav_msgs::Path>("/path_global", 2);
+    pubAddPoints = nh.advertise<sensor_msgs::PointCloud2>("/add_points", 5);
 
 // 开启可行路径可视化，发布可行路径
 #if PLOTPATHSET == 1

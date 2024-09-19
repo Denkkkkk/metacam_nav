@@ -51,6 +51,7 @@ private:
     ros::Publisher pubMap;
     ros::Publisher pubMarker;
     ros::Publisher pubVirHeadDir;
+    ros::Publisher pubAddPoints;
     int Xbias;
     int Ybias;
     std::string pcd_path_rmuc;

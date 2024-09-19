@@ -13,7 +13,6 @@ void LpNode::closeMapHandler(const std_msgs::Bool::ConstPtr &msg)
     }
 }
 
-
 /**
  * @brief 全局目标点回调
  *
@@ -126,8 +125,43 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
             terrainCloudCrop->push_back(point);
         }
     }
+
+    pcl::PointCloud<pcl::PointXYZI>::Ptr terrainAddPoints(new pcl::PointCloud<pcl::PointXYZI>);
+    terrainAddPoints->clear();
+    // 遍历点云插值
+    if (lctlPtr->param.add_point_radius > 0.01)
+    {
+        // 先做一次降采样
+        terrainCloudDwz->clear();
+        terrainDwzFilter.setInputCloud(terrainCloudCrop);
+        terrainDwzFilter.filter(*terrainCloudDwz);
+        *terrainCloudCrop = *terrainCloudDwz;
+        terrainCloudDwz->clear();
+        for (int i = 0; i < terrainCloudCrop->points.size(); i++)
+        {
+            terrainCloudDwz->push_back(terrainCloudCrop->points[i]);
+            // 60度插值一次
+            for (int j = 1; j < 6; j++)
+            {
+                point.x = terrainCloudCrop->points[i].x + lctlPtr->param.add_point_radius * cos(j * 60 * M_PI / 180);
+                point.y = terrainCloudCrop->points[i].y + lctlPtr->param.add_point_radius * sin(j * 60 * M_PI / 180);
+                point.z = terrainCloudCrop->points[i].z;
+                terrainCloudDwz->push_back(point);
+                terrainAddPoints->push_back(point);
+            }
+        }
+        *terrainCloudCrop = *terrainCloudDwz;
+    }
+    // 发布插值点云
+    sensor_msgs::PointCloud2 terrainAddPoints2;
+    pcl::toROSMsg(*terrainAddPoints, terrainAddPoints2);
+    terrainAddPoints2.header.stamp = ros::Time::now();
+    terrainAddPoints2.header.frame_id = "map";
+    pubAddPoints.publish(terrainAddPoints2);
+    terrainAddPoints->clear();
+
+    //  最后做一次降采样
     terrainCloudDwz->clear();
-    //  使用pcl库自带的，点云滤波处理
     terrainDwzFilter.setInputCloud(terrainCloudCrop);
     terrainDwzFilter.filter(*terrainCloudDwz);
     newTerrainCloud = true;

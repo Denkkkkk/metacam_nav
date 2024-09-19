@@ -36,6 +36,7 @@ struct Params
     double pathScaleStep;
     bool use_pcd_close;
     double goalClearRange_global;
+    float add_point_radius;
 };
 
 class ParamControl

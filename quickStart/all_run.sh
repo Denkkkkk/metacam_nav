@@ -88,8 +88,6 @@ fi
 # 启动实车环境
 if [ ${para_r} -eq 1 ];
 then # 启动实车环境
-  if [ ! ${para_a} -eq 1 ];
-  then # 非纯自瞄模式下启动完整实车环境
     gnome-terminal --tab --title="串口"  -- bash -c "
     source /opt/ros/noetic/setup.bash; 
     source devel/setup.bash; 
@@ -106,14 +104,12 @@ then # 启动实车环境
     source /opt/ros/noetic/setup.bash; 
     source devel/setup.bash;
     roslaunch start_real_robot sentry_real2_pointlio.launch;exec bash"
-  fi
-
 # 启动仿真环境
 else 
-    gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-    source /opt/ros/noetic/setup.bash;
-    source devel/setup.bash;
-    roslaunch sentry_gazebo startup_robot.launch; exec bash"
+        gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+        source /opt/ros/noetic/setup.bash;
+        source devel/setup.bash;
+        roslaunch sentry_gazebo startup_robot.launch; exec bash"
 fi
 
 echo "done!"
