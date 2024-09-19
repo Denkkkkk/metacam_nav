@@ -88,21 +88,21 @@ if (WITH_ROS)
     add_dependencies(movement_ctrl_example diablo_sdk_generate_messages_cpp)
 	target_link_libraries(movement_ctrl_example PRIVATE Threads::Threads)
     
-	add_executable(robot_status_example ${OSDK_LIB_SRCS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/example/robot_status/main.cpp)
-    add_dependencies(robot_status_example diablo_sdk_generate_messages_cpp)
-	target_link_libraries(robot_status_example PRIVATE Threads::Threads)
+	# add_executable(robot_status_example ${OSDK_LIB_SRCS}
+    # ${CMAKE_CURRENT_SOURCE_DIR}/example/robot_status/main.cpp)
+    # add_dependencies(robot_status_example diablo_sdk_generate_messages_cpp)
+	# target_link_libraries(robot_status_example PRIVATE Threads::Threads)
 
-    add_executable(status_update_and_ctrl_example ${OSDK_LIB_SRCS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/example/status_update_and_ctrl/main.cpp)
-    add_dependencies(status_update_and_ctrl_example diablo_sdk_generate_messages_cpp)
-	target_link_libraries(status_update_and_ctrl_example PRIVATE Threads::Threads)
+    # add_executable(status_update_and_ctrl_example ${OSDK_LIB_SRCS}
+    # ${CMAKE_CURRENT_SOURCE_DIR}/example/status_update_and_ctrl/main.cpp)
+    # add_dependencies(status_update_and_ctrl_example diablo_sdk_generate_messages_cpp)
+	# target_link_libraries(status_update_and_ctrl_example PRIVATE Threads::Threads)
 
     install(
         TARGETS
         ${library_name}
         movement_ctrl_example
-        status_update_and_ctrl_example
+        # status_update_and_ctrl_example
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

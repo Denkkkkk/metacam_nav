@@ -55,7 +55,7 @@
     <param name="goalY" type="double" value="$(arg goalY)" />
     <param name="dirWeight" type="double" value="80" />            <!--@-只允许路径终点在这个转弯角度内的路径通过-->
     <param name="dirThre" type="double" value="85" />              <!--@-规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑-->
-    <param name="detourWei" type="double" value="1.7" />           <!--绕行系数，越大绕行越明显，拐弯处会越远离障碍物，但是左右摆动越明显-->
+    <param name="detourWei" type="double" value="1.8" />           <!--绕行系数，越大绕行越明显，拐弯处会越远离障碍物，但是左右摆动越明显-->
     <param name="pathCropByGoal" type="bool" value="true" />       <!--删除路径点到车体的距离超过了车体到目标点的圆形区域外加goalClearRange延长环，这些路径点都不会碰到，不会到达-->
     <param name="goalClearRange" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
     <param name="goalClearRange_global" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
@@ -104,7 +104,7 @@
     <param name="MIDPlanning_minSpeed" type="double" value="1.0" />
     <param name="dirDiffThre" type="double" value="0.26" />         <!--@-角度差-->
     <param name="use_closeGoal_direct" type="bool" value="false" />  <!--@-开启到目标点附近直接冲向目标点-->
-    <param name="closeGoal_direct_dis" type="double" value="0.4" /><!--@-到目标点附近直冲的阈值-->
+    <param name="closeGoal_direct_dis" type="double" value="0.3" /><!--@-到目标点附近直冲的阈值-->
     <param name="close_direct_speed" type="double" value="$(arg close_direct_speed)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->

@@ -4,6 +4,7 @@ project(nav_ctrl)
 
 set(CMAKE_BUILD_TYPE "Debug")
 
+set(USE_DIABLO ON)
 if(NOT USE_DIABLO)
     return()
 endif()
@@ -17,10 +18,10 @@ find_package(catkin REQUIRED COMPONENTS
   diablo_sdk
 )
 catkin_package(
-  # INCLUDE_DIRS include
-  # LIBRARIES nav_ctrl
-  # CATKIN_DEPENDS geometry_msgs roscpp std_msgs
-  # DEPENDS system_lib
+  CATKIN_DEPENDS
+  roscpp
+  std_msgs
+  geometry_msgs
 )
 
 include_directories(
@@ -36,7 +37,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # target_link_libraries(${PROJECT_NAME} -ldw -lbfd)
-add_dependencies(${PROJECT_NAME} diablo_sdk_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME} diablo_sdk diablo_sdk_generate_messages_cpp)
 
 # ############
 # # Install ##
