@@ -94,9 +94,9 @@
     <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
     <param name="maxAddAccel" type="double" value="4.0" />         <!--@-最大加速速度-->
     <param name="maxSlowAccel" type="double" value="4.0" />        <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="6.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="10.0" />     <!--@-静止下的伪车头转动增益-->
-    <param name="maxYawRate" type="double" value="25.0" />         <!--车头最大转动角速度-->
+    <param name="yawRateGain" type="double" value="5.0" />         <!--@-一般情况下的伪车头转动增益-->
+    <param name="stopYawRateGain" type="double" value="12.0" />     <!--@-静止下的伪车头转动增益-->
+    <param name="maxYawRate" type="double" value="30.0" />         <!--车头最大转动角速度-->
     <param name="maxStopYawRate" type="double" value="60.0" />     <!--低速下车头最大转动角速度,有过大保护-->
     <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->
     <param name="use_MIDPlanning_slow" type="bool" value="true" />  <!--是否使用转弯点减速-->
