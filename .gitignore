@@ -2,7 +2,6 @@ build
 build_clion
 devel
 install
-Gazebo
 
 cmake-build-debug
 .catkin_workspace

@@ -1,0 +1,18 @@
+<launch>
+    <!--模型车的起点放置位置-->
+    <arg name="vehicleX" default="0" />
+    <arg name="vehicleY" default="0" />
+    <arg name="vehicleZ" default="0.5" />
+    <arg name="is_rviz" default="true" />
+    <arg name="ns" default="Sentry" />
+
+    <group if="$(arg is_rviz)">
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find rplidar_ros)/rviz/rplidar.rviz" />
+    </group>
+
+    <node name="rplidarNodeClient" pkg="rplidar_ros" type="rplidarNodeClient" output="screen">
+        <param name="robotFrame" type="string" value="$(arg ns)/vehicle" />
+        <param name="laserFrame" type="string" value="$(arg ns)/laser" />
+    </node>
+
+</launch>

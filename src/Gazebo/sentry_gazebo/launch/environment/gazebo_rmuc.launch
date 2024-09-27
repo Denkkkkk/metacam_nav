@@ -1,0 +1,58 @@
+<launch>
+  <arg name="ns" default="Sentry" />
+  <arg name="paused" default="false" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <arg name="verbose" default="false" />
+  <arg name="use_2dlaser" default="false" />
+
+  <!--模型车的起点放置位置-->
+  <arg name="vehicleX" default="0" />
+  <arg name="vehicleY" default="0" />
+  <arg name="vehicleZ" default="0" />
+  <arg name="vehicleYaw" default="0" />
+  <arg name="world_name" default="RMUL2024" />
+  <arg name="is_open_rviz" default="false" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="false" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="use_sim_time" value="$(arg use_sim_time)" />
+    <arg name="headless" value="false" />
+    <arg name="verbose" value="$(arg verbose)" />
+    <arg name="world_name" value="$(find sentry_gazebo)/worlds/$(arg world_name).world" />
+  </include>
+
+  <group ns="$(arg ns)">
+    <param name="robot_description"
+      command="$(find xacro)/xacro $(find sentry_gazebo)/urdf/xacro/robot.urdf.xacro ns:=$(arg ns)" />
+    <param name="chassis_description"
+      command="$(find xacro)/xacro $(find sentry_gazebo)/urdf/xacro/chassis.urdf.xacro ns:=$(arg ns)" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher"
+      type="joint_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+    </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+      output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+    </node>
+    <node name="$(arg ns)_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
+      output="screen"
+      args="-unpause -urdf -model $(arg ns) -param robot_description -x $(arg vehicleX) -y $(arg vehicleY) -z $(arg vehicleZ) -Y $(arg vehicleYaw)" />
+  </group>
+
+  <group if="$(arg use_2dlaser)">
+    <include file="$(find sentry_gazebo)/launch/environment/startup_laser.launch">
+      <arg name="ns" value="$(arg ns)" />
+      <arg name="is_rviz" value="false" />
+    </include>
+  </group>
+
+  <group if="$(arg is_open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sentry_gazebo)/rviz/rm_lidar.rviz" />
+  </group>
+
+</launch>

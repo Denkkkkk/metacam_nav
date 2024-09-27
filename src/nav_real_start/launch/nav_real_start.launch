@@ -3,7 +3,6 @@
     <arg name="use_global_planner" default="false" />
     <arg name="use_rviz" default="false" />
     <arg name="use_map" default="true" />
-    <arg name="use_lp_reconfigure" default="false" />
 
     <!-- 局部规划的初始点位-->
     <arg name="ns" default="TITA" />
@@ -33,31 +32,10 @@
         <arg name="pcd_path" value="$(arg pcd_path)" />
     </include>
 
-    <!-- 启动全局规划 -->
-    <group if="$(arg use_global_planner)">
-        <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-            <arg name="min_intensity" value="$(arg min_intensity_global)" />
-        </include>
-        <!-- Map server -->
-        <group if="$(arg use_map)">
-            <node pkg="map_server" name="map_server" type="map_server" respawn="true"
-                args="$(arg map_file)" />
-        </group>
-        <!-- move_base -->
-        <include file="$(find move_base)/launch/move_base_goalOnly.launch">
-            <arg name="odom_topic" value="/state_estimation" />
-        </include>
-    </group>
-
     <!-- 启动rviz -->
     <group if="$(arg use_rviz)">
         <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
             args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
-    </group>
-
-    <!-- 启动规划器动态调参 -->
-    <group if="$(arg use_lp_reconfigure)">
-        <include file="$(find local_planner)/launch/reconfigure.launch" />
     </group>
 
     <!-- 启动服务通信 -->

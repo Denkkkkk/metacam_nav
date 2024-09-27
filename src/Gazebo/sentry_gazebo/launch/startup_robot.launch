@@ -1,0 +1,94 @@
+<launch>
+  <!-- 选择性开启-->
+  <arg name="use_global_planner" default="false" />
+  <arg name="use_rviz" default="true" />
+  <arg name="use_2dlaser" default="false" />
+  <arg name="use_map" default="false" />
+
+  <!-- 仿真系统参数 -->
+  <arg name="ns" default="TITA" />
+  <arg name="paused" default="false" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <!--模型车的起点放置位置-->
+  <arg name="vehicleX" default="7.5" />
+  <arg name="vehicleY" default="6.0" />
+  <arg name="vehicleZ" default="0.0" />
+  <arg name="vehicleYaw" default="1.57" />
+  <!-- Autonomous Exploration Development Environment参数 -->
+  <arg name="world_name" default="RMUC2024" />
+  <arg name="checkTerrainConn" default="true" />
+  <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
+  <arg name="pcd_path" default="$(find map_manager)/pcd/rmuc.pcd" /> -->
+  <arg name="min_intensity" default="0.2" />
+  <arg name="min_intensity_global" default="0.25" />
+  <arg name="min_intensity_blind" default="0.33" />
+  <arg name="down_hill_judge_time" default="0.4" />
+
+  <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
+  <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
+    <arg name="world_name" value="$(arg world_name)" />
+    <arg name="ns" value="$(arg ns)" />
+    <arg name="vehicleX" value="$(arg vehicleX)" />
+    <arg name="vehicleY" value="$(arg vehicleY)" />
+    <arg name="vehicleZ" value="$(arg vehicleZ)" />
+    <arg name="vehicleYaw" default="1.57" />
+    <arg name="use_sim_time" value="$(arg use_sim_time)" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="is_open_rviz" value="false" />
+    <arg name="use_2dlaser" value="$(arg use_2dlaser)" />
+  </include>
+
+  <!-- 启动Autonomous Exploration Development Environment环境，加载地形分析，局部导航 -->
+  <include file="$(find local_planner)/launch/system_rmuc.launch">
+    <arg name="ns" value="$(arg ns)" />
+    <arg name="vehicleX" value="$(arg vehicleX)" />
+    <arg name="vehicleY" value="$(arg vehicleY)" />
+    <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
+    <arg name="checkTerrainConn" value="$(arg checkTerrainConn)" />
+    <arg name="use_map" value="$(arg use_map)" />
+    <arg name="min_intensity" value="$(arg min_intensity)" />
+    <!-- <arg name="pcd_path" value="$(arg pcd_path)" /> -->
+  </include>
+
+  <!-- odom-map -->
+  <include file="$(find map_to_odom)/launch/map_to_odom.launch">
+    <arg name="vehicleX" value="0.0" />
+    <arg name="vehicleY" value="0.0" />
+    <arg name="vehicleYaw" value="0.0" />
+    <arg name="ns" value="$(arg ns)" />
+  </include>
+
+  <!-- velodyne点云处理成/相应话题和里程/话题输出 -->
+  <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">
+    <arg name="ns" value="$(arg ns)" />
+  </include>
+
+
+  <!-- 启动rviz -->
+  <group if="$(arg use_rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
+      args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
+  </group>
+
+  <!-- 启动全局规划 -->
+  <group if="$(arg use_global_planner)">
+    <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
+      <arg name="min_intensity" value="$(arg min_intensity_global)" />
+      <arg name="min_intensity_blind" value="$(arg min_intensity_blind)" />
+    </include>
+    <!-- Map server -->
+    <group if="$(arg use_map)">
+      <node pkg="map_server" name="map_server" type="map_server" respawn="true"
+        args="$(arg map_file)" />
+    </group>
+    <!-- move_base -->
+    <include file="$(find move_base)/launch/move_base_goalOnly.launch">
+      <arg name="odom_topic" value="/Odometry" />
+    </include>
+  </group>
+
+  <!-- 启动服务通信 -->
+  <include file="$(find nav_service)/launch/nav_service.launch" />
+</launch>

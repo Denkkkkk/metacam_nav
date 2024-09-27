@@ -85,34 +85,9 @@ then
   exit
 fi
 
-# 实车根据实时场地建图
-if [ ${para_m} -eq 1 ];
-then
-  gnome-terminal --tab --title="串口"  -- bash -c "
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  roslaunch serial_process serial.launch;exec bash"
-
-  sleep 1.0s
-  gnome-terminal --tab --title="局部规划控制系统"  -- bash -c " 
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  roslaunch waypoint_control waypoint_control.launch; exec bash"
-
-  sleep 2.5s
-  echo "edit map..."
-  gnome-terminal --tab --title="地图编辑"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above; 
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  roslaunch start_real_robot sentry_real2_pointlio_map.launch;exec bash"
-
-  exit
-fi
-
 # 启动实车环境
 if [ ${para_r} -eq 1 ];
 then # 启动实车环境
-
   if [ ! ${para_a} -eq 1 ];
   then # 非纯自瞄模式下启动完整实车环境
     gnome-terminal --tab --title="串口"  -- bash -c "
@@ -135,32 +110,10 @@ then # 启动实车环境
 
 # 启动仿真环境
 else 
-    if [ ${para_a} -eq 1 ];
-    then # 纯自瞄模式下不启动仿真环境
-      echo "纯自瞄模式下不启动仿真环境"
-    else
-      if [ ${para_f} -eq 1 ];
-      then
-        gnome-terminal --tab --title="修改全局点云图"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-        source /opt/ros/noetic/setup.bash;
-        source devel/setup.bash;
-        roslaunch map_manager pcd_edit.launch; exec bash"
-        exit
-      else
-        if [ ${para_q} -eq 1 ];
-        then
-        gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-        source /opt/ros/noetic/setup.bash;
-        source devel/setup.bash;
-        roslaunch sentry_gazebo startup_qingqing.launch; exec bash"
-        else        
-        gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-        source /opt/ros/noetic/setup.bash;
-        source devel/setup.bash;
-        roslaunch sentry_gazebo startup_robot.launch; exec bash"
-        fi
-      fi
-    fi
+    gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+    source /opt/ros/noetic/setup.bash;
+    source devel/setup.bash;
+    roslaunch sentry_gazebo startup_robot.launch; exec bash"
 fi
 
 echo "done!"
