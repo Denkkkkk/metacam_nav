@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="nav_serial_ctrl" type="nav_serial_ctrl" name="nav_serial_ctrl" output="screen" respawn="true">
+        <param name="/serial_port" type="string" value="/dev/ttyTHS0" />
+    </node>
+</launch>

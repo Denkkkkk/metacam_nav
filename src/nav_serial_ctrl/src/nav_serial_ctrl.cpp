@@ -1,10 +1,10 @@
-#include "nav_ctrl/nav_ctrl.h"
+#include "nav_serial_ctrl/nav_serial_ctrl.h"
 
 namespace info_update_and_ctrl {
     int InfoUpdateAndCtrl::SubscribeAndPublish()
     {
         std::string serial_port = "/dev/ttyTHS0";
-        ros::param::get("/nav_ctrl/serial_port", serial_port);
+        ros::param::get("/nav_serial_ctrl/serial_port", serial_port);
         DIABLO::OSDK::HAL_Pi Hal;
         if (Hal.init(serial_port))
             return -1;
@@ -192,7 +192,7 @@ namespace info_update_and_ctrl {
 int main(int argc, char **argv)
 {
     // Initiate ROS
-    ros::init(argc, argv, "nav_ctrl");
+    ros::init(argc, argv, "nav_serial_ctrl");
 
     info_update_and_ctrl::InfoUpdateAndCtrl test;
     test.SubscribeAndPublish();

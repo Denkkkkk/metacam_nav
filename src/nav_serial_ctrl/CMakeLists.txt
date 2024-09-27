@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 2.8)
-project(nav_ctrl)
+project(nav_serial_ctrl)
 
 set(CMAKE_BUILD_TYPE "Debug")
 
@@ -29,7 +29,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME} src/nav_ctrl.cpp)
+add_executable(${PROJECT_NAME} src/nav_serial_ctrl.cpp)
 
 target_link_libraries(${PROJECT_NAME}
   diablo_sdk
@@ -44,7 +44,7 @@ add_dependencies(${PROJECT_NAME} diablo_sdk diablo_sdk_generate_messages_cpp)
 # ############
 install(
   TARGETS
-  nav_ctrl
+  nav_serial_ctrl
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

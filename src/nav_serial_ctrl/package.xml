@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>nav_ctrl</name>
+  <name>nav_serial_ctrl</name>
   <version>0.0.0</version>
-  <description>The nav_ctrl package</description>
+  <description>The nav_serial_ctrl package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/nav_ctrl</url> -->
+  <!-- <url type="website">http://wiki.ros.org/nav_serial_ctrl</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
