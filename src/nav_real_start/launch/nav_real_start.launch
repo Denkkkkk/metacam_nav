@@ -26,6 +26,22 @@
         <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
     </include>
 
+    <!-- 启动全局规划 -->
+    <group if="$(arg use_global_planner)">
+        <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
+            <arg name="min_intensity" value="$(arg min_intensity_global)" />
+        </include>
+        <!-- Map server -->
+        <group if="$(arg use_map)">
+            <node pkg="map_server" name="map_server" type="map_server" respawn="true"
+                args="$(arg map_file)" />
+        </group>
+        <!-- move_base -->
+        <include file="$(find move_base)/launch/move_base_goalOnly.launch">
+            <arg name="odom_topic" value="/state_estimation" />
+        </include>
+    </group>
+
     <!-- 启动rviz -->
     <group if="$(arg use_rviz)">
         <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
@@ -42,4 +58,5 @@
     <include file="$(find nav_real_start)/launch/tf_real.launch">
         <arg name="ns" value="$(arg ns)" />
     </include>
+
 </launch>

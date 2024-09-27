@@ -8,7 +8,6 @@ aux_source_directory(src DIR_SRCS)
 add_library(LpNode SHARED ${DIR_SRCS})
 
 target_include_directories(LpNode PUBLIC include ${catkin_INCLUDE_DIRS})
-add_dependencies(LpNode ${catkin_EXPORTED_TARGETS} )
 target_link_libraries(LpNode Parts ${catkin_LIBRARIES} localPlanner_param)
 
 install(
