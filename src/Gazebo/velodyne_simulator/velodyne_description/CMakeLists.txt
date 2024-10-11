@@ -1,3 +1,7 @@
+if(NOT BUILD_SIMULATOR)
+    return()
+endif()
+
 cmake_minimum_required(VERSION 3.0.2)
 project(velodyne_description)
 

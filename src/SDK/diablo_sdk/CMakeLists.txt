@@ -1,3 +1,7 @@
+if(NOT BUILD_DIABLO_SERIAL)
+    return()
+endif()
+
 cmake_minimum_required(VERSION 3.0)
 project(diablo_sdk)
 
@@ -5,12 +9,6 @@ add_compile_options(
 		-std=c++17
 		-Wno-psabi
 )
-
-set(USE_DIABLO ON)
-if(NOT USE_DIABLO)
-    return()
-endif()
-
 set(WITH_ROS    1)
 set(library_name ${PROJECT_NAME})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
