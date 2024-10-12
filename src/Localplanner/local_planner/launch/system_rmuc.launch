@@ -1,12 +1,8 @@
 <launch>
-      <arg name="checkTerrainConn" default="true" />
       <arg name="vehicleX" default="8" />
       <arg name="vehicleY" default="6" />
       <arg name="vehicleYaw" default="0" />
       <arg name="ns" default="" />
-      <arg name="pcd_path" default="" />
-      <arg name="use_map" default="false" />
-      <arg name="min_intensity" default="0.17" />
       <!-- 打开地形和扩展地形分析，
   接收：/Odometry 位姿信息
         /cloud_registered 输出点云
@@ -21,7 +17,7 @@
   发布：
   /terrain_map_ext  扩展地形点云地图 -->
       <!-- <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
-            <arg name="checkTerrainConn" value="$(arg checkTerrainConn)" />
+            <arg name="checkTerrainConn" value="true" />
       </include> -->
 
       <include file="$(find local_planner)/launch/local_planner.launch">
@@ -29,9 +25,6 @@
             <arg name="vehicleY" value="$(arg vehicleY)" />
             <arg name="robotFrame" value="$(arg ns)/vehicle" />
             <arg name="cmdTopic" value="$(arg ns)/cmd_vel" />
-            <arg name="pcd_path" value="$(arg pcd_path)" />
-            <arg name="use_map" value="$(arg use_map)" />
-            <arg name="min_intensity" value="$(arg min_intensity)" />
       </include>
 
 </launch>

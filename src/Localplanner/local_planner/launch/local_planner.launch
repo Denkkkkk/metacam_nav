@@ -1,73 +1,31 @@
 <launch>
   <arg name="usual_pcd_path" default="" />
-  <arg name="pcd_path_rmuc" default="" />
-  <arg name="pcd_path_qingqing" default="" />
-  <arg name="min_intensity" default="0.2" />
-  <arg name="maxSpeed" default="0.75" />
-  <arg name="minSpeed" default="0.3" />                 <!--@-maxSpeed1，最大速度的最小速度-->
   <arg name="close_direct_speed" default="0.5" />
   <arg name="curvature" default="9" />
-  <arg name="autonomySpeed" default="$(arg maxSpeed)" /> <!--自然速度,应该比maxSpeed小-->
   <arg name="terrainVoxelSize" value="0.1" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="goalX" default="$(arg vehicleX)" />
   <arg name="goalY" default="$(arg vehicleY)" />
-  <arg name="pcd_path" default="" />
   <arg name="robotFrame" default="Sentry/vehicle" />
   <arg name="cmdTopic" default="/cmd_vel" />
   <arg name="use_map" default="false" />
   <arg name="update_begin_dis_goalPoint" default="4.0" />
   <arg name="update_begin_dis_vehicleDis" default="6.0" />
 
+  <arg name="yaml_path" default="$(find local_planner)/config/XT_network.yaml" />
+
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
     <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
-    <param name="vehicleRadius" type="double" value="0.6" />
-    <param name="terrainVoxelSize" type="double" value="$(arg terrainVoxelSize)" />
-    <param name="maxSpeed" value="$(arg maxSpeed)" />
-    <param name="checkObstacle" type="bool" value="true" />              <!--控制是否根据用于的规划点云进行地形障碍检查，也可以通过发布/check_obstacle随时控制-->
-    <param name="checkRotObstacle" type="bool" value="false" />          <!--长条形车或差速底盘过窄道，旁边检测到障碍物在可碰撞半径内，限制转弯-->
+
+    <rosparam command="load" file="$(arg yaml_path)" />
+   
     <param name="robotFrame" type="string" value="$(arg robotFrame)" />  <!--控制是否根据用于的规划点云进行地形障碍检查，也可以通过发布/check_obstacle随时控制-->
-    <param name="useMap" type="bool" value="$(arg use_map)" />           <!--是否加入全局地图-->
     <param name="pcd_path" value="$(arg pcd_path)" />
     <param name="usual_pcd_path" value="$(arg usual_pcd_path)" />
-    <param name="pcd_path_qingqing" value="$(arg pcd_path_qingqing)" />
-    <param name="pcd_path_rmuc" value="$(arg pcd_path_rmuc)" />
-    <param name="close_map_time" type="double" value="2.5" />            <!--关闭局部地图的超时时间-->
-    <param name="use_fail_closemap" type="bool" value="true" />          <!--开启规划失败就关闭点云地图-->
-    <!--速度控制和对规划范围的影响，pathRange小的时候速度一定也得小，因为路径短，速度一大两下就会超出路点的尽头导致抽搐-->
-    <param name="autonomySpeed" value="$(arg autonomySpeed)" />    <!--默认控制车体的运动速度，应该小于maxSpeed-->
-    <param name="adjacentRange" type="double" value="2.8" />       <!--@-第一次裁剪规划点云的范围-->
-    <param name="pathRangeStep" type="double" value="0.4" />       <!--上面这个系数的缩小步长-->
-    <param name="minSpeedRange" type="double" value="1.2" />
-    <param name="minPathRange" type="double" value="0.45" />        <!--速度越慢，路径范围就越小，再小都小不过这个值-->
-    <param name="pathRangeBySpeed" type="bool" value="false" />    <!--根据速度调整规划范围-->
-    <param name="slow_dis" type="double" value="0.6" />
-    <!--障碍物高度相关控制-->
-    <param name="obstacleHeightThre" type="double" value="$(arg min_intensity)" /> <!--@-地形分析中，intensity(相对地面的高度)的筛选阈值，高于这里的点云才被认为障碍物-->
-    <param name="useCost" type="bool" value="false" />            <!--@-关了之后地形分析的点云只会保留大于高度阈值的，开启则不大于阈值的后续做路径评分处理-->
-    <param name="groundHeightThre" type="double" value="-0.1" />  <!--点云高度大于这个地面阈值会惩罚得分-->
-    <param name="costHeightThre" type="double" value="0.1" />     <!--只要高于0.1,其高度得分就是0，高度优先度拉到最低-->
-    <param name="costScore" type="double" value="0.02" />         <!--高度得分最低不能低于这个值-->
-    <param name="pointPerPathThre" type="int" value="1" />        <!--@-同一块体素位置需要至少多少个障碍物点云才被舍弃-->
-    <!-- 目标点或转弯等方向信息的控制 -->
     <param name="goalX" type="double" value="$(arg goalX)" />
     <param name="goalY" type="double" value="$(arg goalY)" />
-    <param name="dirWeight" type="double" value="80" />            <!--@-只允许路径终点在这个转弯角度内的路径通过-->
-    <param name="dirThre" type="double" value="85" />              <!--@-规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑-->
-    <param name="detourWei" type="double" value="1.8" />           <!--绕行系数，越大绕行越明显，拐弯处会越远离障碍物，但是左右摆动越明显-->
-    <param name="pathCropByGoal" type="bool" value="true" />       <!--删除路径点到车体的距离超过了车体到目标点的圆形区域外加goalClearRange延长环，这些路径点都不会碰到，不会到达-->
-    <param name="goalClearRange" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
-    <param name="goalClearRange_global" type="double" value="0.4" />      <!--快到目的地的时候会减小障碍物检测的范围。-->
-    <!-- scale点云收拢比例控制 -->
-    <param name="usePathScale" type="bool" value="false" />
-    <param name="defPathScale" type="double" value="1.0" />        <!--@-默认缩放范围-->
-    <param name="minPathScale" type="double" value="1.0" />
-    <param name="pathScaleStep" type="double" value="0.2" />
-    <param name="pathScaleBySpeed" type="bool" value="false" />
-    <!-- 其他 -->
-    <param name="Xbias" type="double" value="0" />                 <!--@-可视化用于剪枝的周围障碍物点云偏移map坐标系的量X-->
-    <param name="Ybias" type="double" value="0" />                 <!--@-可视化用于剪枝的周围障碍物点云偏移map坐标系的量Y-->
+
   </node>
 
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">

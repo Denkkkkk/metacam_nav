@@ -20,14 +20,11 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
     nhPrivate.getParam("checkRotObstacle", checkRotObstacle);
     nhPrivate.getParam("maxSpeed", maxSpeed);
     nhPrivate.getParam("defpathScale", defPathScale);
-    nhPrivate.getParam("autonomySpeed", joySpeed);
     nhPrivate.getParam("goalX", goalX);
     nhPrivate.getParam("goalY", goalY);
     nhPrivate.getParam("Xbias", Xbias);
     nhPrivate.getParam("Ybias", Ybias);
     nhPrivate.getParam("pcd_path", pcd_path_open);
-    nhPrivate.getParam("pcd_path_rmuc", pcd_path_rmuc);
-    nhPrivate.getParam("pcd_path_qingqing", pcd_path_qingqing);
     nhPrivate.getParam("usual_pcd_path", usual_pcd_path);
     nhPrivate.getParam("detourWei", detourWei);
     nhPrivate.getParam("robotFrame", robotFrame);
@@ -37,6 +34,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
     // 全局目标点初始化到很远
     goal_point.pose.position.x = 100;
     goal_point.pose.position.y = 100;
+    joySpeed = maxSpeed;
 
     // 回调函数，提取里程计信息，更新车体的位姿信息
     subOdometry = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &LpNode::odometryHandler, this);
@@ -619,55 +617,20 @@ void LpNode::close_map()
 
 void LpNode::load_pcd_map()
 {
-    // 地图路径选择
-    if (pcd_path_open == pcd_path_rmuc)
-    {
-        pcd_path_close = usual_pcd_path + "rmuc_close.pcd";
-        pcd_path_protect = usual_pcd_path + "rmuc_protect.pcd";
-    }
-    else if (pcd_path_open == pcd_path_qingqing)
-    {
-        pcd_path_close = usual_pcd_path + "qingqing_close.pcd";
-        pcd_path_protect = usual_pcd_path + "qingqing_protect.pcd";
-    }
-    else
-    {
-        // 加载允许下台阶的点云图
-        pcl::io::loadPCDFile(pcd_path_open, terrainMapRecord_open);
-        terrainMapRecord_open.header.frame_id = "map";
-        terrainMapRecord_open.header.stamp = ros::Time::now();
-        pcl::fromROSMsg(terrainMapRecord_open, *terrainMapRecord_pcl_open);
-        // 加载不允许下台阶的点云图
-        terrainMapRecord_close = terrainMapRecord_open;
-        terrainMapRecord_pcl_close = terrainMapRecord_pcl_open;
-        // 加载保护区的点云图
-        terrainMapRecord_pcl_protect->clear();
-        // 先选择默认的地图
-        terrainMapRecord = terrainMapRecord_open;
-        terrainMapRecord_pcl = terrainMapRecord_pcl_open;
-        return;
-    }
-
-    terrainMapRecord_pcl->clear();
-
     // 加载允许下台阶的点云图
     pcl::io::loadPCDFile(pcd_path_open, terrainMapRecord_open);
     terrainMapRecord_open.header.frame_id = "map";
     terrainMapRecord_open.header.stamp = ros::Time::now();
     pcl::fromROSMsg(terrainMapRecord_open, *terrainMapRecord_pcl_open);
     // 加载不允许下台阶的点云图
-    pcl::io::loadPCDFile(pcd_path_close, terrainMapRecord_close);
-    terrainMapRecord_close.header.frame_id = "map";
-    terrainMapRecord_close.header.stamp = ros::Time::now();
-    pcl::fromROSMsg(terrainMapRecord_close, *terrainMapRecord_pcl_close);
+    terrainMapRecord_close = terrainMapRecord_open;
+    terrainMapRecord_pcl_close = terrainMapRecord_pcl_open;
     // 加载保护区的点云图
-    pcl::io::loadPCDFile(pcd_path_protect, terrainMapRecord_protect);
-    terrainMapRecord_protect.header.frame_id = "map";
-    terrainMapRecord_protect.header.stamp = ros::Time::now();
-    pcl::fromROSMsg(terrainMapRecord_protect, *terrainMapRecord_pcl_protect);
+    terrainMapRecord_pcl_protect->clear();
     // 先选择默认的地图
     terrainMapRecord = terrainMapRecord_open;
     terrainMapRecord_pcl = terrainMapRecord_pcl_open;
+    return;
 }
 
 void LpNode::pcd_choose()

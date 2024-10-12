@@ -93,8 +93,10 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
         }
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
     }
-    if (pctlPtr->param.safetyStop)
+    if (pctlPtr->param.safetyStop && abs(vehicleSpeed) < 0.1)
     {
+        cmd_vel.linear.x = 0.0;
+        cmd_vel.angular.z = 0.0;
         cmd_vel.angular.x = 0.0;
     }
     else

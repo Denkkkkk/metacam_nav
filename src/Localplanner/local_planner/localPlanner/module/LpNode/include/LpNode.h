@@ -54,8 +54,6 @@ private:
     ros::Publisher pubAddPoints;
     int Xbias;
     int Ybias;
-    std::string pcd_path_rmuc;
-    std::string pcd_path_qingqing;
     std::string pcd_path_open;
     std::string pcd_path_close;
     std::string pcd_path_protect;

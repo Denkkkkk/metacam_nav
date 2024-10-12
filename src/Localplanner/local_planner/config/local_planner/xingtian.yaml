@@ -1,0 +1,45 @@
+
+localPlanner:
+  # 车体半径和最大速度
+  vehicleRadius: 0.6
+  maxSpeed: 0.75
+
+  # 用于规划的点云的参数
+  terrainVoxelSize: 0.1  # 地形分析的体素大小
+  checkObstacle: true  # 控制是否根据用于的规划点云进行地形障碍检查
+  checkRotObstacle: false  # 长条形车或差速底盘过窄道，限制转弯
+  close_map_time: 2.5  # 关闭局部地图的超时时间
+  use_fail_closemap: true  # 开启规划失败就关闭点云地图
+  adjacentRange: 2.8  # 第一次裁剪规划点云的范围
+  pathRangeStep: 0.4  # 上面这个系数的缩小步长
+  minSpeedRange: 1.2
+  minPathRange: 0.45  # 最小路径范围
+  pathRangeBySpeed: false  # 根据速度调整规划范围
+  slow_dis: 0.6
+
+  # 障碍物高度相关控制
+  obstacleHeightThre: 0.1  # 地形分析中，intensity的筛选阈值
+  useCost: false  # 是否开启路径评分处理
+  groundHeightThre: -0.1  # 点云高度大于这个阈值会惩罚得分
+  costHeightThre: 0.1  # 高度得分最低不能低于这个值
+  costScore: 0.02  # 高度得分的最低值
+  pointPerPathThre: 1  # 同一块体素位置需要的障碍物点云数量
+
+  # 目标点或转弯等方向信息的控制
+  dirWeight: 80  # 只允许路径终点在这个转弯角度内的路径通过
+  dirThre: 85  # 根据车头或目标点筛选路径
+  detourWei: 1.8  # 绕行系数
+  pathCropByGoal: true  # 删除超过圆形区域的路径点
+  goalClearRange: 0.4  # 快到目的地时减小障碍物检测的范围
+  goalClearRange_global: 0.4  # 全局范围
+
+  # scale点云收拢比例控制
+  usePathScale: false
+  defPathScale: 1.0  # 默认缩放范围
+  minPathScale: 1.0
+  pathScaleStep: 0.2
+  pathScaleBySpeed: false
+
+  # 其他
+  Xbias: 0  # 可视化用于剪枝的周围障碍物点云偏移量X
+  Ybias: 0  # 可视化用于剪枝的周围障碍物点云偏移量Y

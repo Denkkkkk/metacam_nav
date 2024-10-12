@@ -2,16 +2,13 @@
     <!-- 选择性开启-->
     <arg name="use_global_planner" default="false" />
     <arg name="use_rviz" default="false" />
-    <arg name="use_map" default="true" />
 
     <!-- 局部规划的初始点位-->
     <arg name="ns" default="TITA" />
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
-    <arg name="min_intensity" default="0.1" />
     <arg name="min_intensity_global" default="0.17" />
-    <arg name="pcd_path" default="" />
     <param name="use_sim_time" value="false" />
 
     <include file="$(find map_to_odom)/launch/map_to_odom.launch">
@@ -27,9 +24,6 @@
         <arg name="vehicleX" value="$(arg vehicleX)" />
         <arg name="vehicleY" value="$(arg vehicleY)" />
         <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
-        <arg name="use_map" value="$(arg use_map)" />
-        <arg name="min_intensity" value="$(arg min_intensity)" />
-        <arg name="pcd_path" value="$(arg pcd_path)" />
     </include>
 
     <!-- 启动rviz -->

@@ -18,9 +18,7 @@
   <!-- Autonomous Exploration Development Environment参数 -->
   <arg name="world_name" default="RMUC2024" />
   <arg name="checkTerrainConn" default="true" />
-  <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
-  <arg name="pcd_path" default="$(find map_manager)/pcd/rmuc.pcd" /> -->
-  <arg name="min_intensity" default="0.2" />
+  <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
   <arg name="min_intensity_global" default="0.25" />
   <arg name="min_intensity_blind" default="0.33" />
   <arg name="down_hill_judge_time" default="0.4" />
@@ -48,8 +46,6 @@
     <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
     <arg name="checkTerrainConn" value="$(arg checkTerrainConn)" />
     <arg name="use_map" value="$(arg use_map)" />
-    <arg name="min_intensity" value="$(arg min_intensity)" />
-    <!-- <arg name="pcd_path" value="$(arg pcd_path)" /> -->
   </include>
 
   <!-- odom-map -->
