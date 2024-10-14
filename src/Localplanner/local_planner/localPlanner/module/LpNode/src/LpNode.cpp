@@ -15,11 +15,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
                    terrainMapRecord_pcl_close(new pcl::PointCloud<pcl::PointXYZI>()),
                    terrainMapRecord_pcl_protect(new pcl::PointCloud<pcl::PointXYZI>())
 {
-    nhPrivate.getParam("pathFolder", pathFolder);
-    nhPrivate.getParam("terrainVoxelSize", terrainVoxelSize);
-    nhPrivate.getParam("checkRotObstacle", checkRotObstacle);
-    nhPrivate.getParam("maxSpeed", maxSpeed);
-    nhPrivate.getParam("defpathScale", defPathScale);
     nhPrivate.getParam("goalX", goalX);
     nhPrivate.getParam("goalY", goalY);
     nhPrivate.getParam("Xbias", Xbias);
