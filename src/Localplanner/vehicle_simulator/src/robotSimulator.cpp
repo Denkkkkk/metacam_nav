@@ -71,7 +71,11 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     nhPrivate.param<std::string>("ns", ns, "");
-    robotFrame = ns + "/vehicle";
+    if (ns != "")
+    {
+        ns += "/";
+    }
+    robotFrame = ns + "vehicle";
     velodyne_topic1 = ns + "/velodyne_points";
     velodyne_topic2 = ns + "/velodyne_points2";
     tf::TransformListener listener;

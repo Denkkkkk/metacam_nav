@@ -222,6 +222,4 @@ void RoboCtrl::imuCallback(const sensor_msgs::Imu::ConstPtr &imu)
     {
         angular_velocity = imu->angular_velocity.z;
     }
-    // 直接使用imu的角速度
-    pctlPtr->param.spinSpeed = angular_velocity;
 }

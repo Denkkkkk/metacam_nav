@@ -16,7 +16,6 @@ struct Params
     double getGoal_speed;
     double goal_zero_bias;
     double dirDiffThre;
-    double spinSpeed;
     double endGoalDis;
     bool useCloudSlowDown;
     double cloudSlow_minSpeed;
@@ -39,8 +38,6 @@ struct Params
     double closeGoal_direct_dis;
     double quick_turn_N;
     double close_direct_speed;
-    double update_begin_dis_vehicleDis;
-    double update_begin_dis_goalPoint;
     bool use_virtual_head;
     bool use_move_base;
 };
@@ -58,5 +55,6 @@ public:
 private:
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::NodeHandle nhPrivate_actual = ros::NodeHandle("pathFollower_actual");
+    ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
     ros::NodeHandle nh;
 };

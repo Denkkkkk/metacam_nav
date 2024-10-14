@@ -24,7 +24,6 @@ int main(int argc, char **argv)
          *
          */
         LocalPanner.lctlPtr->update_params();
-        LocalPanner.pcd_choose();
         ros::spinOnce();
         /**
          * @brief 相关参数更新，需要读取路径文件

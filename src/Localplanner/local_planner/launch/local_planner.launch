@@ -1,74 +1,30 @@
 <launch>
   <arg name="usual_pcd_path" default="" />
-  <arg name="close_direct_speed" default="0.5" />
-  <arg name="curvature" default="9" />
-  <arg name="terrainVoxelSize" value="0.1" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
-  <arg name="goalX" default="$(arg vehicleX)" />
-  <arg name="goalY" default="$(arg vehicleY)" />
-  <arg name="robotFrame" default="Sentry/vehicle" />
-  <arg name="cmdTopic" default="/cmd_vel" />
+  <arg name="ns" default="" />
   <arg name="use_map" default="false" />
-  <arg name="update_begin_dis_goalPoint" default="4.0" />
-  <arg name="update_begin_dis_vehicleDis" default="6.0" />
-
-  <arg name="yaml_path" default="$(find local_planner)/config/xingtian.yaml" />
+  <arg name="robot" default="xingtian" />
 
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
-    <rosparam command="load" file="$(arg yaml_path)" />
+    <rosparam command="load" file="$(find local_planner)/config/usual_config/$(arg robot).yaml" />
+    <rosparam command="load" file="$(find local_planner)/config/local_planner/$(arg robot).yaml" />
 
     <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
-    <param name="robotFrame" type="string" value="$(arg robotFrame)" />  <!--控制是否根据用于的规划点云进行地形障碍检查，也可以通过发布/check_obstacle随时控制-->
-    <param name="pcd_path" value="$(arg pcd_path)" />
+    <param name="use_map" value="$(arg use_map)" />
+    <param name="ns" type="string" value="$(arg ns)" />
     <param name="usual_pcd_path" value="$(arg usual_pcd_path)" />
-    <param name="goalX" type="double" value="$(arg goalX)" />
-    <param name="goalY" type="double" value="$(arg goalY)" />
+    <param name="goalX" type="double" value="$(arg vehicleX)" />
+    <param name="goalY" type="double" value="$(arg vehicleY)" />
   </node>
 
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">
-    <param name="lookAheadDis" type="double" value="0.5" />        <!--@-每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向-->
-    <param name="maxSpeed" value="$(arg maxSpeed)" />
-    <param name="useLoaclSlow" type="bool" value="true" />         <!--@-启用局部路径跟踪减速-->
-    <param name="endPathDis" value="0.02" />                       <!--@-跟踪到局部路径的末尾多少距离内就不再跟踪-->
-    <param name="pathSlowDisThre" type="double" value="0.4" />    <!--@-局部路径跟踪开始减速的距离阈值,局部路径最长就1m-->
-    <param name="getPath_speed" type="double" value="0.1" />       <!--@-追踪到局部路径末端时的速度-->
-    <param name="path_zero_bias" type="double" value="0.01" />     <!--@-追踪路径减速的零点偏移-->
-    <param name="goalSlowDisThre" type="double" value="1.3" />     <!--@-靠近全局目标点时减速-->
-    <param name="getGoal_speed" type="double" value="$(arg close_direct_speed)" />      <!--@-刚好追踪到目标点时的速度 -->
-    <param name="goal_zero_bias" type="double" value="0.0" />      <!--@-到点减速的零点偏移-->
-    <param name="spinSpeed" value="0" />                            <!--@-小陀螺转速-->
-    <param name="goalX" value="$(arg goalX)" />
-    <param name="goalY" value="$(arg goalY)" />
-    <param name="endGoalDis" value="0.6" />                         <!--@-到达目标点范围内就停止-->
-    <param name="useCloudSlowDown" value="false" />                 <!--使能根据周围障碍物点云密集情况进行减速-->
-    <param name="cloudSlow_minSpeed" value="1.0" />                 <!--根据周围障碍物减速的最小速度-->
-    <param name="minSpeed" value="$(arg minSpeed)" />               <!--根据周围障碍物减速的最小速度-->
-    <param name="curvature" value="$(arg curvature)" />             <!--@-根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好-->
-    <param name="slowBegin" value="3" />                            <!--@-根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好-->
-    <param name="safetyStop" type="bool" value="false" />           <!--@-紧急刹车-->
-    <param name="cmdTopic" type="string" value="$(arg cmdTopic)" />
-    <param name="maxAddAccel" type="double" value="4.0" />         <!--@-最大加速速度-->
-    <param name="maxSlowAccel" type="double" value="4.0" />        <!--@-最大减速加速度-->
-    <param name="yawRateGain" type="double" value="5.0" />         <!--@-一般情况下的伪车头转动增益-->
-    <param name="stopYawRateGain" type="double" value="12.0" />     <!--@-静止下的伪车头转动增益-->
-    <param name="maxYawRate" type="double" value="30.0" />         <!--车头最大转动角速度-->
-    <param name="maxStopYawRate" type="double" value="60.0" />     <!--低速下车头最大转动角速度,有过大保护-->
-    <param name="goal_path_direct" type="bool" value="true" />      <!--是否全局路径直接追踪-->
-    <param name="use_MIDPlanning_slow" type="bool" value="true" />  <!--是否使用转弯点减速-->
-    <param name="MIDPlanning_slow_rate" type="double" value="0.7" /><!--转弯点减速比例-->
-    <param name="MIDPlanning_minSpeed" type="double" value="1.0" />
-    <param name="dirDiffThre" type="double" value="0.26" />         <!--@-角度差-->
-    <param name="use_closeGoal_direct" type="bool" value="false" />  <!--@-开启到目标点附近直接冲向目标点-->
-    <param name="closeGoal_direct_dis" type="double" value="0.3" /><!--@-到目标点附近直冲的阈值-->
-    <param name="close_direct_speed" type="double" value="$(arg close_direct_speed)" />
+    <rosparam command="load" file="$(find local_planner)/config/usual_config/$(arg robot).yaml" />
+    <rosparam command="load" file="$(find local_planner)/config/path_follower/$(arg robot).yaml" />
+
+    <param name="ns" type="string" value="$(arg ns)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->
-    <param name="quick_turn_N" type="double" value="0.03" />        <!--减速到这个*maxAddAccel/100就允许快速转向-->
-    <param name="update_begin_dis_goalPoint" value="$(arg update_begin_dis_goalPoint)" />
-    <param name="update_begin_dis_vehicleDis" value="$(arg update_begin_dis_vehicleDis)" />
-    <param name="use_virtual_head" value="false" />
-    <param name="use_move_base" value="false" />
   </node>
 
 </launch> 

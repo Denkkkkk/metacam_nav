@@ -10,19 +10,23 @@
  */
 #include "LpNode.h"
 
-LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>()),
-                   terrainMapRecord_pcl_open(new pcl::PointCloud<pcl::PointXYZI>()),
-                   terrainMapRecord_pcl_close(new pcl::PointCloud<pcl::PointXYZI>()),
-                   terrainMapRecord_pcl_protect(new pcl::PointCloud<pcl::PointXYZI>())
+LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
 {
+    nhPrivate.getParam("pathFolder", pathFolder);
+
     nhPrivate.getParam("goalX", goalX);
     nhPrivate.getParam("goalY", goalY);
     nhPrivate.getParam("Xbias", Xbias);
     nhPrivate.getParam("Ybias", Ybias);
-    nhPrivate.getParam("pcd_path", pcd_path_open);
     nhPrivate.getParam("usual_pcd_path", usual_pcd_path);
     nhPrivate.getParam("detourWei", detourWei);
-    nhPrivate.getParam("robotFrame", robotFrame);
+    string ns;
+    nhPrivate.getParam("ns", ns);
+    if (ns != "")
+    {
+        ns += "/";
+    }
+    robotFrame = ns + "vehicle";
     lctlPtr = new ParamControl();
     lctlPtr->load_params();
     load_pcd_map();
@@ -135,11 +139,11 @@ void LpNode::pathRange_from_speed()
     if (pathRange < lctlPtr->param.minPathRange)
         pathRange = lctlPtr->param.minPathRange;
 
-    pathScale = defPathScale; // local_planner外的暂存值，很关键，他只会是预设定的maxPathScale，因为loacal_planner结束是都会让pathScale回到这个值
+    pathScale = lctlPtr->param.defPathScale; // local_planner外的暂存值，很关键，他只会是预设定的maxPathScale，因为loacal_planner结束是都会让pathScale回到这个值
     // 如果开启了pathScaleBySpeed，那么path（黄色）随着速度的变化而变化,并且把pathScale的最小值限制在了minPathScale里
     if (lctlPtr->param.pathScaleBySpeed)
     {
-        pathScale = defPathScale * (joySpeed / maxSpeed);
+        pathScale = lctlPtr->param.defPathScale * (joySpeed / maxSpeed);
     }
     if (pathScale < lctlPtr->param.minPathScale)
         pathScale = lctlPtr->param.minPathScale;
@@ -613,31 +617,9 @@ void LpNode::close_map()
 void LpNode::load_pcd_map()
 {
     // 加载允许下台阶的点云图
-    pcl::io::loadPCDFile(pcd_path_open, terrainMapRecord_open);
-    terrainMapRecord_open.header.frame_id = "map";
-    terrainMapRecord_open.header.stamp = ros::Time::now();
-    pcl::fromROSMsg(terrainMapRecord_open, *terrainMapRecord_pcl_open);
-    // 加载不允许下台阶的点云图
-    terrainMapRecord_close = terrainMapRecord_open;
-    terrainMapRecord_pcl_close = terrainMapRecord_pcl_open;
-    // 加载保护区的点云图
-    terrainMapRecord_pcl_protect->clear();
-    // 先选择默认的地图
-    terrainMapRecord = terrainMapRecord_open;
-    terrainMapRecord_pcl = terrainMapRecord_pcl_open;
+    pcl::io::loadPCDFile(usual_pcd_path, terrainMapRecord);
+    terrainMapRecord.header.frame_id = "map";
+    terrainMapRecord.header.stamp = ros::Time::now();
+    pcl::fromROSMsg(terrainMapRecord, *terrainMapRecord_pcl);
     return;
-}
-
-void LpNode::pcd_choose()
-{
-    if (lctlPtr->param.use_pcd_close)
-    {
-        terrainMapRecord = terrainMapRecord_close;
-        terrainMapRecord_pcl = terrainMapRecord_pcl_close;
-    }
-    else
-    {
-        terrainMapRecord = terrainMapRecord_open;
-        terrainMapRecord_pcl = terrainMapRecord_pcl_open;
-    }
 }

@@ -103,10 +103,6 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     {
         *terrainCloudCrop = *terrainMapRecord_pcl;
     }
-    else
-    {
-        *terrainCloudCrop = *terrainMapRecord_pcl_protect;
-    }
     int terrainCloudSize = terrainCloud->points.size();
     // 排除掉->太远，（太低或代价评价）
     for (int i = 0; i < terrainCloudSize; i++)

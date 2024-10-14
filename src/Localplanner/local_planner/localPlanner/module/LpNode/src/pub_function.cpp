@@ -117,6 +117,9 @@ void LpNode::pub_Map()
     }
     else
     {
-        pubMap.publish(terrainMapRecord_protect);
+        sensor_msgs::PointCloud2 temp;
+        temp.header.stamp = ros::Time().now();
+        temp.header.frame_id = "map";
+        pubMap.publish(temp);
     }
 }

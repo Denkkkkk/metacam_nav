@@ -2,6 +2,11 @@
 
 void ParamControl::load_params()
 {
+    // 加载通用参数
+    nhUsual.getParam("maxSpeed", param.maxSpeed);
+
+    nhPrivate.getParam("terrainVoxelSize", param.terrainVoxelSize);
+    nhPrivate.getParam("checkRotObstacle", param.checkRotObstacle);
     nhPrivate.getParam("vehicleRadius", param.vehicleRadius);
     nhPrivate.getParam("checkObstacle", param.checkObstacle);
     nhPrivate.getParam("adjacentRange", param.adjacentRange);
@@ -22,10 +27,10 @@ void ParamControl::load_params()
     nhPrivate.getParam("pathCropByGoal", param.pathCropByGoal);
     nhPrivate.getParam("goalClearRange", param.goalClearRange);
     nhPrivate.getParam("slow_dis", param.slow_dis);
-    nhPrivate.getParam("defPathScale", param.defpathScale);
+    nhPrivate.getParam("defPathScale", param.defPathScale);
     nhPrivate.getParam("usePathScale", param.usePathScale);
     nhPrivate.getParam("minSpeedRange", param.minSpeedRange);
-    nhPrivate.getParam("useMap", param.useMap);
+    nhPrivate.getParam("use_map", param.useMap);
     nhPrivate.getParam("close_map_time", param.close_map_time);
     nhPrivate.getParam("use_fail_closemap", param.use_fail_closemap);
     nhPrivate.getParam("goalClearRange_global", param.goalClearRange_global);

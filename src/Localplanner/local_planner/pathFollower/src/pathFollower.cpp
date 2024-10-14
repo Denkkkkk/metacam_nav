@@ -20,9 +20,13 @@ RoboCtrl::RoboCtrl()
     goal_point_origin = way_point;
     pctlPtr->load_params();
     use_real_goal = true;
-    nhPrivate.param<std::string>("cmdTopic", cmdTopic, "/cmd_vel");
     nhPrivate.param<std::string>("ns", ns, "");
-    robot_frame = ns + "/vehicle";
+    cmdTopic = ns + "/cmd_vel";
+    if (ns != "")
+    {
+        ns += "/";
+    }
+    robot_frame = ns + "vehicle";
     subOdom = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &RoboCtrl::odomHandler, this);
     if (pctlPtr->param.use_move_base)
     {
@@ -72,14 +76,6 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
             cmd_vel.linear.x = vehicleSpeed * cos(vh_to_v);
             cmd_vel.linear.y = -vehicleSpeed * sin(vh_to_v);
         }
-        if (pctlPtr->param.spinSpeed != 0) // 仿真给决策控制的云台自转
-        {
-            cmd_vel.angular.z = pctlPtr->param.spinSpeed;
-        }
-        else
-        {
-            cmd_vel.angular.z = 0;
-        }
     }
     else
     {
@@ -103,7 +99,6 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     {
         cmd_vel.angular.x = -1.0;
     }
-    // ROS_INFO("TEST:%f, vehicleYaw: %f, pctlPtr->param.spinSpeed:%f", vh_to_v, vehicleYaw, pctlPtr->param.spinSpeed);
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
     ROS_WARN("vehicleSpeed: %f, cmd_vel.angular.z:%f", vehicleSpeed, cmd_vel.angular.z);
@@ -129,14 +124,6 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
             double goal_to_vhi = vehicleYaw - goal_dir;
             cmd_vel.linear.x = vehicleSpeed * cos(goal_to_vhi);
             cmd_vel.linear.y = -vehicleSpeed * sin(goal_to_vhi);
-        }
-        if (pctlPtr->param.spinSpeed != 0) // 仿真给决策控制的云台自转
-        {
-            cmd_vel.angular.z = pctlPtr->param.spinSpeed;
-        }
-        else
-        {
-            cmd_vel.angular.z = 0;
         }
     }
     else

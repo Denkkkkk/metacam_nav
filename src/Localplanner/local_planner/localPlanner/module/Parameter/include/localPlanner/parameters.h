@@ -6,6 +6,9 @@ using namespace std;
 
 struct Params
 {
+    double terrainVoxelSize;
+    bool checkRotObstacle;
+    double maxSpeed;
     double vehicleRadius;
     bool checkObstacle;
     bool useMap;
@@ -31,7 +34,7 @@ struct Params
     double goalClearRange;
     // pathScale相关控制
     bool usePathScale;
-    double defpathScale;
+    double defPathScale;
     double minPathScale;
     double pathScaleStep;
     bool use_pcd_close;
@@ -48,5 +51,6 @@ public:
     Params param;
     Params param_origin;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
+    ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
     ros::NodeHandle nh;
 };

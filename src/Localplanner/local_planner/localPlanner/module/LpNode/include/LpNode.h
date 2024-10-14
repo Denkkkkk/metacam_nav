@@ -54,18 +54,9 @@ private:
     ros::Publisher pubAddPoints;
     int Xbias;
     int Ybias;
-    std::string pcd_path_open;
-    std::string pcd_path_close;
-    std::string pcd_path_protect;
     std::string usual_pcd_path;
     pcl::PointCloud<pcl::PointXYZI>::Ptr terrainMapRecord_pcl;
-    pcl::PointCloud<pcl::PointXYZI>::Ptr terrainMapRecord_pcl_open;
-    pcl::PointCloud<pcl::PointXYZI>::Ptr terrainMapRecord_pcl_close;
-    pcl::PointCloud<pcl::PointXYZI>::Ptr terrainMapRecord_pcl_protect;
     sensor_msgs::PointCloud2 terrainMapRecord;
-    sensor_msgs::PointCloud2 terrainMapRecord_open;
-    sensor_msgs::PointCloud2 terrainMapRecord_close;
-    sensor_msgs::PointCloud2 terrainMapRecord_protect;
     std::string robotFrame;
     visualization_msgs::Marker marker; // 可视化的形状
     uint32_t shape;
@@ -129,7 +120,6 @@ public:
     void pub_Map();                                              // 发布地形点云
     void makerInit();
     void close_map();
-    void pcd_choose(); // 选择是否关闭下台阶的地图
     double close_map_begin = -1.0;
     bool need_close_map = false;
     bool need_read_path = false;

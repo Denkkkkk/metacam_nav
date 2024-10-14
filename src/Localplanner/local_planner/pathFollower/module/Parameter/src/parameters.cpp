@@ -2,10 +2,10 @@
 
 void ParamControl::load_params()
 {
+    nhUsual.getParam("maxSpeed", param.maxSpeed);
+
     nhPrivate.getParam("lookAheadDis", param.lookAheadDis);
-    nhPrivate.getParam("maxSpeed", param.maxSpeed);
     nhPrivate.getParam("pathSlowDisThre", param.pathSlowDisThre);
-    nhPrivate.getParam("spinSpeed", param.spinSpeed);
     nhPrivate.getParam("endGoalDis", param.endGoalDis);
     nhPrivate.getParam("endPathDis", param.endPathDis);
     nhPrivate.getParam("useCloudSlowDown", param.useCloudSlowDown);
@@ -35,8 +35,6 @@ void ParamControl::load_params()
     nhPrivate.getParam("closeGoal_direct_dis", param.closeGoal_direct_dis);
     nhPrivate.getParam("quick_turn_N", param.quick_turn_N);
     nhPrivate.param("close_direct_speed", param.close_direct_speed, 0.4);
-    nhPrivate.param("update_begin_dis_goalPoint", param.update_begin_dis_goalPoint, 4.0);
-    nhPrivate.param("update_begin_dis_vehicleDis", param.update_begin_dis_vehicleDis, 5.0);
     nhPrivate.param("use_virtual_head", param.use_virtual_head, false);
     nhPrivate.param("use_move_base", param.use_move_base, false);
     param_origin = param;
@@ -53,7 +51,6 @@ void ParamControl::output_params()
     nhPrivate_actual.setParam("lookAheadDis", param.lookAheadDis);
     nhPrivate_actual.setParam("maxSpeed", param.maxSpeed);
     nhPrivate_actual.setParam("pathSlowDisThre", param.pathSlowDisThre);
-    nhPrivate_actual.setParam("spinSpeed", param.spinSpeed);
     nhPrivate_actual.setParam("endGoalDis", param.endGoalDis);
     nhPrivate_actual.setParam("endPathDis", param.endPathDis);
     nhPrivate_actual.setParam("useCloudSlowDown", param.useCloudSlowDown);
