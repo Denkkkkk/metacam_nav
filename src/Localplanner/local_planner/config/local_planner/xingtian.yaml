@@ -2,7 +2,6 @@
 localPlanner:
   # 车体半径和最大速度
   vehicleRadius: 0.6
-  maxSpeed: 0.75
 
   # 用于规划的点云的参数
   terrainVoxelSize: 0.1  # 地形分析的体素大小

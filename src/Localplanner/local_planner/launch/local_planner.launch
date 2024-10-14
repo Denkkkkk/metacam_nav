@@ -13,19 +13,17 @@
   <arg name="update_begin_dis_goalPoint" default="4.0" />
   <arg name="update_begin_dis_vehicleDis" default="6.0" />
 
-  <arg name="yaml_path" default="$(find local_planner)/config/XT_network.yaml" />
+  <arg name="yaml_path" default="$(find local_planner)/config/xingtian.yaml" />
 
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
-    <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
-
     <rosparam command="load" file="$(arg yaml_path)" />
-   
+
+    <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
     <param name="robotFrame" type="string" value="$(arg robotFrame)" />  <!--控制是否根据用于的规划点云进行地形障碍检查，也可以通过发布/check_obstacle随时控制-->
     <param name="pcd_path" value="$(arg pcd_path)" />
     <param name="usual_pcd_path" value="$(arg usual_pcd_path)" />
     <param name="goalX" type="double" value="$(arg goalX)" />
     <param name="goalY" type="double" value="$(arg goalY)" />
-
   </node>
 
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">
