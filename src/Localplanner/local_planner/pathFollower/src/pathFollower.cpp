@@ -392,7 +392,7 @@ void RoboCtrl::pure_persuit()
         {
             if (abs(dirDiff) < PI / 4)
             {
-                vehicleYawRate = -pctlPtr->param.stopYawRateGain * dirDiff / 2.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->param.stopYawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
             }
             else
             {
@@ -403,14 +403,14 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxStopYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxStopYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate / pub_rate) > fabs(dirDiff))
+            if (fabs(vehicleYawRate) > fabs(dirDiff))
             {
-                vehicleYawRate = -dirDiff * pub_rate;
+                vehicleYawRate = -dirDiff;
             }
         }
         else
         {
-            if (abs(dirDiff) < PI / 7) // 25.5度误差内
+            if (abs(dirDiff) < PI / 6) // 25.5度误差内
             {
                 vehicleYawRate = -pctlPtr->param.yawRateGain * dirDiff / 2.0; // 偏差角较小时不用转这么快
             }
@@ -423,9 +423,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate / pub_rate) > fabs(dirDiff))
+            if (fabs(vehicleYawRate) > fabs(dirDiff))
             {
-                vehicleYawRate = -dirDiff * pub_rate;
+                vehicleYawRate = -dirDiff * 3;
             }
         }
         ROS_WARN("vehicleYawRate: %f", vehicleYawRate);
@@ -482,7 +482,7 @@ void RoboCtrl::pure_persuit()
         // 角速度
         if (pctlPtr->param.use_virtual_head)
         {
-            virture_headDir = virture_headDir + vehicleYawRate / pub_rate;
+            virture_headDir = virture_headDir + vehicleYawRate;
             while (virture_headDir > M_PI || virture_headDir < -M_PI)
             {
                 if (virture_headDir > M_PI)
