@@ -170,27 +170,39 @@ int main(int argc, char **argv)
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
-            // 恢复停止标志位
-            std_msgs::Bool stop;
-            stop.data = false;
-            stop_pub.publish(stop);
             if (nav_model.points.empty())
             {
                 ROS_WARN("NO Navigation Point!");
+                // 强制停止
+                std_msgs::Bool stop;
+                stop.data = true;
+                stop_pub.publish(stop);
                 continue;
             }
             else if (nav_model.parameters.empty())
             {
                 ROS_WARN("nav_model Parameters Is Empty!");
+                // 强制停止
+                std_msgs::Bool stop;
+                stop.data = true;
+                stop_pub.publish(stop);
                 continue;
             }
             else if (nav_model.parameters[0] <= 0)
             {
                 ROS_WARN("nav_model.parameters[0] :%f !", nav_model.parameters[0]);
+                // 强制停止
+                std_msgs::Bool stop;
+                stop.data = true;
+                stop_pub.publish(stop);
                 continue;
             }
             else
             {
+                // 恢复停止标志位
+                std_msgs::Bool stop;
+                stop.data = false;
+                stop_pub.publish(stop);
                 const auto &point = nav_model.points.at(nav_index);
                 // way_point赋值
                 way_point.header.frame_id = "map";
