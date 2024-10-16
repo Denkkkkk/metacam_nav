@@ -43,14 +43,13 @@ RoboCtrl::RoboCtrl()
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &RoboCtrl::stopHandler, this);
     subGoal = nh.subscribe<geometry_msgs::PoseStamped>("/way_point", 5, &RoboCtrl::goalHandler, this);
     subControlMode = nh.subscribe("/control_mode", 5, &RoboCtrl::controlModeCallback, this);
-    // subIMU = nh.subscribe<sensor_msgs::Imu>("/livox/imu_192_168_1_100", 5, &RoboCtrl::imuCallback, this);
 
     pubCmd_vel = nh.advertise<geometry_msgs::Twist>(cmdTopic, 5);
     pubSpeed = nh.advertise<std_msgs::Float32>("/speed", 5);
     pubGoalPathDir = nh.advertise<geometry_msgs::PoseStamped>("/goal_path_dir", 5);
     pubGetGoal = nh.advertise<std_msgs::Bool>("/get_goal", 1);
     maxSpeed1 = pctlPtr->param.maxSpeed;
-    pub_rate = 12;
+    pub_rate = 20;
 }
 
 /**
@@ -79,7 +78,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     }
     else
     {
-        if (fabs(vehicleSpeed) <= pctlPtr->param.maxAddAccel / pub_rate)
+        if (fabs(vehicleSpeed) < pctlPtr->param.maxAddAccel / pub_rate)
         {
             cmd_vel.linear.x = 0; // 速度太小直接赋为0
         }
@@ -129,9 +128,16 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
     else
     {
         double goal_to_vhi = vehicleYaw - goal_dir;
-        vehicleYawRate = -pctlPtr->param.stopYawRateGain * goal_to_vhi;
-        cmd_vel.linear.x = vehicleSpeed;    // 前向速度
+        vehicleYawRate = -pctlPtr->param.yawRateGain * goal_to_vhi;
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
+        if (fabs(vehicleSpeed) < pctlPtr->param.maxSlowAccel / pub_rate)
+        {
+            cmd_vel.linear.x = 0;
+        }
+        else
+        {
+            cmd_vel.linear.x = vehicleSpeed; // 前向速度
+        }
     }
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
@@ -390,9 +396,9 @@ void RoboCtrl::pure_persuit()
         }
         else if (fabs(vehicleSpeed) < pctlPtr->param.quick_turn_speed)
         {
-            if (abs(dirDiff) < PI / 4)
+            if (abs(dirDiff) < PI / 5)
             {
-                vehicleYawRate = -pctlPtr->param.stopYawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->param.stopYawRateGain * dirDiff / 3.0; // 偏差角较小时不用转这么快
             }
             else
             {
@@ -403,16 +409,16 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxStopYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxStopYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate) > fabs(dirDiff))
+            if (fabs(vehicleYawRate) > fabs(dirDiff) * 10)
             {
-                vehicleYawRate = -dirDiff;
+                vehicleYawRate = -dirDiff * 10;
             }
         }
         else
         {
-            if (abs(dirDiff) < PI / 6) // 25.5度误差内
+            if (abs(dirDiff) < PI / 4) // 25.5度误差内
             {
-                vehicleYawRate = -pctlPtr->param.yawRateGain * dirDiff / 2.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->param.yawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
             }
             else
             {
@@ -423,9 +429,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->param.maxYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->param.maxYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate) > fabs(dirDiff))
+            if (fabs(vehicleYawRate) > fabs(dirDiff) * 10)
             {
-                vehicleYawRate = -dirDiff * 3;
+                vehicleYawRate = -dirDiff * 10;
             }
         }
         ROS_WARN("vehicleYawRate: %f", vehicleYawRate);
@@ -453,6 +459,15 @@ void RoboCtrl::pure_persuit()
                 vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
             else if (vehicleSpeed > joySpeed2)
                 vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
+
+            if (vehicleSpeed > pctlPtr->param.maxSpeed)
+            {
+                vehicleSpeed = pctlPtr->param.maxSpeed;
+            }
+            else if (vehicleSpeed < -pctlPtr->param.maxSpeed)
+            {
+                vehicleSpeed = -pctlPtr->param.maxSpeed;
+            }
 
             // 速度小允许跳变
             if (fabs(vehicleSpeed) < pctlPtr->param.minSpeed)

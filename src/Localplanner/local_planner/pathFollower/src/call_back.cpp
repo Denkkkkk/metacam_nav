@@ -211,15 +211,3 @@ void RoboCtrl::slowDownHandler(const std_msgs::Float32::ConstPtr &slowDown)
     slowDown1 = slowDown->data;
     slowDown1_update_time = ros::Time::now().toSec();
 }
-
-void RoboCtrl::imuCallback(const sensor_msgs::Imu::ConstPtr &imu)
-{
-    if (fabs(imu->angular_velocity.z) < 0.5)
-    {
-        angular_velocity = 0;
-    }
-    else
-    {
-        angular_velocity = imu->angular_velocity.z;
-    }
-}
