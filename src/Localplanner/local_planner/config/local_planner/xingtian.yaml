@@ -1,6 +1,7 @@
 # 常用参数
 expandRadius: 0.6 # 点云膨胀半径
-
+vehicleWidth: 0.5  # 车宽
+vehicleLength: 0.5  # 车长
 
 dirThre: 120  # 目标点方向允许规划范围
 minPathRange: 0.5  # 最小路径范围
@@ -12,7 +13,7 @@ obstacleHeightThre: 0.1  # 地形分析中，intensity的筛选阈值
 # 用于规划的点云的参数
 terrainVoxelSize: 0.1  # 地形分析的体素大小
 checkObstacle: true  # 控制是否根据用于的规划点云进行地形障碍检查
-checkRotObstacle: false  # 长条形车或差速底盘过窄道，限制转弯
+checkRotObstacle: true  # 长条形车或差速底盘过窄道，限制转弯
 close_map_time: 2.5  # 关闭局部地图的超时时间
 use_fail_closemap: true  # 开启规划失败就关闭点云地图
 adjacentRange: 3.0  # 第一次裁剪规划点云的范围

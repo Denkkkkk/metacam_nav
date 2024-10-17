@@ -40,6 +40,8 @@ struct Params
     bool use_pcd_close;
     double goalClearRange_global;
     float add_point_radius;
+    float vehicleLength;
+    float vehicleWidth;
 };
 
 class ParamControl
@@ -47,6 +49,10 @@ class ParamControl
 public:
     void load_params();
     void update_params();
+    inline void reset_params()
+    {
+        param = param_origin;
+    }
 
     Params param;
     Params param_origin;

@@ -182,6 +182,10 @@ void LpNode::local_planner()
         {
             block_flag[i] = false;
         }
+        minObsAngCW = -180.0;
+        minObsAngCCW = 180.0;
+        diameter = sqrt(lctlPtr->param.vehicleLength / 2.0 * lctlPtr->param.vehicleLength / 2.0 + lctlPtr->param.vehicleWidth / 2.0 * lctlPtr->param.vehicleWidth / 2.0);
+        angOffset = atan2(lctlPtr->param.vehicleWidth, lctlPtr->param.vehicleLength) * 180.0 / PI;
         for (int i = 0; i < plannerCloudCropSize; i++)
         {
             float x = plannerCloudCrop->points[i].x * pathScale; // 先除了用来计算，后面发布规划路径点位和可行路径的时候会乘回来，使障碍物看得更远
@@ -525,26 +529,6 @@ void LpNode::count_PathPerGroupScore(int pathId, int rotDir)
     }
 }
 
-void LpNode::select_from_dir(float &maxScore, int &selectedGroupID)
-{
-    for (int i = 0; i < 36 * groupNum; i++)
-    {
-        int rotDir = int(i / pathNum);
-        float rotAng = (10.0 * rotDir - 180.0) * PI / 180;
-        float rotDeg = 10.0 * rotDir;
-        if (rotDeg > 180.0)
-            rotDeg -= 360.0;
-        // 这里在对侧方碰撞进行限制了之后，算出了最高得分的路径组的ID
-        if (maxScore < clearPathPerGroupScore[i] && ((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) // 限制转弯
-                                                     || (rotDeg > minObsAngCW && rotDeg < minObsAngCCW)                        // 允许前后双向行驶
-                                                     || !checkRotObstacle))
-        {
-            maxScore = clearPathPerGroupScore[i];
-            selectedGroupID = i; // 选出来的路径时路径组中的某一条，还不是路径组
-        }
-    }
-}
-
 void LpNode::makerInit()
 {
     // 设置可视化的形状
@@ -585,6 +569,7 @@ void LpNode::local_diff_limitTurn(int x, int y)
     // 那么需要根据点云在左侧还是右侧，对此刻的转向进行限制
     // 其中CW即顺时针旋转（Clock Wise）的方向 与CW反方向旋转时为CCW （Counter Clock Wise）
     float angObs = atan2(y, x) * 180.0 / PI;
+
     // 障碍点云在车体的左侧
     if (angObs > 0)
     {
@@ -601,6 +586,29 @@ void LpNode::local_diff_limitTurn(int x, int y)
             minObsAngCW = angObs + angOffset;
         if (minObsAngCCW > 180.0 + angObs - angOffset)
             minObsAngCCW = 180.0 + angObs - angOffset;
+    }
+    if (minObsAngCW > 0)
+        minObsAngCW = 0;
+    if (minObsAngCCW < 0)
+        minObsAngCCW = 0;
+}
+
+void LpNode::select_from_dir(float &maxScore, int &selectedGroupID)
+{
+    for (int i = 0; i < 36 * groupNum; i++)
+    {
+        int rotDir = int(i / pathNum);
+        float rotAng = (10.0 * rotDir - 180.0) * PI / 180;
+        float rotDeg = 10.0 * rotDir; // 和上面唯一的区别就是这个没有修正到-180到180
+        if (rotDeg > 180.0)
+            rotDeg -= 360.0;
+        // 这里在对侧方碰撞进行限制了之后，算出了最高得分的路径组的ID
+        if (maxScore < clearPathPerGroupScore[i] && ((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) // 限制转弯
+                                                     || !checkRotObstacle))
+        {
+            maxScore = clearPathPerGroupScore[i];
+            selectedGroupID = i; // 选出来的路径时路径组中的某一条，还不是路径组
+        }
     }
 }
 

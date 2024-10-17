@@ -19,7 +19,7 @@ void LpNode::pub_allFreePath()
             angDiff = 360.0 - angDiff;
         }
         // 相对目标点之间的规划扇形范围
-        if ((angDiff > lctlPtr->param.dirThre) || !((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) || (rotDeg > minObsAngCW && rotDeg < minObsAngCCW) || !checkRotObstacle))
+        if ((angDiff > lctlPtr->param.dirThre) || !((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) || !checkRotObstacle))
         {
             continue;
         }
