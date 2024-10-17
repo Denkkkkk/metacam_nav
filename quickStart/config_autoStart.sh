@@ -7,10 +7,7 @@ sleep 0.5s
 source ~/.bashrc
 
 sudo apt -y install  wmctrl # 安装wmctrl令窗口置顶
-
-sudo chmod 777 all_kill.sh all_run.sh run.sh
-
-chmod +x all_kill.sh all_run.sh run.sh
+sudo chmod +x all_kill.sh all_run.sh run.sh
 
 cd ..
 dir=$(pwd);

@@ -1,6 +1,0 @@
-<launch>
-    <arg name="mode" default="qinqin" />
-    <node pkg="vehicle_simulator" type="key_control" name="key_control">
-        <param name="mode" type="string" value="$(arg mode)" />
-    </node>
-</launch>

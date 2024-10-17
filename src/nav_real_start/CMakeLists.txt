@@ -8,9 +8,6 @@ project(nav_real_start)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
-        geometry_msgs
-        pcl_conversions
-        pcl_ros
 )
 
 catkin_package(
@@ -24,10 +21,6 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${catkin_INCLUDE_DIRS}
 )
-
-add_executable(start_control src/main.cpp src/start_control.cpp)
-add_dependencies(start_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(start_control ${catkin_LIBRARIES})
 
 install(DIRECTORY launch/
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch

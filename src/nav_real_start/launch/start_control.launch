@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="start_real_robot" type="start_control" name="start_control" respawn="true">
-    </node>
-</launch>

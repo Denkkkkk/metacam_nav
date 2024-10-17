@@ -1,9 +1,0 @@
-<launch>
-    <node pkg="vehicle_simulator" type="car_control" name="car_control" output="screen"/>
-    <node pkg="vehicle_simulator" type="key_control" name="key_control" output="screen">
-        <param name="mode" type="string" value="qinqin" />
-    </node>
-
-    <include file="$(find serial_process)/launch/serial.launch"/>
-    
-</launch>

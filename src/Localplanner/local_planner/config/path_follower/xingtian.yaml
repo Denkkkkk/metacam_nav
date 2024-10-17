@@ -1,34 +1,33 @@
-pathFollower:
-  lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
-  useLoaclSlow: true  # 启用局部路径跟踪减速
-  endPathDis: 0.02  # 跟踪到局部路径的末尾多少距离内就不再跟踪
-  pathSlowDisThre: 0.4  # 局部路径跟踪开始减速的距离阈值, 局部路径最长就1m
-  getPath_speed: 0.1  # 追踪到局部路径末端时的速度
-  path_zero_bias: 0.01  # 追踪路径减速的零点偏移
-  goalSlowDisThre: 1.3  # 靠近全局目标点时减速
-  getGoal_speed: 0.2  # 刚好追踪到目标点时的速度
-  goal_zero_bias: 0.0  # 到点减速的零点偏移
-  endGoalDis: 0.6  # 到达目标点范围内就停止
-  useCloudSlowDown: false  # 使能根据周围障碍物点云密集情况进行减速
-  cloudSlow_minSpeed: 1.0  # 根据周围障碍物减速的最小速度
-  minSpeed: 0.1  # 根据周围障碍物减速的最小速度
-  curvature: 9  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
-  slowBegin: 3  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
-  safetyStop: false  # 紧急刹车
-  maxAddAccel: 4.0  # 最大加速速度
-  maxSlowAccel: 4.0  # 最大减速加速度
-  yawRateGain: 5.0  # 一般情况下的伪车头转动增益
-  stopYawRateGain: 12.0  # 静止下的伪车头转动增益
-  maxYawRate: 30.0  # 车头最大转动角速度
-  maxStopYawRate: 60.0  # 低速下车头最大转动角速度, 有过大保护
-  goal_path_direct: true  # 是否全局路径直接追踪
-  use_MIDPlanning_slow: true  # 是否使用转弯点减速
-  MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
-  MIDPlanning_minSpeed: 1.0
-  dirDiffThre: 0.26  # 角度差
-  use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
-  closeGoal_direct_dis: 0.3  # 到目标点附近直冲的阈值
-  close_direct_speed: 0.2  # 到目标点附近直冲的速度
-  quick_turn_N: 0.03  # 减速到这个*maxAddAccel/100就允许快速转向
-  use_virtual_head: false
-  use_move_base: false
+lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
+useLoaclSlow: true  # 启用局部路径跟踪减速
+endPathDis: 0.02  # 跟踪到局部路径的末尾多少距离内就不再跟踪
+pathSlowDisThre: 0.4  # 局部路径跟踪开始减速的距离阈值, 局部路径最长就1m
+getPath_speed: 0.1  # 追踪到局部路径末端时的速度
+path_zero_bias: 0.01  # 追踪路径减速的零点偏移
+goalSlowDisThre: 1.3  # 靠近全局目标点时减速
+getGoal_speed: 0.2  # 刚好追踪到目标点时的速度
+goal_zero_bias: 0.0  # 到点减速的零点偏移
+endGoalDis: 0.6  # 到达目标点范围内就停止
+useCloudSlowDown: false  # 使能根据周围障碍物点云密集情况进行减速
+cloudSlow_minSpeed: 1.0  # 根据周围障碍物减速的最小速度
+minSpeed: 0.1  # 根据周围障碍物减速的最小速度
+curvature: 9  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
+slowBegin: 3  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
+safetyStop: false  # 紧急刹车
+maxAddAccel: 4.0  # 最大加速速度
+maxSlowAccel: 4.0  # 最大减速加速度
+yawRateGain: 5.0  # 一般情况下的伪车头转动增益
+stopYawRateGain: 12.0  # 静止下的伪车头转动增益
+maxYawRate: 30.0  # 车头最大转动角速度
+maxStopYawRate: 60.0  # 低速下车头最大转动角速度, 有过大保护
+goal_path_direct: true  # 是否全局路径直接追踪
+use_MIDPlanning_slow: true  # 是否使用转弯点减速
+MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
+MIDPlanning_minSpeed: 1.0
+dirDiffThre: 0.26  # 角度差
+use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
+closeGoal_direct_dis: 0.3  # 到目标点附近直冲的阈值
+close_direct_speed: 0.2  # 到目标点附近直冲的速度
+quick_turn_N: 0.03  # 减速到这个*maxAddAccel/100就允许快速转向
+use_virtual_head: false
+use_move_base: false

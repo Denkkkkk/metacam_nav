@@ -64,50 +64,18 @@ while [[ $# -gt 0 ]];do # $#表示参数个数, -gt表示大于
   esac
 done
 
-# 键盘控制实车
-if [ ${para_k} -eq 1 ];
-then
-  gnome-terminal --tab --title="通信接口"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above; 
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  rosrun vehicle_simulator car_control;exec bash"
-
-  gnome-terminal --tab --title="键盘控制"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above; 
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  roslaunch vehicle_simulator key_control.launch;exec bash"
-
-  sleep 1s
-  gnome-terminal --title="串口"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above; 
-  source /opt/ros/noetic/setup.bash; 
-  source devel/setup.bash; 
-  roslaunch serial_process serial.launch;exec bash"
-  exit
-fi
 
 # 启动实车环境
 if [ ${para_r} -eq 1 ];
 then # 启动实车环境
-    gnome-terminal --tab --title="串口"  -- bash -c "
-    source /opt/ros/noetic/setup.bash; 
-    source devel/setup.bash; 
-    roslaunch serial_process serial.launch;exec bash"
-
-    echo "relocalization..."
-    gnome-terminal --tab --title="重定位"  -- bash -c "
-    source /opt/ros/noetic/setup.bash;
-    source devel/setup.bash;
-    roslaunch scan_to_map_relocation scan_to_map_location.launch;exec bash"
-
-    sleep 3.0s
     gnome-terminal --tab --title="real_robot"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above; 
-    source /opt/ros/noetic/setup.bash; 
+    source /opt/ros/$ROS_DISTRO/setup.bash;
     source devel/setup.bash;
-    roslaunch start_real_robot sentry_real2_pointlio.launch;exec bash"
+    roslaunch nav_real_start nav_real_start.launch;exec bash"
 # 启动仿真环境
 else 
         gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-        source /opt/ros/noetic/setup.bash;
+        source /opt/ros/$ROS_DISTRO/setup.bash;
         source devel/setup.bash;
         roslaunch sentry_gazebo startup_robot.launch; exec bash"
 fi
