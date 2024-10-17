@@ -17,6 +17,7 @@ NavigationModel nav_model;
 double vehicle_x = 0.0;
 double vehicle_y = 0.0;
 int nav_index = 0;
+double endGoalDis = 0.5;
 /**
  * @brief 更新导航点参数
  *
@@ -164,6 +165,8 @@ int main(int argc, char **argv)
         loop_rate.sleep();
         ros::spinOnce();
         navStatusPub(nav_status_pub);
+        nh.getParam("/pathFollower/endGoalDis", endGoalDis);
+
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
@@ -203,7 +206,7 @@ int main(int argc, char **argv)
             }
             // 判断到点状态
             double dis = sqrt(pow(vehicle_x - way_point.pose.position.x, 2) + pow(vehicle_y - way_point.pose.position.y, 2));
-            if (dis < 0.6)
+            if (dis < endGoalDis)
             {
                 nav_index += 1;
                 if (nav_index == nav_model.points.size())

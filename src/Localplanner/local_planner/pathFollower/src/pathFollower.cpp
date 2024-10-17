@@ -143,7 +143,7 @@ void RoboCtrl::slowStop()
     if (vehicleSpeed < 0)
     {
         vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
-        if (vehicleSpeed >= -pctlPtr->param.minSpeed)
+        if (vehicleSpeed > -pctlPtr->param.minSpeed)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
@@ -152,7 +152,7 @@ void RoboCtrl::slowStop()
     else if (vehicleSpeed > 0)
     {
         vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
-        if (vehicleSpeed <= pctlPtr->param.minSpeed)
+        if (vehicleSpeed < pctlPtr->param.minSpeed)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
@@ -384,11 +384,11 @@ void RoboCtrl::pure_persuit()
             joySpeed2 *= -1;
         }
         ROS_WARN("dirDiff: %f", dirDiff);
-        if (abs(dirDiff) < 0.05)
+        if (abs(dirDiff) < pctlPtr->param.dirDiffThre_keep)
         {
             vehicleYawRate = 0.0;
         }
-        else if (fabs(vehicleSpeed) < pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate)
+        else if (fabs(vehicleSpeed) < pctlPtr->param.quick_turn_speed)
         {
             if (abs(dirDiff) < PI / 4)
             {
@@ -447,7 +447,7 @@ void RoboCtrl::pure_persuit()
 
         // 当偏差方向在直行区间，全速前进
         // ROS_ERROR("dirDiff: %f", dirDiff);
-        if (fabs(dirDiff) < pctlPtr->param.dirDiffThre)
+        if (fabs(dirDiff) < pctlPtr->param.dirDiffThre_slow)
         {
             if (vehicleSpeed < joySpeed2)
                 vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
@@ -474,9 +474,9 @@ void RoboCtrl::pure_persuit()
         // 偏差较大减速，先转到对应方向再向前
         else
         {
-            if (vehicleSpeed > (pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate))
+            if (vehicleSpeed > pctlPtr->param.quick_turn_speed)
                 vehicleSpeed -= pctlPtr->param.maxSlowAccel / pub_rate;
-            else if (vehicleSpeed < -(pctlPtr->param.quick_turn_N * pctlPtr->param.maxSlowAccel / pub_rate))
+            else if (vehicleSpeed < -pctlPtr->param.quick_turn_speed)
                 vehicleSpeed += pctlPtr->param.maxAddAccel / pub_rate;
         }
         // 角速度

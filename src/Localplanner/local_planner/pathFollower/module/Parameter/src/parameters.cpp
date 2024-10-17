@@ -26,14 +26,15 @@ void ParamControl::load_params()
     nhPrivate.getParam("getGoal_speed", param.getGoal_speed);
     nhPrivate.getParam("use_MIDPlanning_slow", param.use_MIDPlanning_slow);
     nhPrivate.getParam("MIDPlanning_slow_rate", param.MIDPlanning_slow_rate);
-    nhPrivate.getParam("dirDiffThre", param.dirDiffThre);
+    nhPrivate.getParam("dirDiffThre_slow", param.dirDiffThre_slow);
+    nhPrivate.getParam("dirDiffThre_keep", param.dirDiffThre_keep);
     nhPrivate.getParam("getPath_speed", param.getPath_speed);
     nhPrivate.getParam("path_zero_bias", param.path_zero_bias);
     nhPrivate.getParam("goal_zero_bias", param.goal_zero_bias);
     nhPrivate.getParam("MIDPlanning_minSpeed", param.MIDPlanning_minSpeed);
     nhPrivate.getParam("use_closeGoal_direct", param.use_closeGoal_direct);
     nhPrivate.getParam("closeGoal_direct_dis", param.closeGoal_direct_dis);
-    nhPrivate.getParam("quick_turn_N", param.quick_turn_N);
+    nhPrivate.getParam("quick_turn_speed", param.quick_turn_speed);
     nhPrivate.param("close_direct_speed", param.close_direct_speed, 0.4);
     nhPrivate.param("use_virtual_head", param.use_virtual_head, false);
     nhPrivate.param("use_move_base", param.use_move_base, false);
@@ -71,13 +72,14 @@ void ParamControl::output_params()
     nhPrivate_actual.setParam("getGoal_speed", param.getGoal_speed);
     nhPrivate_actual.setParam("use_MIDPlanning_slow", param.use_MIDPlanning_slow);
     nhPrivate_actual.setParam("MIDPlanning_slow_rate", param.MIDPlanning_slow_rate);
-    nhPrivate_actual.setParam("dirDiffThre", param.dirDiffThre);
+    nhPrivate_actual.setParam("dirDiffThre_slow", param.dirDiffThre_slow);
+    nhPrivate_actual.setParam("dirDiffThre_keep", param.dirDiffThre_keep);
     nhPrivate_actual.setParam("getPath_speed", param.getPath_speed);
     nhPrivate_actual.setParam("path_zero_bias", param.path_zero_bias);
     nhPrivate_actual.setParam("goal_zero_bias", param.goal_zero_bias);
     nhPrivate_actual.setParam("MIDPlanning_minSpeed", param.MIDPlanning_minSpeed);
     nhPrivate_actual.setParam("use_closeGoal_direct", param.use_closeGoal_direct);
     nhPrivate_actual.setParam("closeGoal_direct_dis", param.closeGoal_direct_dis);
-    nhPrivate_actual.setParam("quick_turn_N", param.quick_turn_N);
+    nhPrivate_actual.setParam("quick_turn_speed", param.quick_turn_speed);
     nhPrivate_actual.setParam("close_direct_speed", param.close_direct_speed);
 }

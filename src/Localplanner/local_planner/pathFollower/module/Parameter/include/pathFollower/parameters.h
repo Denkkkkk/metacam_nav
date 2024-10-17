@@ -15,7 +15,8 @@ struct Params
     double goalSlowDisThre;
     double getGoal_speed;
     double goal_zero_bias;
-    double dirDiffThre;
+    double dirDiffThre_slow;
+    double dirDiffThre_keep;
     double endGoalDis;
     bool useCloudSlowDown;
     double cloudSlow_minSpeed;
@@ -36,7 +37,7 @@ struct Params
     double MIDPlanning_minSpeed;
     bool use_closeGoal_direct;
     double closeGoal_direct_dis;
-    double quick_turn_N;
+    double quick_turn_speed;
     double close_direct_speed;
     bool use_virtual_head;
     bool use_move_base;
