@@ -1,17 +1,5 @@
 <launch>
   <arg name="usual_pcd_path" default="" />
-<<<<<<< HEAD
-=======
-  <arg name="pcd_path_rmuc" default="" />
-  <arg name="pcd_path_qingqing" default="" />
-  <arg name="min_intensity" default="0.12" />
-  <arg name="maxSpeed" default="0.7" />
-  <arg name="minSpeed" default="0.1" />                 <!--@-maxSpeed1，最大速度的最小速度-->
-  <arg name="close_direct_speed" default="0.1" />
-  <arg name="curvature" default="9" />
-  <arg name="autonomySpeed" default="$(arg maxSpeed)" /> <!--自然速度,应该比maxSpeed小-->
-  <arg name="terrainVoxelSize" value="0.1" />
->>>>>>> 1.reduce speed
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
