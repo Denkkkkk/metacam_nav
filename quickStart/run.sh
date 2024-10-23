@@ -1,4 +1,4 @@
-#!/bin/bash
+cm,#!/bin/bash
 usage() {
   echo "Usage: ${0} [-a|--autoaim] [-d|--decision] [-q|--qingqing] [-f|--close_map] [-c|--catkin] [-r|--real] [-k|--key_test] [-g|--noRestart] [-m|--edit_map] [-h|--huanong] [-t|--mirror]" 1>&2
   exit 1 

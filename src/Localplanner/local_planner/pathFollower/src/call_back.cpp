@@ -31,8 +31,12 @@ void RoboCtrl::odomHandler(const nav_msgs::Odometry::ConstPtr &odomIn)
 void RoboCtrl::goalHandler(const geometry_msgs::PoseStamped::ConstPtr &goal)
 {
     // 目标点的x位置
-    way_point = *goal;
-    use_real_goal = true;
+    double distance = sqrt(pow(way_point.pose.position.x - goal->pose.position.x, 2) + pow(way_point.pose.position.y - goal->pose.position.y, 2));
+    if (distance > 0.1)
+    {
+        way_point = *goal;
+        use_real_goal = true;
+    }
 }
 
 /**

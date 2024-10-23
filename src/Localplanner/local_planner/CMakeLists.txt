@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(local_planner)
 
-# set(CMAKE_BUILD_TYPE Release)
-# set(CMAKE_BUILD_TYPE Debug)
-# add_definitions("-Wall -g")
 add_subdirectory(localPlanner)
 add_subdirectory(pathFollower)
 

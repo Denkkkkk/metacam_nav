@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(terrain_analysis)
 
-#set(CMAKE_BUILD_TYPE Debug)
 set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)

@@ -20,7 +20,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     nhPrivate.getParam("Ybias", Ybias);
     nhPrivate.getParam("usual_pcd_path", usual_pcd_path);
     nhPrivate.getParam("detourWei", detourWei);
-    string ns;
+    std::string ns;
     nhPrivate.getParam("ns", ns);
     if (ns != "")
     {
@@ -66,7 +66,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     pubFreePaths = nh.advertise<sensor_msgs::PointCloud2>("/free_paths", 2);
 #endif
     // 计算速度控制的K值
-    planRangeK = std::pow(4, maxSpeed) / (lctlPtr->param.adjacentRange - lctlPtr->param.minPathRange);
+    planRangeK = pow(4, maxSpeed) / (lctlPtr->param.adjacentRange - lctlPtr->param.minPathRange);
     ROS_WARN("planRangeK: %f", planRangeK);
     makerInit();
 }

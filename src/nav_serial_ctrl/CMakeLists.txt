@@ -5,7 +5,6 @@ endif()
 
 cmake_minimum_required(VERSION 2.8)
 project(nav_serial_ctrl)
-# set(CMAKE_BUILD_TYPE "Release")
 add_compile_options(-std=c++17)
 add_definitions(-D_WITH_SERIAL)
 find_package(catkin REQUIRED COMPONENTS
