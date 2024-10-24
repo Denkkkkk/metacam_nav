@@ -4,7 +4,7 @@
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
   <arg name="use_map" default="false" />
-  <arg name="robot" default="xingtian" />
+  <arg name="robot" default="tita" />
 
   <!-- load global params -->
   <rosparam command="load" file="$(find local_planner)/config/usual_config/$(arg robot).yaml" />
