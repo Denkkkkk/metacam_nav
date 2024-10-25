@@ -2,6 +2,7 @@ build
 build_clion
 devel
 install
+output
 
 cmake-build-debug
 .catkin_workspace
@@ -29,8 +30,6 @@ src/vehicle_simulator/log/*
 *.pyc
 *.zip
 
-path_config.h
-
 myRosbag
 *bag.active
 
@@ -42,5 +41,4 @@ myRosbag
 # *.kdev4
 # # Version control
 # .svn
-decision_xml_config.h
 fishros
