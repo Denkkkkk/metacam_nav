@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ -z "$INSTALL_PATH" ]; then
+    INSTALL_PATH=/opt/skyland/metacam_nav
+fi
+
+# install systemd servcies needed
+services=("metacam_nav")
+for service in "${services[@]}"
+do
+    echo "=============================="
+    cd $INSTALL_PATH/services/$service
+    ./setup.bash --uninstall --install
+    echo
+done
+
+# chown
+chown -R root:root $INSTALL_PATH
+
+# remove empty folder & pycache
+find $INSTALL_PATH -type d -empty -delete
+find $INSTALL_PATH -type d -name '__pycache__' -exec rm -rf {} +
+
+echo "The metacam_nav is installed. Use 'journalctl -u metacam_nav.service' to check the history output or add '-f' to watch the real-time output"

@@ -1,0 +1,100 @@
+#!/bin/bash
+_metacam_completion() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local options="--version --set-model --changelog --network-hotspot --network-eth1-static --network-eth1-dhcp --upgrade --start --restart --stop --enable-systemd --disable-systemd --status --log --lidar-model --lidar-standby --lidar-work --lidar-getip --lidar-setip --help"
+
+    case "$prev" in
+        --version)
+            COMPREPLY=()
+            return 0
+            ;;
+        --set-model)
+            COMPREPLY=()
+            return 0
+            ;;
+        --changelog)
+            COMPREPLY=()
+            return 0
+            ;;
+
+        --network-hotspot)
+            COMPREPLY=()
+            return 0
+            ;;
+        --network-eth1-static)
+            COMPREPLY=()
+            return 0
+            ;;
+        --network-eth1-dhcp)
+            COMPREPLY=()
+            return 0
+            ;;
+
+        --upgrade)
+            COMPREPLY=()
+            return 0
+            ;;
+        --start)
+            COMPREPLY=()
+            return 0
+            ;;
+        --restart)
+            COMPREPLY=()
+            return 0
+            ;;
+        --stop)
+            COMPREPLY=()
+            return 0
+            ;;
+        --enable-systemd)
+            COMPREPLY=()
+            return 0
+            ;;
+        --disable-systemd)
+            COMPREPLY=()
+            return 0
+            ;;
+        --status)
+            COMPREPLY=()
+            return 0
+            ;;
+        --log)
+            COMPREPLY=()
+            return 0
+            ;;
+
+        --lidar-model)
+            COMPREPLY=()
+            return 0
+            ;;
+        --lidar-standby)
+            COMPREPLY=()
+            return 0
+            ;;
+        --lidar-work)
+            COMPREPLY=()
+            return 0
+            ;;
+        --lidar-getip)
+            COMPREPLY=()
+            return 0
+            ;;
+        --lidar-setip)
+            COMPREPLY=()
+            return 0
+            ;;
+
+        --help)
+            COMPREPLY=()
+            return 0
+            ;;
+        *)
+            IFS=$'\n' read -r -d '' -a completions <<< "$options"
+            COMPREPLY=( $(compgen -W "${completions[*]}" -- "$cur") )
+            return 0
+            ;;
+    esac
+}
+
+complete -F _metacam_completion metacam
