@@ -14,6 +14,9 @@ do
     echo
 done
 
+# check rosbridge for /TITA/cmd_vel topic
+python3 $INSTALL_PATH/config/rosbridge_cfg.py
+
 # chown
 chown -R root:root $INSTALL_PATH
 
