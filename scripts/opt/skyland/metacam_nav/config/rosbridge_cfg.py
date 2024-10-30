@@ -1,6 +1,6 @@
 import json
 # 定义文件路径
-file_path = 'info/.internal/config/metacam_ros2_config.json'
+file_path = '/home/skyland/info/.internal/config/metacam_ros2_config.json'
 
 try:
     # 读取 JSON 文件
