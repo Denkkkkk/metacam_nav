@@ -13,13 +13,13 @@ try:
 
     # 在文件末尾的 } 前追加新语句
     # 注意：在这里，我们将新语句添加到字典中
-    data['/TITA/cmd_vel'] = '/TITA/cmd_vel'  # 这里假设你要添加的语句是一个键值对
+    data['/cmd_vel'] = '/navigation/cmd_vel'  # 这里假设你要添加的语句是一个键值对
 
     # 将修改后的数据写回文件
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
-    print("add /TITA/cmd_vel into rosbridge succeed.")
+    print("add /cmd_vel into rosbridge succeed.")
 
 except FileNotFoundError:
     print("metacam_ros2_config.json not found, please check the path")

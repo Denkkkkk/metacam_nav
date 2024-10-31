@@ -4,7 +4,7 @@
     <arg name="use_rviz" default="false" />
 
     <!-- 局部规划的初始点位-->
-    <arg name="ns" default="TITA" />
+    <arg name="ns" default="" />
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
