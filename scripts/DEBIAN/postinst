@@ -14,10 +14,10 @@ do
     echo
 done
 
-# check rosbridge for /TITA/cmd_vel topic
-python3 $INSTALL_PATH/config/rosbridge_cfg.py
-sleep 0.1s
-systemctl restart metacam_ros2_wrapper.service
+# run config files
+cd $INSTALL_PATH/config
+./setup.bash
+
 
 # chown
 chown -R root:root $INSTALL_PATH

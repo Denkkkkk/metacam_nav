@@ -1,0 +1,11 @@
+[Unit]
+Description=metacam_config
+[Service]
+User=root
+ExecStart=-/opt/skyland/metacam_nav/services/metacam_config/metacam_config.sh
+Type=simple
+Restart=no
+StandardOutput=journal
+StandardError=journal
+[Install]
+WantedBy=multi-user.target
