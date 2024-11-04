@@ -5,7 +5,7 @@ import yaml
 file_path = '/home/skyland/info/.internal/config/mapping_config.yaml'
 # 要修改的行
 search_string = 'blind:'
-new_value = '    blind: 0.28'
+new_value = '    blind: 0.25'
 
 # 使用 fileinput 模块逐行读取和修改文件
 with fileinput.input(file_path, inplace=True, backup='.bak') as file:
