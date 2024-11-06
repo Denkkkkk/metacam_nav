@@ -4,8 +4,8 @@ yawRateGain: 2.0  # 一般情况下的伪车头转动增益
 stopYawRateGain: 4.5  # 静止下的伪车头转动增益
 maxYawRate: 30.0  # 车头最大转动角速度
 maxStopYawRate: 50.0  # 低速下车头最大转动角速度, 有过大保护
-maxAddAccel: 2.0  # 最大加速速度
-maxSlowAccel: 2.0  # 最大减速加速度
+maxAddAccel: 3.0  # 最大加速速度
+maxSlowAccel: 3.0  # 最大减速加速度
 dirDiffThre_slow: 0.28  # 角度差
 dirDiffThre_keep: 0.1  # 角度差
 quick_turn_speed: 0.09  # 减速到这个速度就允许快速转向
