@@ -84,5 +84,5 @@
   </group>
 
   <!-- 启动服务通信 -->
-  <include file="$(find nav_service)/launch/nav_service.launch" />
+  <!-- <include file="$(find nav_service)/launch/nav_service.launch" /> -->
 </launch>

@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /PlannerActCloud1
         - /Local Map1/Costmap1
       Splitter Ratio: 0.5252659320831299
     Tree Height: 1406
@@ -81,7 +82,7 @@ Visualization Manager:
       Use rainbow: true
       Value: false
     - Alpha: 1
-      Autocompute Intensity Bounds: false
+      Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 0.9582680463790894
         Min Value: -0.043718695640563965
@@ -94,21 +95,19 @@ Visualization Manager:
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 0.10000000149011612
-      Min Color: 0; 0; 0
-      Min Intensity: -0.10000000149011612
+      Max Color: 204; 41; 204
+      Min Color: 204; 41; 204
       Name: PlannerActCloud
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
-      Size (Pixels): 10
+      Size (Pixels): 14
       Size (m): 0.10000000149011612
       Style: Points
       Topic: /PannerAtuCloud
       Unreliable: false
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: false
@@ -834,6 +833,36 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: false
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: true
+      Max Color: 255; 255; 255
+      Max Intensity: 0.20000000298023224
+      Min Color: 238; 238; 236
+      Min Intensity: -0.20000000298023224
+      Name: addpoints
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.029999999329447746
+      Style: Flat Squares
+      Topic: /add_points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -851,7 +880,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 13.045042037963867
+      Distance: 18.93215560913086
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -859,17 +888,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -2.7077150344848633
-        Y: -0.6589449644088745
+        X: 12.269076347351074
+        Y: 6.879123210906982
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5597963333129883
+      Pitch: 1.5697963237762451
       Target Frame: vehicle
-      Yaw: 3.7303848266601562
+      Yaw: 6.230383396148682
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055
@@ -909,5 +938,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 2736
-  X: 144
-  Y: 1565
+  X: 374
+  Y: 1399

@@ -4,17 +4,20 @@ yawRateGain: 2.0  # 一般情况下的伪车头转动增益
 stopYawRateGain: 5.0  # 静止下的伪车头转动增益
 maxYawRate: 35.0  # 车头最大转动角速度
 maxStopYawRate: 50.0  # 低速下车头最大转动角速度, 有过大保护
-maxAddAccel: 4.0  # 最大加速速度
-maxSlowAccel: 4.0  # 最大减速加速度
-dirDiffThre_slow: 0.26  # 角度差
+maxAddAccel: 2.0  # 最大加速速度
+maxSlowAccel: 2.0  # 最大减速加速度
+dirDiffThre_slow: 0.22  # 角度差
 dirDiffThre_keep: 0.1  # 角度差
 quick_turn_speed: 0.08  # 减速到这个速度就允许快速转向
+use_getgoal_yaw: false  # 允许控制到目标点时的车头朝向
+getgoal_yaw: 0.0  # 到目标点时的车头朝向增益
 
 # get goal parameters
 endGoalDis: 0.5  # 到达目标点范围内就停止
 getGoal_speed: 0.2  # 刚好追踪到目标点时的速度
-closeGoal_direct_dis: 0.7  # 到目标点附近直走的阈值&&达到getGoal_speed的距离
-goalSlowDisThre: 1.4  # 靠近全局目标点时减速
+use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
+closeGoal_direct_dis: 0.8  # 到目标点附近直走的阈值&&达到getGoal_speed的距离
+goalSlowDisThre: 1.5  # 靠近全局目标点时减速
 
 
 # Generally fixed parameters
@@ -29,13 +32,11 @@ useCloudSlowDown: false  # 使能根据周围障碍物点云密集情况进行�
 cloudSlow_minSpeed: 1.0  # 根据周围障碍物减速的最小速度
 curvature: 9  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
 slowBegin: 3  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
-safetyStop: false  # 紧急刹车
 
 goal_path_direct: true  # 是否全局路径直接追踪
 use_MIDPlanning_slow: true  # 是否使用转弯点减速
 MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
 MIDPlanning_minSpeed: 1.0
-use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
 close_direct_speed: 0.2  # 到目标点附近直冲的速度
 use_virtual_head: false
 use_move_base: false

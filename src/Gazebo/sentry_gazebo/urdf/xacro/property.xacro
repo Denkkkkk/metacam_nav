@@ -30,7 +30,7 @@
     <!-- 底盘尺寸 -->
     <xacro:property name="PI" value="3.14159" />
     <xacro:property name="car_length" value="0.6" />
-    <xacro:property name="car_width" value="0.6" />
+    <xacro:property name="car_width" value="0.55" />
     <xacro:property name="car_height" value="0.16" />
 
     <!-- 轮胎尺寸 -->

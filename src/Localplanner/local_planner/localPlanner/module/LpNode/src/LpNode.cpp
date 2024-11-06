@@ -158,7 +158,7 @@ void LpNode::transform_goal()
     // 目标点转移到车体坐标系
     float relativeGoalX_global = ((goal_point.pose.position.x - vehicleX) * cosVehicleYaw + (goal_point.pose.position.y - vehicleY) * sinVehicleYaw);
     float relativeGoalY_global = (-(goal_point.pose.position.x - vehicleX) * sinVehicleYaw + (goal_point.pose.position.y - vehicleY) * cosVehicleYaw);
-    // 计算车体到waypoint（目标点）之间的距离
+    // 计算车体到goalpoint（目标点）之间的距离
     relativeGoalDis_global = sqrt(relativeGoalX_global * relativeGoalX_global + relativeGoalY_global * relativeGoalY_global);
 
     // joyDir为目标点相对车体的yaw角
@@ -515,9 +515,16 @@ void LpNode::count_PathPerGroupScore(int pathId, int rotDir)
             rotDirW = fabs(fabs(rotDir - 9) + 1);
         else
             rotDirW = fabs(fabs(rotDir - 27) + 1);
-
-        // 计算惩罚得分，dirDiff目标点和当前路径夹角越小越高分，rotDirW初始方向不在正左右方越高，penaltyScore点云高度越低越高
-        float score = (1 - sqrt(sqrt((1 / lctlPtr->param.dirWeight) * dirDiff))) * abs(rotDirW * rotDirW * rotDirW * rotDirW) * penaltyScore;
+        float score = 0;
+        if (relativeGoalDis > 1.2)
+        {
+            // 计算惩罚得分，dirDiff目标点和当前路径夹角越小越高分，rotDirW初始方向不在正左右方越高，penaltyScore点云高度越低越高
+            score = (1 - sqrt(sqrt((1 / lctlPtr->param.dirWeight) * dirDiff))) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
+        }
+        else
+        {
+            score = pow((1 - sqrt(sqrt((1 / lctlPtr->param.dirWeight) * dirDiff))), 4) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
+        }
         // float score = (1 - sqrt(sqrt((1 / dirWeight) * dirDiff))) * penaltyScore;
         // 下面代码的作用简述是 ：
         // clearPathPerGroupScore 是一个 7 × 36 7×36 7×36的数组，即7组路径，36个方向，代表了7组在36个方向下的总得分

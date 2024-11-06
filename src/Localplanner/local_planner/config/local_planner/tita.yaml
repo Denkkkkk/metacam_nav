@@ -2,13 +2,12 @@
 expandRadius: 0.6 # 点云膨胀半径
 vehicleWidth: 0.6  # 车宽
 vehicleLength: 0.6  # 车长
-
-dirThre: 120  # 目标点方向允许规划范围
-minPathRange: 0.5  # 最小路径范围
+add_point_radius: 0.25 # 膨胀半径
+dirThre: 90  # 目标点方向允许规划范围
+minPathRange: 0.55  # 最小路径范围
 goalClearRange: 0.5  # 快到目的地时减小障碍物检测的范围
 slow_dis: 0.6 # 近障减速距离
 obstacleHeightThre: 0.1  # 地形分析中，intensity的筛选阈值
-
 
 # 用于规划的点云的参数
 terrainVoxelSize: 0.1  # 地形分析的体素大小
@@ -29,8 +28,8 @@ costScore: 0.02  # 高度得分的最低值
 pointPerPathThre: 1  # 同一块体素位置需要的障碍物点云数量
 
 # 目标点或转弯等方向信息的控制
-dirWeight: 60  # 评分中，只允许路径终点在这个转弯角度内的路径通过
-detourWei: 1.9  # 绕行系数
+dirWeight: 70  # 评分中，只允许路径终点在这个转弯角度内的路径通过
+detourWei: 1.5  # 绕行系数
 pathCropByGoal: true  # 删除超过圆形区域的路径点
 goalClearRange_global: 5.0  # 全局范围
 

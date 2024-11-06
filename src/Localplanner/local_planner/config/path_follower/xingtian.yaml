@@ -29,7 +29,6 @@ useCloudSlowDown: false  # 使能根据周围障碍物点云密集情况进行�
 cloudSlow_minSpeed: 1.0  # 根据周围障碍物减速的最小速度
 curvature: 9  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
 slowBegin: 3  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
-safetyStop: false  # 紧急刹车
 
 goal_path_direct: true  # 是否全局路径直接追踪
 use_MIDPlanning_slow: true  # 是否使用转弯点减速

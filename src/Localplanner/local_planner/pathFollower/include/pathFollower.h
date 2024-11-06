@@ -67,18 +67,15 @@ private:
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::Subscriber subOdom;
     ros::Subscriber subPath;
-    ros::Subscriber subJoystick;
     ros::Subscriber subSpeed;
     ros::Subscriber subStop;
     ros::Subscriber subGoal;
     ros::Subscriber subSlowDown;
-    ros::Subscriber subLplannerData;
     ros::Subscriber subSerial;
     ros::Subscriber subGlobalPoint;
     ros::Subscriber subPathStatus;
     ros::Subscriber subGoalPath;
     ros::Subscriber subControlMode;
-    ros::Subscriber subIMU;
     ros::Publisher pubSpeed;
     ros::Publisher pubCmd_vel;
     ros::Publisher pubGoalPathDir;
@@ -86,7 +83,6 @@ private:
     ros::Publisher pubGetGoal;
 
     const double PI = 3.1415926;
-    int pubSkipCount = 0;
 
     float vehicleX = 0;
     float vehicleY = 0;
@@ -138,10 +134,10 @@ private:
     geometry_msgs::Twist cmd_vel;
     int slowDown1;
     double slowDown1_update_time;
-    double angular_velocity;
     int mid_slow_delay = 15;
     std::string ns;
     std::string robot_frame;
     double odom_update_time = 0;
     bool use_two_forward = false;
+    bool safetyStop = false;
 };

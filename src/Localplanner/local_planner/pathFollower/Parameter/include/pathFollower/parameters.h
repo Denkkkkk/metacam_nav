@@ -23,7 +23,6 @@ struct Params
     double minSpeed;
     double curvature;
     int slowBegin;
-    bool safetyStop;
     std::string cmdTopicdTopic;
     double maxAddAccel;
     double maxSlowAccel;
@@ -41,6 +40,8 @@ struct Params
     double close_direct_speed;
     bool use_virtual_head;
     bool use_move_base;
+    bool use_getgoal_yaw;
+    double getgoal_yaw;
 };
 
 class ParamControl
@@ -48,14 +49,17 @@ class ParamControl
 public:
     void load_params();
     void update_params();
-    void output_params();
-
-    Params param;
-    Params param_origin;
+    inline Params get_params() const // 设置外部只读
+    {
+        return param;
+    }
 
 private:
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::NodeHandle nhPrivate_actual = ros::NodeHandle("pathFollower_actual");
     ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
     ros::NodeHandle nh;
+
+    Params param;
+    Params param_origin;
 };

@@ -48,7 +48,7 @@ void RoboCtrl::pathHandler(const nav_msgs::Path::ConstPtr &pathIn)
     int pathSize = pathIn->poses.size();
     path.poses.resize(pathSize);
     // 转到虚拟车头
-    if (pctlPtr->param.use_virtual_head)
+    if (pctlPtr->get_params().use_virtual_head)
     {
         vehicleYawRec = virture_headDir;
         for (int i = 0; i < pathSize; i++)
@@ -92,7 +92,7 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
     nav_msgs::Path goal_path_temp;
     int pathSize = pathIn->poses.size();
     goal_path_temp.poses.resize(pathSize);
-    if (pctlPtr->param.use_virtual_head)
+    if (pctlPtr->get_params().use_virtual_head)
     {
         vehicleYawRec = virture_headDir;
         for (int i = 0; i < pathSize; i++)
@@ -154,7 +154,7 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
  */
 void RoboCtrl::stopHandler(const std_msgs::Bool::ConstPtr &stop)
 {
-    pctlPtr->param.safetyStop = stop->data;
+    safetyStop = stop->data;
 }
 
 /**
