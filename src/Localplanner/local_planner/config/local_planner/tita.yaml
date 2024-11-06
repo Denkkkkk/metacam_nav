@@ -28,8 +28,8 @@ costScore: 0.02  # 高度得分的最低值
 pointPerPathThre: 1  # 同一块体素位置需要的障碍物点云数量
 
 # 目标点或转弯等方向信息的控制
-dirWeight: 70  # 评分中，只允许路径终点在这个转弯角度内的路径通过
-detourWei: 1.5  # 绕行系数
+dirWeight: 80  # 评分中，只允许路径终点在这个转弯角度内的路径通过
+detourWei: 1.2  # 绕行系数
 pathCropByGoal: true  # 删除超过圆形区域的路径点
 goalClearRange_global: 5.0  # 全局范围
 

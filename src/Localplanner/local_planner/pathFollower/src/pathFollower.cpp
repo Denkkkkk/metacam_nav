@@ -383,14 +383,13 @@ void RoboCtrl::pure_persuit()
                 dirDiff -= 2 * PI;
             joySpeed2 *= -1;
         }
-        ROS_WARN("dirDiff: %f", dirDiff);
         if (abs(dirDiff) < pctlPtr->get_params().dirDiffThre_keep)
         {
             vehicleYawRate = 0.0;
         }
         else if (fabs(vehicleSpeed) < pctlPtr->get_params().quick_turn_speed)
         {
-            if (abs(dirDiff) < PI / 5)
+            if (abs(dirDiff) < 0.3)
             {
                 vehicleYawRate = -pctlPtr->get_params().stopYawRateGain * dirDiff / 3.0; // 偏差角较小时不用转这么快
             }
@@ -410,9 +409,9 @@ void RoboCtrl::pure_persuit()
         }
         else
         {
-            if (abs(dirDiff) < PI / 4) // 25.5度误差内
+            if (abs(dirDiff) < 0.2)
             {
-                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 3.0; // 偏差角较小时不用转这么快
             }
             else
             {
@@ -428,7 +427,7 @@ void RoboCtrl::pure_persuit()
                 vehicleYawRate = -dirDiff * 10;
             }
         }
-        ROS_WARN("vehicleYawRate: %f", vehicleYawRate);
+        ROS_WARN("dirDiff: %f ;vehicleYawRate: %f", dirDiff, vehicleYawRate);
 
         // 追踪到路径末尾减速
         if (endPathDis_now / pctlPtr->get_params().pathSlowDisThre < 1 && pctlPtr->get_params().useLoaclSlow)
@@ -446,7 +445,6 @@ void RoboCtrl::pure_persuit()
         ROS_WARN("joySpeed2: %f", joySpeed2);
 
         // 当偏差方向在直行区间，全速前进
-        // ROS_ERROR("dirDiff: %f", dirDiff);
         if (fabs(dirDiff) < pctlPtr->get_params().dirDiffThre_slow)
         {
             if (vehicleSpeed < joySpeed2)
