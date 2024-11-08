@@ -32,5 +32,5 @@ sleep 0.5s
 . $HOME/.bashrc
 
 echo -e "\nConfig done!"
-echo -e "Use \033[33m'sentry_run'\033[0m to start the sentry robot with parameters: -d|--decision -f|--far_planner -c|--catkin -r|--real\n  e.g. sentry_run -d -f -c -r"
+echo -e "Use \033[33m'sentry_run'\033[0m to start the sentry robot with parameters: -f|--far_planner -c|--catkin -r|--real\n  e.g. sentry_run -d -f -c -r"
 echo -e "Use \033[33m'sentry_kill'\033[0m to kill all the ros process."

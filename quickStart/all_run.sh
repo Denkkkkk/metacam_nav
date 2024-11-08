@@ -3,7 +3,7 @@
 
 # 1>&2防止命令的执行结果被重定向
 usage() {
-  echo "Usage: ${0} [-a|--autoaim] [-d|--decision] [-f|--close_map] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--qingqing] [-h|--huanong] [-t|--mirror]" 1>&2
+  echo "Usage: ${0} [-a|--autoaim] [-f|--close_map] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--qingqing] [-h|--huanong] [-t|--mirror]" 1>&2
   exit 1 
 }
 
