@@ -105,7 +105,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
         }
         else
         {
-            if (stop_times < 10 && abs(vehicleSpeed) < 0.0001)
+            if (stop_times <= 10 && abs(vehicleSpeed) < 0.001)
             {
                 stop_times++;
             }
@@ -118,6 +118,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     }
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
+    ROS_WARN("vehicleSpeed: %f", vehicleSpeed);
     ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
 }
 /**
