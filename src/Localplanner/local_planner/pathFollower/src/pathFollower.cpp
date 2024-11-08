@@ -54,53 +54,71 @@ RoboCtrl::RoboCtrl()
 
 /**
  * @brief 正常发布速度
- *
+ * @attention cmd_vel必须无条件相应速度值，不然跟踪器无法跟踪修正，会陷入死局
  * @get_params() vehicleSpeed
  */
 void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
 {
+    ROS_INFO("vehicleSpeed: %f", vehicleSpeed);
     if (pctlPtr->get_params().use_virtual_head)
     {
-        // 速度太小直接赋为0
         double vh_to_v;
         car_speed.data = vehicleSpeed;
-        if (fabs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
-        {
-            cmd_vel.linear.x = 0;
-            cmd_vel.linear.y = 0;
-        }
-        else
-        {
-            vh_to_v = vehicleYaw - virture_headDir;
-            cmd_vel.linear.x = vehicleSpeed * cos(vh_to_v);
-            cmd_vel.linear.y = -vehicleSpeed * sin(vh_to_v);
-        }
+        vh_to_v = vehicleYaw - virture_headDir;
+        cmd_vel.linear.x = vehicleSpeed * cos(vh_to_v);
+        cmd_vel.linear.y = -vehicleSpeed * sin(vh_to_v);
     }
     else
     {
-        if (fabs(vehicleSpeed) < pctlPtr->get_params().maxAddAccel / pub_rate)
-        {
-            cmd_vel.linear.x = 0; // 速度太小直接赋为0
-        }
-        else
-        {
-            cmd_vel.linear.x = vehicleSpeed; // 前向速度
-        }
+        cmd_vel.linear.x = vehicleSpeed;    // 前向速度
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
     }
-    if (safetyStop && abs(vehicleSpeed) < 0.1)
+
+    // 优先判断到点后的yaw角控制
+    double goalyaw_diff = vehicleYaw - pctlPtr->get_params().getgoal_yaw;
+    if (get_goal.data && pctlPtr->get_params().use_getgoal_yaw && abs(goalyaw_diff) > 0.1 && abs(vehicleSpeed) < 0.001)
     {
         cmd_vel.linear.x = 0.0;
-        cmd_vel.angular.z = 0.0;
-        cmd_vel.angular.x = 0.0;
+        cmd_vel.angular.x = -1.0;
+        // 转向控制，上下死区
+        if (abs(goalyaw_diff) < 0.1)
+        {
+            cmd_vel.angular.z = (goalyaw_diff > 0) ? -0.1 : 0.1;
+        }
+        else if (abs(goalyaw_diff) > PI / 3)
+        {
+            cmd_vel.angular.z = (goalyaw_diff > 0) ? -PI / 4 : PI / 4;
+        }
+        else
+        {
+            cmd_vel.angular.z = -goalyaw_diff;
+        }
     }
     else
     {
-        cmd_vel.angular.x = -1.0;
+        static int stop_times = 0; // 在导航可控的情况下确保车辆停稳后才转遥控接管
+        if (safetyStop && abs(vehicleSpeed) < 0.01 && stop_times > 10)
+        {
+            cmd_vel.linear.x = 0.0;
+            cmd_vel.angular.x = 0.0;
+            cmd_vel.angular.z = 0.0;
+        }
+        else
+        {
+            if (stop_times < 10 && abs(vehicleSpeed) < 0.0001)
+            {
+                stop_times++;
+            }
+            else
+            {
+                stop_times = 0;
+            }
+            cmd_vel.angular.x = -1.0;
+        }
     }
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
-    ROS_WARN("vehicleSpeed: %f, cmd_vel.angular.z:%f", vehicleSpeed, cmd_vel.angular.z);
+    ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
 }
 /**
  * @brief 以全局目标点为方向发布速度
@@ -148,7 +166,7 @@ void RoboCtrl::slowStop()
 {
     if (vehicleSpeed < 0)
     {
-        vehicleSpeed += pctlPtr->get_params().maxAddAccel / pub_rate;
+        vehicleSpeed += pctlPtr->get_params().maxAddAccel * 3 / pub_rate;
         if (vehicleSpeed > -pctlPtr->get_params().minSpeed)
         {
             vehicleSpeed = 0;
@@ -157,7 +175,7 @@ void RoboCtrl::slowStop()
     }
     else if (vehicleSpeed > 0)
     {
-        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate;
+        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel * 3 / pub_rate;
         if (vehicleSpeed < pctlPtr->get_params().minSpeed)
         {
             vehicleSpeed = 0;
@@ -267,7 +285,6 @@ void RoboCtrl::pure_persuit()
         endPathDis_now = sqrt(endpathDisX * endpathDisX + endpathDisY * endpathDisY);
     }
     // 遍历所有的路径点，循环的目的是找到机器人需要前进到的路径点。这是路径跟踪的核心部分
-    // ROS_WARN("pathInit: %d", pathInit);
 
     double odom_update_duration = ros::Time::now().toSec() - odom_update_time;
     bool no_odom_flag = false;
@@ -442,6 +459,11 @@ void RoboCtrl::pure_persuit()
             goalSlow_K = log(pctlPtr->get_params().getGoal_speed / abs(joySpeed2)) / log(pctlPtr->get_params().closeGoal_direct_dis / pctlPtr->get_params().goalSlowDisThre); // 换底公式实现底数计算
             joySpeed2 = (joySpeed2 - pctlPtr->get_params().goal_zero_bias) * (pow(endGoalDis_now, goalSlow_K) / pow(pctlPtr->get_params().goalSlowDisThre, goalSlow_K)) + pctlPtr->get_params().goal_zero_bias;
         }
+        // 由于joySpeed2是允许正常规划下的速度计算，理论上不应该停车，也不应该太小导致失速
+        if (abs(joySpeed2) < 0.08)
+        {
+            joySpeed2 = joySpeed2 > 0 ? 0.08 : -0.08;
+        }
         ROS_WARN("joySpeed2: %f", joySpeed2);
 
         // 当偏差方向在直行区间，全速前进
@@ -452,25 +474,18 @@ void RoboCtrl::pure_persuit()
             else if (vehicleSpeed > joySpeed2)
                 vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate;
 
-            if (vehicleSpeed > pctlPtr->get_params().maxSpeed)
+            // 速度最大限制
+            if (abs(vehicleSpeed) > pctlPtr->get_params().maxSpeed)
             {
-                vehicleSpeed = pctlPtr->get_params().maxSpeed;
-            }
-            else if (vehicleSpeed < -pctlPtr->get_params().maxSpeed)
-            {
-                vehicleSpeed = -pctlPtr->get_params().maxSpeed;
+                vehicleSpeed = vehicleSpeed > 0 ? pctlPtr->get_params().maxSpeed : -pctlPtr->get_params().maxSpeed;
             }
 
             // 速度小允许跳变
             if (fabs(vehicleSpeed) < pctlPtr->get_params().minSpeed)
             {
-                if (joySpeed2 > 0 && fabs(joySpeed2) > pctlPtr->get_params().minSpeed)
+                if (fabs(joySpeed2) > pctlPtr->get_params().minSpeed)
                 {
-                    vehicleSpeed = pctlPtr->get_params().minSpeed;
-                }
-                else if (joySpeed2 < 0 && fabs(joySpeed2) > pctlPtr->get_params().minSpeed)
-                {
-                    vehicleSpeed = -pctlPtr->get_params().minSpeed;
+                    vehicleSpeed = joySpeed2 > 0 ? pctlPtr->get_params().minSpeed : -pctlPtr->get_params().minSpeed;
                 }
                 else
                 {
@@ -485,6 +500,10 @@ void RoboCtrl::pure_persuit()
                 vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate;
             else if (vehicleSpeed < -pctlPtr->get_params().quick_turn_speed)
                 vehicleSpeed += pctlPtr->get_params().maxAddAccel / pub_rate;
+            if (abs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
+            {
+                vehicleSpeed = 0;
+            }
         }
         // 角速度
         if (pctlPtr->get_params().use_virtual_head)

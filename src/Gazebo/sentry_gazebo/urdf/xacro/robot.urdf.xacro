@@ -16,14 +16,14 @@
 
     <xacro:VLP-16 parent="vehicle" name="velodyne" topic="/velodyne_points" hz="10"
         min_range="0.35" samples="350" collision_range="0.2" organize_cloud="true" gpu="false"
-        min_angle="-0.2" max_angle="3.34159" vmin_angle="${-7/180*PI}" vmax_angle="${52/180*PI}">
-        <origin xyz="0.0 0.15 ${car_height/2+0.05}" rpy="0 0 0" />
+        min_angle="-3.1415" max_angle="3.14159" vmin_angle="${-7/180*PI}" vmax_angle="${52/180*PI}">
+        <origin xyz="0.0 0.0 ${car_height/2+holder_length}" rpy="0 0 0" />
     </xacro:VLP-16>
-    <xacro:VLP-16 parent="vehicle" name="velodyne2" topic="/velodyne_points2" hz="10"
+    <!-- <xacro:VLP-16 parent="vehicle" name="velodyne2" topic="/velodyne_points2" hz="10"
         min_range="0.35" samples="350" collision_range="0.2" organize_cloud="true" gpu="false"
         min_angle="-3.34159" max_angle="0.2" vmin_angle="${-7/180*PI}" vmax_angle="${52/180*PI}">
         <origin xyz="0.0 -0.15 ${car_height/2+0.05}" rpy="0 0 0" />
-    </xacro:VLP-16>
+    </xacro:VLP-16> -->
 
     <xacro:include
         filename="$(find sentry_gazebo)/urdf/car_drive.gazebo" />

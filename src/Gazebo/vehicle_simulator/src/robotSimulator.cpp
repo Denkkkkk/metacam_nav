@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     tf::TransformListener listener;
     tf_listener_ptr = &listener;
     subScan = nh.subscribe<sensor_msgs::PointCloud2>(velodyne_topic1, 5, scanHandler);
-    subScan2 = nh.subscribe<sensor_msgs::PointCloud2>(velodyne_topic2, 5, scan2Handler);
+    // subScan2 = nh.subscribe<sensor_msgs::PointCloud2>(velodyne_topic2, 5, scan2Handler);
     pubVehicleOdom = nh.advertise<nav_msgs::Odometry>("/Odometry", 5);
     pubScan = nh.advertise<sensor_msgs::PointCloud2>("/cloud_registered", 5);
     // 使pubscan这个发布者，成为cpp文件范围内的全局指针，方便在回调函数中，收一个发一个
@@ -98,16 +98,16 @@ int main(int argc, char **argv)
         pcl::PointCloud<pcl::PointXYZ> pcl_registered;
         pcl::PointCloud<pcl::PointXYZI> pclI_registered;
         pcl::fromROSMsg(velodyne_points1, pcl_points1);
-        pcl::fromROSMsg(velodyne_points2, pcl_points2);
+        // pcl::fromROSMsg(velodyne_points2, pcl_points2);
 
         for (int i = 0; i < pcl_points1.points.size(); i++)
         {
             pcl_registered.push_back(pcl_points1.points[i]);
         }
-        for (int i = 0; i < pcl_points2.points.size(); i++)
-        {
-            pcl_registered.push_back(pcl_points2.points[i]);
-        }
+        // for (int i = 0; i < pcl_points2.points.size(); i++)
+        // {
+        //     pcl_registered.push_back(pcl_points2.points[i]);
+        // }
         for (int i = 0; i < pcl_registered.points.size(); i++)
         {
             pcl::PointXYZI point;

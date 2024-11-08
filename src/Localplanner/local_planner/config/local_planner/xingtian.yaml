@@ -1,5 +1,4 @@
 # 常用参数
-expandRadius: 0.6 # 点云膨胀半径
 vehicleWidth: 0.5  # 车宽
 vehicleLength: 0.5  # 车长
 add_point_radius: 0.25 # 膨胀半径
