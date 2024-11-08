@@ -20,6 +20,6 @@ with fileinput.input(file_path, inplace=True, backup='.bak') as file:
 with open(file_path, 'r') as file:
     content = file.read()
     if new_value in content:
-        print("The 'blind' parameter has been successfully updated to 0.28.")
+        print("The 'blind' parameter has been successfully updated to 0.25.")
     else:
         print("Failed to update the 'blind' parameter.")
