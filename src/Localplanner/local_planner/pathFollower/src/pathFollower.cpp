@@ -167,8 +167,8 @@ void RoboCtrl::slowStop()
 {
     if (vehicleSpeed < 0)
     {
-        vehicleSpeed += pctlPtr->get_params().maxAddAccel * 3 / pub_rate;
-        if (vehicleSpeed > -pctlPtr->get_params().minSpeed || vehicleSpeed > -pctlPtr->get_params().maxAddAccel * 3 / pub_rate)
+        vehicleSpeed += pctlPtr->get_params().maxSlowAccel * 4 / pub_rate;
+        if (vehicleSpeed > -pctlPtr->get_params().minSpeed || vehicleSpeed > -pctlPtr->get_params().maxSlowAccel * 4 / pub_rate)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
@@ -176,8 +176,8 @@ void RoboCtrl::slowStop()
     }
     else if (vehicleSpeed > 0)
     {
-        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel * 3 / pub_rate;
-        if (vehicleSpeed < pctlPtr->get_params().minSpeed || vehicleSpeed < pctlPtr->get_params().maxSlowAccel * 3 / pub_rate)
+        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel * 4 / pub_rate;
+        if (vehicleSpeed < pctlPtr->get_params().minSpeed || vehicleSpeed < pctlPtr->get_params().maxSlowAccel * 4 / pub_rate)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
@@ -470,11 +470,24 @@ void RoboCtrl::pure_persuit()
         // 当偏差方向在直行区间，全速前进
         if (fabs(dirDiff) < pctlPtr->get_params().dirDiffThre_slow)
         {
-            if (vehicleSpeed < joySpeed2)
-                vehicleSpeed += pctlPtr->get_params().maxAddAccel / pub_rate;
-            else if (vehicleSpeed > joySpeed2)
-                vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate;
-
+            if (vehicleSpeed > (joySpeed2 - pctlPtr->get_params().maxAddAccel / pub_rate) ||
+                vehicleSpeed < (joySpeed2 + pctlPtr->get_params().maxAddAccel / pub_rate) ||
+                vehicleSpeed > (joySpeed2 - pctlPtr->get_params().maxSlowAccel / pub_rate) ||
+                vehicleSpeed < (joySpeed2 + pctlPtr->get_params().maxSlowAccel / pub_rate))
+            {
+                vehicleSpeed = joySpeed2;
+            }
+            else
+            {
+                if (abs(vehicleSpeed) > abs(joySpeed2) || vehicleSpeed * joySpeed2 < 0)
+                {
+                    vehicleSpeed += vehicleSpeed > joySpeed2 ? -pctlPtr->get_params().maxSlowAccel / pub_rate : pctlPtr->get_params().maxSlowAccel / pub_rate;
+                }
+                else
+                {
+                    vehicleSpeed += vehicleSpeed > joySpeed2 ? -pctlPtr->get_params().maxAddAccel / pub_rate : pctlPtr->get_params().maxAddAccel / pub_rate;
+                }
+            }
             // 速度最大限制
             if (abs(vehicleSpeed) > pctlPtr->get_params().maxSpeed)
             {
