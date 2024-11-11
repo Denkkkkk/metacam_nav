@@ -1,0 +1,10 @@
+global_costmap:
+   global_frame: map
+   robot_base_frame: Sentry/vehicle
+   static_map: true
+   obstacle_map: true
+   rolling_window: false
+   transform_tolerance: 1.0
+
+   # 全局层的膨胀半径大一点，衰减也快一点
+   inflation_radius: 0.8

@@ -1,0 +1,64 @@
+#动态窗口法在一定程度上采用了粒子滤波的思想，
+#在速度空间（v,w）中采样多组速度，并模拟出这些速度在一定时间内的运动轨迹，并通过评价函数对这些轨迹进行评价，选取最优轨迹对应的速度驱动机器人运动。
+# 优点
+#         计算简单
+#         适用于差分和全向车模
+# 缺点
+#         前瞻性不足
+#         动态效果差
+#         不适用于阿克曼模型车模
+# 基本思想
+# 1.在机器人的控制空间中离散采样 (dx,dy,dtheta)
+# 2.对于每个采样速度，从机器人的当前状态执行前向模拟，以预测如果采样速度应用于某个（短）时间段会发生什么。
+# 3.使用包含以下特征的度量来评估前向模拟产生的每个轨迹：与障碍物的距离、与目标的距离、与全局路径的距离和速度，排除非法轨迹（与障碍物相撞的轨迹）。
+# 4.选择得分最高的轨迹并将相关的速度发送到移动基地。
+# 5.重复执行上述步骤。
+
+# 对应功能包下的类名
+DWAPlannerROS:
+# 整车速度控制 
+  max_vel_x: 2.0          # x方向最大线速度，单位:米/秒
+  min_vel_x: -2.0         # x方向最小线速度，负数代表可后退，单位:米/秒
+  max_vel_y: 2.0          # y方向最大线速度，单位:米/秒。差分驱动机器人为0    
+  min_vel_y: -2.0         # y方向最小线速度，单位:米/秒。差分驱动机器人为0   
+  max_vel_trans: 2.0      # 最大平移速度的绝对值，单位为 m/s
+  min_vel_trans: -2.0      # 最小平移速度的绝对值，单位为 m/s 不可为零  
+  trans_stopped_vel: 0.2  # 被认属于“停止”状态时的平移速度。如果机器人的速度低于该值，则认为机器人已停止。单位为 m/s
+  max_vel_theta: 0.0      # 最大旋转角速度的绝对值，单位为 rad/s 
+  min_vel_theta: 0.0      # 最小旋转角速度的绝对值，单位为 rad/s
+  theta_stopped_vel : 8.0 # 被认属于“停止”状态时的旋转速度。单位为 rad/s  
+  acc_lim_x: 1.5          # 在x方向的极限加速度，单位为 meters/sec^2
+  acc_lim_theta: 0.0      # 极限旋转加速度，单位为 rad/sec^2
+  acc_lim_y: 1.5          # 在y方向的极限加速度
+
+# 目标距离公差参数
+  yaw_goal_tolerance: 6.28 # 到达目标点时，控制器在偏航/旋转时的弧度容差(tolerance)。即：到达目标点时偏行角允许的误差，单位弧度
+  xy_goal_tolerance: 0.25   # 到到目标点时，控制器在x和y方向上的容差（tolerence）（米）。即：到达目标点时,在xy平面内与目标点的距离误差
+  latch_xy_goal_tolerance: false # 设置为true时表示：如果到达容错距离内,机器人就会原地旋转；即使转动是会跑出容错距离外。
+ 
+# dwa前向模拟参数
+  sim_time: 1.8       # 前向模拟轨迹的最大时间，单位为s(seconds) 
+  vx_samples: 10       # x方向速度空间的采样点数
+  vy_samples: 10       # y方向速度空间采样点数。
+  vtheta_samples: 0   # 旋转方向的速度空间采样点数
+ 
+# Trajectory Scoring Parameters
+  path_distance_bias: 100.0     # 控制器与给定路径接近程度的权重
+  goal_distance_bias: 24.0      # 控制器与局部目标点的接近程度的权重，也用于速度控制
+  occdist_scale: 0.5            # 控制器躲避障碍物的程度
+  forward_point_distance: 0.325 # 以机器人为中心，额外放置一个计分点的距离
+  stop_time_buffer: 0.1         # 该时间内所采用的轨迹仍视为有效。即：为防止碰撞,机器人必须提前停止的时间长度
+  scaling_speed: 0.5           # 开始缩放机器人足迹时的速度的绝对值，单位为m/s。
+  max_scaling_factor: 0.2       # 最大缩放因子。max_scaling_factor为上式的值的大小。
+ 
+# Oscillation Prevention Parameters
+  oscillation_reset_dist: 0.05  #机器人必须运动多少米远后才能复位震荡标记(机器人运动多远距离才会重置振荡标记)
+  oscillation_reset_angle: 0.05
+ 
+# Debugging调试参数
+  publish_traj_pc : true       #将规划的轨迹在RVIZ上进行可视化
+  publish_cost_grid_pc: true   #将代价值进行可视化显示
+  global_frame_id: map         #全局参考坐标系
+ 
+# 是否为全向移动机器人
+  holonomic_robot: true

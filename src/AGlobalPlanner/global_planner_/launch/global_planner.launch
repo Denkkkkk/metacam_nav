@@ -1,0 +1,62 @@
+<launch>
+   <!-- Arguments -->
+   <arg name="ns" default="Sentry" />
+   <arg name="map_file" default="$(find map_manager)/map/rmul.yaml" />
+   <arg name="open_rviz" default="true" />
+
+   <arg name="world_name" default="RMUL2024" />
+   <arg name="paused" default="false" />   <!-- 仿真是否应该在启动时处于暂停状态 -->
+   <arg name="use_sim_time" default="true" />
+   <arg name="gui" default="true" />
+   <!--模型车的起点放置位置-->
+   <arg name="vehicleX" default="0" />
+   <arg name="vehicleY" default="0" />
+   <arg name="vehicleZ" default="0.2" />
+   <arg name="vehicleYaw" default="0" />
+   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
+      <arg name="world_name" value="$(arg world_name)" />
+      <arg name="vehicleX" value="$(arg vehicleX)" />
+      <arg name="vehicleY" value="$(arg vehicleY)" />
+      <arg name="vehicleZ" value="$(arg vehicleZ)" />
+      <arg name="use_sim_time" value="$(arg use_sim_time)" />
+      <arg name="paused" value="$(arg paused)" />
+      <arg name="gui" value="$(arg gui)" />
+      <arg name="is_open_rviz" value="false" />
+   </include>
+
+   <!-- velodyne点云处理成/registered_scan和里程计/state_estimation输出 -->
+   <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">
+      <arg name="robotFrame" value="$(arg ns)/vehicle" />
+   </include>
+
+   <!-- 3D点云转2D-->
+   <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
+      <arg name="min_intensity" value="0.2" />
+   </include>
+
+   <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
+   <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
+      <arg name="checkTerrainConn" value="true" />
+   </include>
+
+   <include file="$(find map_to_odom)/launch/map_to_odom.launch">
+      <arg name="vehicleX" value="0.0" />
+      <arg name="vehicleY" value="0.0" />
+   </include>
+
+   <!-- Map server -->
+   <node pkg="map_server" name="map_server" type="map_server" respawn="true" args="$(arg map_file)" />
+
+   <!-- move_base -->
+   <include file="$(find move_base)/launch/move_base_goalOnly.launch">
+      <arg name="odom_topic" value="/state_estimation" />
+   </include>
+
+   <!-- rviz -->
+   <group if="$(arg open_rviz)">
+      <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
+         args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
+      <!-- <node pkg="rviz" type="rviz" name="rviz" required="true"
+         args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_navigation.rviz" /> -->
+   </group>
+</launch>

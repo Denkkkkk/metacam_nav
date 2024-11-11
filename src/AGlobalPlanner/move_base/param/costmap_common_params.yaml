@@ -1,0 +1,62 @@
+#map_type: voxel
+map_type: costmap
+
+# 圆形机器人半径
+robot_radius: 0.27
+# 矩形机器人
+# footprint: [[0.23,0.19],[0.25,0],[0.23,-0.19],[-0.23, -0.19],[-0.23,0.19]]
+# resolution: 0.05         #地图的分辨率，该分辨率可以从加载的地图相对应的配置文件中获取到;
+
+
+#动态障碍地图层
+obstacle_layer:
+  enabled: true
+  combination_method: 1        # 只能设置为0或1，用来更新地图上的代价值，一般设置为1;
+  #如果设置为false，那么地图上代价值就只分为致命碰撞和自由区域两种。
+  #如果设置为true，那么就分为致命碰撞，自由区域和未知区域三种。
+  #若为true,可以把一些未探索的未知区域也来参与到路径规划。
+  track_unknown_space: true
+  origin_z: 0.0
+  z_voxels: 1
+  z_resolution: 0.05
+  unknown_cost_value: 0
+  unknown_threshold: 8
+  mark_threshold: 0
+  publish_voxel_map: false
+
+  #动态障碍物检测范围
+  #只有靠近到该范围内的动态障碍物才会更新
+  obstacle_range: 4.5
+  #在机器人移动过程中，实时清除代价地图上的障碍物的最大范围，更新可自由移动的空间数据。
+  raytrace_range: 4.5
+  inf_is_valid: true
+  max_obstacle_height: 2.0        #超过该高度的障碍物，并不进行检测
+  min_obstacle_height: -2.0       #低于该高度的障碍物，并不进行检测
+  controller_frequency: 5         #控制器更新频率，也就是规划频率    
+
+  #这里可以用逗号形式来区分开很多个传感器，例如激光雷达，碰撞传感器，超声波传感器等
+  #要与下面的laser_scan_sensor:对应
+  observation_sources: scan     
+  scan: {
+    sensor_frame: Sentry/vehicle,  
+    observation_persistence: 0.2,    #观察数据的持续时间，不能低于更新频率10hz。
+    max_obstacle_height: 4.0,        #超过该范围的障碍物，并不进行检测
+    min_obstacle_height: -4.0,       #低于该范围的障碍物，并不进行检测
+    data_type: LaserScan,   
+    topic: /terrain_map_2d,                  
+    marking: true,                  #是否可以使用该传感器来标记障碍物;
+    clearing: true                 #是否可以使用该传感器来清除障碍物;                
+  }
+
+#障碍膨胀层
+inflation_layer:
+  enabled: true
+  #代价地图中到障碍物距离在内切圆半径到膨胀半径之间的所有cell可以使用如下公式来计算膨胀代价：
+  # exp(-1.0 * cost_scaling_factor * (distance_from_obstacle – inscribed_radius)) * 
+  # (costmap_2d::INSCRIBED_INFLATED_OBSTACLE – 1),
+  #公式中costmap_2d::INSCRIBED_INFLATED_OBSTACLE目前指定为254，
+  #注意： 由于在公式中cost_scaling_factor被乘了一个负数，所以增大比例因子反而会降低代价
+  #默认情况下，这个指数速率是10。
+  cost_scaling_factor: 7.0        #膨胀过程中应用到代价值的比例因子
+  
+

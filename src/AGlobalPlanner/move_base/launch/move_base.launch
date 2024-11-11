@@ -1,0 +1,32 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="cmd_vel_topic" default="Sentry/cmd_vel" />
+    <arg name="odom_topic" default="/state_estimation" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+    <remap from="odom" to="$(arg odom_topic)" />
+
+    <!-- move_base -->
+    <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+        <!-- 设置使用的全局规划器 -->
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <!-- 设置调用的局部规划器，必须要现有这个局部规划包 -->
+        <param name="use_local_planner" value="false" />
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <!-- 通用参数必须先加载，手动分别加载命名空间其实和后续的yaml文件中写一样 -->
+
+        <!-- 代价地图-->
+        <rosparam file="$(find move_base)/param/costmap_common_params.yaml" command="load"
+            ns="global_costmap" />
+        <rosparam file="$(find move_base)/param/costmap_common_params.yaml" command="load"
+            ns="local_costmap" />
+        <rosparam file="$(find move_base)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find move_base)/param/global_costmap_params.yaml" command="load" />
+
+        <!-- move_base通用-->
+        <rosparam file="$(find move_base)/param/move_base_params.yaml" command="load" />
+
+        <!-- 局部规划器选择-->
+        <rosparam file="$(find move_base)/param/local_plugins/dwa_local_planner_params.yaml"
+            command="load" />
+    </node>
+</launch>

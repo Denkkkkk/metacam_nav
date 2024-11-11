@@ -3,7 +3,7 @@
   <arg name="use_global_planner" default="false" />
   <arg name="use_rviz" default="true" />
   <arg name="use_2dlaser" default="false" />
-  <arg name="use_map" default="false" />
+  <arg name="use_map" default="true" />
 
   <!-- 仿真系统参数 -->
   <arg name="ns" default="TITA" />
@@ -19,7 +19,6 @@
   <arg name="world_name" default="RMUC2024" />
   <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
   <arg name="min_intensity_global" default="0.25" />
-  <arg name="min_intensity_blind" default="0.33" />
   <arg name="down_hill_judge_time" default="0.4" />
 
   <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
@@ -70,7 +69,6 @@
   <group if="$(arg use_global_planner)">
     <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
       <arg name="min_intensity" value="$(arg min_intensity_global)" />
-      <arg name="min_intensity_blind" value="$(arg min_intensity_blind)" />
     </include>
     <!-- Map server -->
     <group if="$(arg use_map)">

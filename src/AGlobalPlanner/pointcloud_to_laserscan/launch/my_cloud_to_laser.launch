@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="min_intensity" default="0.2" />
+    <!-- run pointcloud_to_laserscan node -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"
+        name="pointcloud_to_laserscan" output="screen">
+
+        <remap from="cloud_in" to="/terrain_map" />
+        <remap from="scan" to="/terrain_map_2d" />
+
+        <!-- 是否使用intensity来代替高度-->
+        <param name="use_intensity" type="bool" value="true" />
+        <param name="min_intensity" type="double" value="$(arg min_intensity)" />
+        <param name="max_intensity" type="double" value="1.0" />
+
+        <rosparam>
+            target_frame: Sentry/vehicle # Leave disabled to output scan in pointcloud frame
+            transform_tolerance: 0.5
+            min_height: -0.75
+            max_height: 0.75
+
+            angle_min: -3.1415926 # -M_PI/2_1.5708
+            angle_max: 3.1415926 # M_PI/2
+            angle_increment: 3.14/720 # M_PI/360.0
+            scan_time: 0.1
+            range_min: 0.2
+            range_max: 20
+            use_inf: true
+            inf_epsilon: 1.0
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of
+            #threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>
+
+    </node>
+
+</launch>
