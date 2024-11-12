@@ -1,10 +1,10 @@
 <launch>
    <!-- Arguments -->
-   <arg name="ns" default="Sentry" />
-   <arg name="map_file" default="$(find map_manager)/map/rmul.yaml" />
+   <arg name="ns" default="TITA" />
+   <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
    <arg name="open_rviz" default="true" />
 
-   <arg name="world_name" default="RMUL2024" />
+   <arg name="world_name" default="RMUC2024" />
    <arg name="paused" default="false" />   <!-- 仿真是否应该在启动时处于暂停状态 -->
    <arg name="use_sim_time" default="true" />
    <arg name="gui" default="true" />
@@ -31,7 +31,7 @@
 
    <!-- 3D点云转2D-->
    <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-      <arg name="min_intensity" value="0.2" />
+      <arg name="min_intensity" value="0.1" />
    </include>
 
    <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
@@ -48,15 +48,11 @@
    <node pkg="map_server" name="map_server" type="map_server" respawn="true" args="$(arg map_file)" />
 
    <!-- move_base -->
-   <include file="$(find move_base)/launch/move_base_goalOnly.launch">
-      <arg name="odom_topic" value="/state_estimation" />
-   </include>
+   <include file="$(find move_base)/launch/move_base.launch" />
 
    <!-- rviz -->
    <group if="$(arg open_rviz)">
       <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
          args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
-      <!-- <node pkg="rviz" type="rviz" name="rviz" required="true"
-         args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_navigation.rviz" /> -->
    </group>
 </launch>

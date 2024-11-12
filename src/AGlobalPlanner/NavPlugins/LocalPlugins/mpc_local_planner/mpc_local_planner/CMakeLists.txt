@@ -4,7 +4,7 @@ project(mpc_local_planner)
 # Set to Release in order to speed up the program significantly
 #set(CMAKE_BUILD_TYPE Release) #None, Debug, Release, RelWithDebInfo, MinSizeRel
 set(BUILD_TEST OFF)
-set(BUILD_mpc_local_planner OFF)
+set(BUILD_mpc_local_planner ON)
 if(NOT BUILD_mpc_local_planner)
   return()
 endif()
@@ -238,6 +238,7 @@ if(BUILD_mpc_local_planner)
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
   endif()
+  
   ## Mark cpp header files for installation
   install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

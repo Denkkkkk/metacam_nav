@@ -10,8 +10,8 @@
         <!-- 设置使用的全局规划器 -->
         <param name="base_global_planner" value="global_planner/GlobalPlanner" />
         <!-- 设置调用的局部规划器，必须要现有这个局部规划包 -->
-        <param name="use_local_planner" value="false" />
-        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <param name="use_local_planner" value="true" />
+        <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS" />
         <!-- 通用参数必须先加载，手动分别加载命名空间其实和后续的yaml文件中写一样 -->
 
         <!-- 代价地图-->
