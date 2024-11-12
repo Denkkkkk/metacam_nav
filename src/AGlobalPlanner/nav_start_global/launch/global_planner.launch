@@ -1,7 +1,7 @@
 <launch>
    <!-- Arguments -->
    <arg name="ns" default="TITA" />
-   <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
+   <arg name="map_file" default="$(find move_base)/map/rmuc.yaml" />
    <arg name="open_rviz" default="true" />
 
    <arg name="world_name" default="RMUC2024" />
@@ -14,10 +14,12 @@
    <arg name="vehicleZ" default="0.2" />
    <arg name="vehicleYaw" default="0" />
    <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
+      <arg name="ns" value="$(arg ns)" />
       <arg name="world_name" value="$(arg world_name)" />
       <arg name="vehicleX" value="$(arg vehicleX)" />
       <arg name="vehicleY" value="$(arg vehicleY)" />
       <arg name="vehicleZ" value="$(arg vehicleZ)" />
+      <arg name="vehicleYaw" default="0" />
       <arg name="use_sim_time" value="$(arg use_sim_time)" />
       <arg name="paused" value="$(arg paused)" />
       <arg name="gui" value="$(arg gui)" />
@@ -26,13 +28,11 @@
 
    <!-- velodyne点云处理成/registered_scan和里程计/state_estimation输出 -->
    <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">
-      <arg name="robotFrame" value="$(arg ns)/vehicle" />
+      <arg name="ns" value="$(arg ns)" />
    </include>
 
    <!-- 3D点云转2D-->
-   <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-      <arg name="min_intensity" value="0.1" />
-   </include>
+   <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch" />
 
    <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
    <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">

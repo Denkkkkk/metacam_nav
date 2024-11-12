@@ -39,6 +39,10 @@ RoboCtrl::RoboCtrl()
     {
         pubVirHeadDir = nh.advertise<std_msgs::Float32>("/vir_head_dir", 1);
     }
+    if (pctlPtr->get_params().useCloudSlowDown)
+    {
+        subSlowDown = nh.subscribe<std_msgs::Float32>("/slow_down", 1, &RoboCtrl::slowDownHandler, this);
+    }
     subPath = nh.subscribe<nav_msgs::Path>("/local_path", 1, &RoboCtrl::pathHandler, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &RoboCtrl::stopHandler, this);
     subGoal = nh.subscribe<geometry_msgs::PoseStamped>("/way_point", 5, &RoboCtrl::goalHandler, this);
@@ -59,7 +63,6 @@ RoboCtrl::RoboCtrl()
  */
 void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
 {
-    ROS_INFO("vehicleSpeed: %f", vehicleSpeed);
     if (pctlPtr->get_params().use_virtual_head)
     {
         double vh_to_v;
@@ -189,6 +192,7 @@ void RoboCtrl::slowStop()
 
 void RoboCtrl::pure_persuit()
 {
+    maxSpeed1 = pctlPtr->get_params().maxSpeed; // 恢复最大速度
     // 全局目标点到最新车体位置的距离
     if (pctlPtr->get_params().use_move_base)
     {
@@ -247,6 +251,10 @@ void RoboCtrl::pure_persuit()
     else
     {
         splined_path = path;
+    }
+    if (pctlPtr->get_params().useCloudSlowDown)
+    {
+        slowDown();
     }
     /**
      * @brief 转弯点减速
@@ -429,7 +437,7 @@ void RoboCtrl::pure_persuit()
         {
             if (abs(dirDiff) < 0.2)
             {
-                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 3.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
             }
             else
             {
@@ -548,7 +556,19 @@ void RoboCtrl::pure_persuit()
             pubGoalPathDir.publish(goal_path_dir);
         }
     }
-    maxSpeed1 = pctlPtr->get_params().maxSpeed; // 恢复最大速度
+}
+
+void RoboCtrl::slowDown()
+{
+    double slowDown1_update_duaration = ros::Time::now().toSec() - slowDown1_update_time;
+    if (slowDown1_update_duaration > 2.0)
+    {
+        slowDown1 = 0;
+    }
+    if (slowDown1 >= pctlPtr->get_params().slowBegin)
+        maxSpeed1 = pctlPtr->get_params().maxSpeed * 0.6;
+    if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
+        maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
 }
 
 int main(int argc, char **argv)

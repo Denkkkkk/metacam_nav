@@ -1,8 +1,8 @@
 <launch>
     <!-- Arguments -->
-    <arg name="cmd_vel_topic" default="Sentry/cmd_vel" />
+    <arg name="ns" default="" />
     <arg name="odom_topic" default="/state_estimation" />
-    <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+    <remap from="cmd_vel" to="$(arg ns)/cmd_vel" />-
     <remap from="odom" to="$(arg odom_topic)" />
 
     <!-- move_base -->

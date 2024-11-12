@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(global_planner_)
+project(nav_start_global)
 
 find_package(catkin REQUIRED COMPONENTS
         roscpp
@@ -23,7 +23,7 @@ catkin_package(
 
 include_directories(${catkin_INCLUDE_DIRS}  ${EIGEN3_INCLUDE_DIR} include)
 
-add_executable(global_planner_ src/global_planner.cpp)
+add_executable(nav_start_global src/global_planner.cpp)
 
-target_link_libraries(global_planner_ ${catkin_LIBRARIES}  ${EIGEN3_LIBS})
+target_link_libraries(nav_start_global ${catkin_LIBRARIES}  ${EIGEN3_LIBS})
 

@@ -50,9 +50,8 @@
 namespace pointcloud_to_laserscan {
     void PointCloudToLaserScanNodelet::update_params()
     {
-
-        min_intensity_ = min_intensity_origin_;
-        // printf("min_intensity_:%f\n", min_intensity_);
+        nh_.param<double>("local_planner/obstacleHeightThre", min_intensity_, 0.1);
+        printf("min_intensity_:%f\n", min_intensity_);
     }
 
     PointCloudToLaserScanNodelet::PointCloudToLaserScanNodelet()
@@ -65,7 +64,7 @@ namespace pointcloud_to_laserscan {
         private_nh_ = getPrivateNodeHandle();
 
         private_nh_.param<bool>("use_intensity", use_intensity_, true);
-        private_nh_.param<double>("min_intensity", min_intensity_, 0.1);
+        nh_.param<double>("local_planner/obstacleHeightThre", min_intensity_, 0.1);
         min_intensity_origin_ = min_intensity_;
         private_nh_.param<double>("max_intensity", max_intensity_, 1.0);
 
@@ -157,7 +156,7 @@ namespace pointcloud_to_laserscan {
     void PointCloudToLaserScanNodelet::cloudCb(const sensor_msgs::PointCloud2ConstPtr &cloud_msg)
     {
         // 更新参数
-        // update_params();
+        update_params();
         // build laserscan output
         sensor_msgs::LaserScan output;
         output.header = cloud_msg->header;

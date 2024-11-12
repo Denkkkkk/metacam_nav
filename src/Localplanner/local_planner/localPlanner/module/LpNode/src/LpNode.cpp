@@ -155,6 +155,14 @@ void LpNode::transform_goal()
     float relativeGoalY = (-(goalX - vehicleX) * sinVehicleYaw + (goalY - vehicleY) * cosVehicleYaw);
     // 计算车体到waypoint（目标点）之间的距离
     relativeGoalDis = sqrt(relativeGoalX * relativeGoalX + relativeGoalY * relativeGoalY);
+    if (relativeGoalDis > 1.0)
+    {
+        actual_goalClearRange = lctlPtr->param.goalClearRange / 3;
+    }
+    else
+    {
+        actual_goalClearRange = lctlPtr->param.goalClearRange;
+    }
     // 目标点转移到车体坐标系
     float relativeGoalX_global = ((goal_point.pose.position.x - vehicleX) * cosVehicleYaw + (goal_point.pose.position.y - vehicleY) * sinVehicleYaw);
     float relativeGoalY_global = (-(goal_point.pose.position.x - vehicleX) * sinVehicleYaw + (goal_point.pose.position.y - vehicleY) * cosVehicleYaw);

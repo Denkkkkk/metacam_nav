@@ -62,6 +62,8 @@ private:
     void goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn);
     void controlModeCallback(const std_msgs::Int8::ConstPtr &msg);
     void imuCallback(const sensor_msgs::Imu::ConstPtr &imu);
+    void slowCallback(const std_msgs::Float32::ConstPtr &slowDown);
+    void slowDown();
 
     ros::NodeHandle nh;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");

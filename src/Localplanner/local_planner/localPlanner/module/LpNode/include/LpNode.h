@@ -124,4 +124,5 @@ public:
     bool need_close_map = false;
     bool need_read_path = false;
     double pathScale;
+    double actual_goalClearRange;
 };
