@@ -9,10 +9,10 @@
    <arg name="use_sim_time" default="true" />
    <arg name="gui" default="true" />
    <!--模型车的起点放置位置-->
-   <arg name="vehicleX" default="0" />
-   <arg name="vehicleY" default="0" />
-   <arg name="vehicleZ" default="0.2" />
-   <arg name="vehicleYaw" default="0" />
+   <arg name="vehicleX" default="7.5" />
+   <arg name="vehicleY" default="6.0" />
+   <arg name="vehicleZ" default="0.0" />
+   <arg name="vehicleYaw" default="1.57" />
    <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
       <arg name="ns" value="$(arg ns)" />
       <arg name="world_name" value="$(arg world_name)" />
@@ -42,8 +42,9 @@
    <include file="$(find map_to_odom)/launch/map_to_odom.launch">
       <arg name="vehicleX" value="0.0" />
       <arg name="vehicleY" value="0.0" />
+      <arg name="vehicleYaw" value="0.0" />
+      <arg name="ns" value="$(arg ns)" />
    </include>
-
    <!-- Map server -->
    <node pkg="map_server" name="map_server" type="map_server" respawn="true" args="$(arg map_file)" />
 

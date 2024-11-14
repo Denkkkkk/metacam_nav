@@ -51,7 +51,7 @@ namespace pointcloud_to_laserscan {
     void PointCloudToLaserScanNodelet::update_params()
     {
         nh_.param<double>("localPlanner/obstacleHeightThre", min_intensity_, 0.1);
-        printf("min_intensity_:%f\n", min_intensity_);
+        // printf("min_intensity_:%f\n", min_intensity_);
     }
 
     PointCloudToLaserScanNodelet::PointCloudToLaserScanNodelet()

@@ -20,10 +20,3 @@ catkin_package(
         pcl_ros
         geometry_msgs
 )
-
-include_directories(${catkin_INCLUDE_DIRS}  ${EIGEN3_INCLUDE_DIR} include)
-
-add_executable(nav_start_global src/global_planner.cpp)
-
-target_link_libraries(nav_start_global ${catkin_LIBRARIES}  ${EIGEN3_LIBS})
-
