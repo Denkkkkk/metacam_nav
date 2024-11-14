@@ -157,7 +157,7 @@ void LpNode::transform_goal()
     relativeGoalDis = sqrt(relativeGoalX * relativeGoalX + relativeGoalY * relativeGoalY);
     if (relativeGoalDis > 1.0)
     {
-        actual_goalClearRange = lctlPtr->param.goalClearRange / 3;
+        actual_goalClearRange = lctlPtr->param.goalClearRange / 10;
     }
     else
     {
@@ -214,7 +214,7 @@ void LpNode::local_planner()
             //  ①checkObstacle为true
             // *②只考虑规划路径范围内的点云，这是主要的，也可以说可以只看这个
             //  ③如果使用pathCropByGoal，超过目标点的点云就不用管了
-            if (dis < pathRange && (dis <= (relativeGoalDis + lctlPtr->param.goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)) && lctlPtr->param.checkObstacle)
+            if (dis < pathRange && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)) && lctlPtr->param.checkObstacle)
             {
                 // 下文是对此段代码的解释
                 // rotAng当前检索方向和车体的角度

@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 
 <launch>
+    <arg name="target_frame" default="vehicle" />
+
     <!-- run pointcloud_to_laserscan node -->
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"
         name="pointcloud_to_laserscan" output="screen">
@@ -11,9 +13,10 @@
         <!-- 是否使用intensity来代替高度-->
         <param name="use_intensity" type="bool" value="true" />
         <param name="max_intensity" type="double" value="1.0" />
+        <param name="target_frame" type="string" value="$(arg target_frame)" />
 
         <rosparam>
-            target_frame: Sentry/vehicle # Leave disabled to output scan in pointcloud frame
+            : /vehicle # Leave disabled to output scan in pointcloud frame
             transform_tolerance: 0.5
             min_height: -0.75
             max_height: 0.75

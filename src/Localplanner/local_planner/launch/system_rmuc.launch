@@ -17,9 +17,9 @@
     - 与基础地形分析一样的订阅+/terrain_map，此地图分析面积更大，频率更低，主要用来生成高质量的全局规划
   发布：
   /terrain_map_ext  扩展地形点云地图 -->
-      <!-- <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
+      <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
             <arg name="checkTerrainConn" value="true" />
-      </include> -->
+      </include>
 
       <include file="$(find local_planner)/launch/local_planner.launch">
             <arg name="vehicleX" value="$(arg vehicleX)" />

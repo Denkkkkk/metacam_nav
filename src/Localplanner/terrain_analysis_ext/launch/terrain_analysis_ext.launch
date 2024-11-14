@@ -5,7 +5,7 @@
   <node pkg="terrain_analysis_ext" type="terrainAnalysisExt" name="terrainAnalysisExt"
     output="screen" respawn="true">
     <param name="scanVoxelSize" type="double" value="0.2" />            <!--下采样体素大小-->
-    <param name="decayTime" type="double" value="0.5" />               <!--衰减时间,体素地图中超过这个时间的点云会被清除-->
+    <param name="decayTime" type="double" value="0.6" />               <!--衰减时间,体素地图中超过这个时间的点云会被清除-->
     <param name="noDecayDis" type="double" value="0" />
     <param name="clearingDis" type="double" value="20.0" />
     <param name="useSorting" type="bool" value="true" />
@@ -21,7 +21,7 @@
     <param name="terrainConnThre" type="double" value="0.5" />
     <param name="terrainUnderVehicle" type="double" value="-0.75" />
     <param name="ceilingFilteringThre" type="double" value="2.0" />
-    <param name="localTerrainMapRadius" type="double" value="4.8" />        <!--局部地形地图半径为5m-->
+    <param name="localTerrainMapRadius" type="double" value="6.0" />        <!--保留的局部地形地图半径为5m-->
   </node>
 
 </launch>

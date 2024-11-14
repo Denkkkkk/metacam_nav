@@ -38,7 +38,7 @@ void LpNode::pub_allFreePath()
 
                 float dis = sqrt(x * x + y * y);
                 // 点云往里收缩pathScale，可行路就可以往外扩张pathScale
-                if (dis <= pathRange / pathScale && (dis <= (relativeGoalDis + lctlPtr->param.goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)))
+                if (dis <= pathRange / pathScale && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)))
                 {
                     // 转车头系
                     point.x = (cos(rotAng) * x - sin(rotAng) * y) / pathScale;
