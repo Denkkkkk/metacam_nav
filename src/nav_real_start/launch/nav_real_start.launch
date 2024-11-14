@@ -38,7 +38,7 @@
         </group>
         <!-- move_base -->
         <include file="$(find move_base)/launch/move_base_goalOnly.launch">
-            <arg name="odom_topic" value="/state_estimation" />
+            <arg name="odom_topic" value="/Odometry" />
         </include>
     </group>
 

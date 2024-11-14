@@ -1,12 +1,12 @@
 <launch>
     <!-- Arguments -->
     <arg name="ns" default="" />
-    <arg name="odom_topic" default="/state_estimation" />
-    <remap from="cmd_vel" to="$(arg ns)/cmd_vel" />-
-    <remap from="odom" to="$(arg odom_topic)" />
+    <remap from="cmd_vel" to="$(arg ns)/cmd_vel" />
+    <remap from="odom" to="/Odometry" />
 
     <!-- move_base -->
-    <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+    <node
+        pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
         <!-- 设置使用的全局规划器 -->
         <param name="base_global_planner" value="global_planner/GlobalPlanner" />
         <!-- 设置调用的局部规划器，必须要现有这个局部规划包 -->

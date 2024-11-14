@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-    <arg name="target_frame" default="vehicle" />
+    <arg name="target_frame" default="TITA/vehicle" />
 
     <!-- run pointcloud_to_laserscan node -->
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"
@@ -16,7 +16,6 @@
         <param name="target_frame" type="string" value="$(arg target_frame)" />
 
         <rosparam>
-            : /vehicle # Leave disabled to output scan in pointcloud frame
             transform_tolerance: 0.5
             min_height: -0.75
             max_height: 0.75

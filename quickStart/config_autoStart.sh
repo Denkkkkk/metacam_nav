@@ -23,7 +23,7 @@ sed -i "/$pattern2/d" "$file"
 sed -i "/$pattern3/d" "$file"
 sed -i "/ROSCONSOLE_FORMAT/d" "$file"
 
-echo "alias sentry_run='cd ${dir};./quickStart/run.sh'" >> ~/.bashrc
+echo "alias sentry_run='. ${dir}/quickStart/run.sh'" >> ~/.bashrc
 echo "alias sentry_kill='. ${dir}/quickStart/all_kill.sh'" >> ~/.bashrc
 echo "source ${dir}/devel/setup.bash" >> ~/.bashrc
 echo "export ROSCONSOLE_FORMAT='[\${node}]: \${message}'" >> ~/.bashrc

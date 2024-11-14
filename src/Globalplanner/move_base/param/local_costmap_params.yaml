@@ -4,7 +4,7 @@
 
 local_costmap:
   global_frame: map
-  robot_base_frame: Sentry/vehicle
+  robot_base_frame: TITA/vehicle
   static_map: false
   rolling_window: true      #是否在机器人移动过程中需要滚动窗口，始终保持机器人在当前窗口中心位置;
   width: 10.0                #滚动窗口的总宽度，单位是米;

@@ -38,7 +38,7 @@ obstacle_layer:
   #要与下面的laser_scan_sensor:对应
   observation_sources: scan     
   scan: {
-    sensor_frame: Sentry/vehicle,  
+    sensor_frame: TITA/vehicle,  
     observation_persistence: 0.2,    #观察数据的持续时间，不能低于更新频率10hz。
     max_obstacle_height: 4.0,        #超过该范围的障碍物，并不进行检测
     min_obstacle_height: -4.0,       #低于该范围的障碍物，并不进行检测
