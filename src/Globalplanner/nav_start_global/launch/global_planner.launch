@@ -9,17 +9,17 @@
    <arg name="use_sim_time" default="true" />
    <arg name="gui" default="true" />
    <!--模型车的起点放置位置-->
-   <arg name="vehicleX" default="7.5" />
-   <arg name="vehicleY" default="6.0" />
+   <arg name="vehicleX" default="6.0" />
+   <arg name="vehicleY" default="7.5" />
    <arg name="vehicleZ" default="0.0" />
-   <arg name="vehicleYaw" default="1.57" />
+   <arg name="vehicleYaw" default="0.0" />
    <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
       <arg name="ns" value="$(arg ns)" />
       <arg name="world_name" value="$(arg world_name)" />
       <arg name="vehicleX" value="$(arg vehicleX)" />
       <arg name="vehicleY" value="$(arg vehicleY)" />
       <arg name="vehicleZ" value="$(arg vehicleZ)" />
-      <arg name="vehicleYaw" default="0" />
+      <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
       <arg name="use_sim_time" value="$(arg use_sim_time)" />
       <arg name="paused" value="$(arg paused)" />
       <arg name="gui" value="$(arg gui)" />

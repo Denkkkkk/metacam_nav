@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(dwa_local_planner)
 
-set(BUILD_dwa_local_planner OFF)
+set(BUILD_dwa_local_planner ON)
 if(NOT BUILD_dwa_local_planner)
   return()
 endif()

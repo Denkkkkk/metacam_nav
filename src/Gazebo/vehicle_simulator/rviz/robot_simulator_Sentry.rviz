@@ -374,13 +374,13 @@ Visualization Manager:
       Value: false
     - Alpha: 1
       Class: rviz/Axes
-      Enabled: false
+      Enabled: true
       Length: 1
       Name: map
       Radius: 0.10000000149011612
       Reference Frame: <Fixed Frame>
       Show Trail: false
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -867,7 +867,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 21.457643508911133
+      Distance: 24.032560348510742
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -875,17 +875,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 7.473939895629883
-        Y: 7.330224514007568
+        X: 5.09829044342041
+        Y: 1.192690134048462
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.119796633720398
+      Pitch: 1.5697963237762451
       Target Frame: vehicle
-      Yaw: 2.1753828525543213
+      Yaw: 4.865384101867676
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055
