@@ -187,6 +187,20 @@ void LpNode::local_planner()
         {
             lctlPtr->set_add_point_radius(-1); // 重置为默认
         }
+        // 动态调整规划方向,更小的范围要先判断
+        if (pathRange <= lctlPtr->param.minPathRange + lctlPtr->param.pathRangeStep)
+        {
+            lctlPtr->set_enlarge_dirThre(30);
+        }
+        else if (pathRange < lctlPtr->param.adjacentRange - 2 * lctlPtr->param.pathRangeStep)
+        {
+            lctlPtr->set_enlarge_dirThre(10);
+        }
+        else
+        {
+            lctlPtr->set_enlarge_dirThre(0);
+        }
+
         clear_Lists_score(); // 先清空数据
         plannerCloudCropSize = plannerCloudCrop->points.size();
         PannerAtuCloud->clear();    // 实际用于规划的点云

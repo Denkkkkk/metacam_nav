@@ -65,6 +65,10 @@ public:
             param.add_point_radius = radius;
         }
     }
+    inline void set_enlarge_dirThre(double enlarge_dir)
+    {
+        param.dirThre = param_origin.dirThre + enlarge_dir;
+    }
 
     Params param;
     Params param_origin;
