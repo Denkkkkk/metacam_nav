@@ -179,6 +179,14 @@ void LpNode::local_planner()
     while ((pathScale != lctlPtr->param.minPathScale && lctlPtr->param.usePathScale) || pathRange >= lctlPtr->param.minPathRange)
     {
         ROS_INFO("Planning...pathRange: %f", pathRange);
+        if (pathRange <= lctlPtr->param.minPathRange + 2 * lctlPtr->param.pathRangeStep)
+        {
+            lctlPtr->set_add_point_radius(0.2);
+        }
+        else
+        {
+            lctlPtr->set_add_point_radius(-1); // 重置为默认
+        }
         clear_Lists_score(); // 先清空数据
         plannerCloudCropSize = plannerCloudCrop->points.size();
         PannerAtuCloud->clear();    // 实际用于规划的点云

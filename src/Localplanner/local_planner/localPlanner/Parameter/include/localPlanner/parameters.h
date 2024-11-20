@@ -53,6 +53,18 @@ public:
     {
         param = param_origin;
     }
+    inline void set_add_point_radius(double radius)
+    {
+
+        if (abs(radius + 1) < 0.01)
+        {
+            param.add_point_radius = param_origin.add_point_radius;
+        }
+        else
+        {
+            param.add_point_radius = radius;
+        }
+    }
 
     Params param;
     Params param_origin;

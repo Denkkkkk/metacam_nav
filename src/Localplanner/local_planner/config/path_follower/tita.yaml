@@ -1,9 +1,9 @@
 # sports parameters
 minSpeed: 0.2  # 加减速死区阈值
-yawRateGain: 2.0  # 一般情况下的伪车头转动增益
-stopYawRateGain: 4.5  # 静止下的伪车头转动增益
-maxYawRate: 30.0  # 车头最大转动角速度
-maxStopYawRate: 50.0  # 低速下车头最大转动角速度, 有过大保护
+yawRateGain: 2.0  # 一般情况下的车头转动增益
+stopYawRateGain: 4.0  # 静止下的车头转动增益
+maxYawRate: 35.0  # 车头最大转动角速度
+maxStopYawRate: 45.0  # 低速下车头最大转动角速度, 有过大保护
 maxAddAccel: 3.0  # 最大加速速度
 maxSlowAccel: 3.0  # 最大减速加速度
 dirDiffThre_slow: 0.2  # 角度差

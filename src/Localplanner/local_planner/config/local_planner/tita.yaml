@@ -1,7 +1,7 @@
 # 常用参数
-vehicleWidth: 0.62  # 车宽
+vehicleWidth: 0.65  # 车宽
 vehicleLength: 0.6  # 车长
-add_point_radius: 0.23 # 膨胀半径
+add_point_radius: 0.24 # 膨胀半径
 dirThre: 85  # 目标点方向允许规划范围
 minPathRange: 0.6  # 最小路径范围
 goalClearRange: 0.5  # 快到目的地时减小障碍物检测的范围
