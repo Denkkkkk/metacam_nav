@@ -6,7 +6,7 @@ dirThre: 85  # 目标点方向允许规划范围
 minPathRange: 0.6  # 最小路径范围
 goalClearRange: 0.5  # 快到目的地时减小障碍物检测的范围
 slow_dis: 1.0 # 近障减速距离
-obstacleHeightThre: 0.1  # 地形分析中，intensity的筛选阈值
+obstacleHeightThre: 0.09  # 地形分析中，intensity的筛选阈值
 
 # 用于规划的点云的参数
 terrainVoxelSize: 0.1  # 地形分析的体素大小
