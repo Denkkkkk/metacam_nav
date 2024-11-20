@@ -4,7 +4,7 @@
     <!--人为设定地面分割周围对比中，单个平面体素的大小（最好是0.1到0.5就行）因为报错无法解决，暂时舍去-->
     <!-- <param name="planarVoxelSize" type="double" value="0.2" /> -->
     <param name="terrainMapRadius" type="double" value="6.0" /> <!--人为设定地形分析半径，应当小于10-->
-    <param name="scanVoxelSize" type="double" value="0.1" />    <!--下采样体素大小-->
+    <param name="scanVoxelSize" type="double" value="0.05" />    <!--下采样体素大小-->
     <param name="decayTime" type="double" value="0.6" />        <!--衰减时间,体素地图中超过这个时间的点云会被清除-->
     <param name="noDecayDis" type="double" value="0" />         <!--在这个区域的点云永远不会清除！很危险-->
     <param name="clearingDis" type="double" value="5.0" />      <!--回调收到开启清图标志位后，清空这个范围外的所有点云-->
