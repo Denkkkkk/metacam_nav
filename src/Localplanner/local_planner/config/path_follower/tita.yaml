@@ -8,7 +8,7 @@ maxAddAccel: 3.0  # 最大加速速度
 maxSlowAccel: 3.0  # 最大减速加速度
 dirDiffThre_slow: 0.2  # 角度差
 dirDiffThre_keep: 0.1  # 角度差
-quick_turn_speed: 0.1  # 减速到这个速度就允许快速转向
+quick_turn_speed: 0.08  # 减速到这个速度就允许快速转向
 use_getgoal_yaw: false  # 允许控制到目标点时的车头朝向
 getgoal_yaw: 0.0  # 到目标点时的车头相对世界坐标系的朝向
 useCloudSlowDown: true  # 使能根据周围障碍物点云密集情况进行减速
