@@ -6,7 +6,7 @@ maxYawRate: 30.0  # 车头最大转动角速度
 maxStopYawRate: 50.0  # 低速下车头最大转动角速度, 有过大保护
 maxAddAccel: 3.0  # 最大加速速度
 maxSlowAccel: 3.0  # 最大减速加速度
-dirDiffThre_slow: 0.28  # 角度差
+dirDiffThre_slow: 0.2  # 角度差
 dirDiffThre_keep: 0.1  # 角度差
 quick_turn_speed: 0.1  # 减速到这个速度就允许快速转向
 use_getgoal_yaw: false  # 允许控制到目标点时的车头朝向
@@ -14,11 +14,11 @@ getgoal_yaw: 0.0  # 到目标点时的车头相对世界坐标系的朝向
 useCloudSlowDown: true  # 使能根据周围障碍物点云密集情况进行减速
 
 # get goal parameters
-endGoalDis: 0.5  # 到达目标点范围内就停止
+endGoalDis: 0.6  # 到达目标点范围内就停止
 getGoal_speed: 0.2  # 刚好追踪到目标点时的速度
 use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
 closeGoal_direct_dis: 0.8  # 到目标点附近直走的阈值&&达到getGoal_speed的距离
-goalSlowDisThre: 1.5  # 靠近全局目标点时减速
+goalSlowDisThre: 1.6  # 靠近全局目标点时减速
 
 # Generally fixed parameters
 lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向

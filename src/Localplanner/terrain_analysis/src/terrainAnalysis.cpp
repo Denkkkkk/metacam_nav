@@ -85,18 +85,15 @@ const int planarVoxelWidth = 101;
 int planarVoxelHalfWidth = (planarVoxelWidth - 1) / 2;
 const int planarVoxelNum = planarVoxelWidth * planarVoxelWidth;
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr
-    laserCloud(new pcl::PointCloud<pcl::PointXYZI>());
-pcl::PointCloud<pcl::PointXYZI>::Ptr
-    laserCloudCrop(new pcl::PointCloud<pcl::PointXYZI>()); // 回调函数筛选后的最原始点云
-pcl::PointCloud<pcl::PointXYZI>::Ptr
-    laserCloudDwz(new pcl::PointCloud<pcl::PointXYZI>()); // 下采样后
+pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloud(new pcl::PointCloud<pcl::PointXYZI>());
+pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloud_last(new pcl::PointCloud<pcl::PointXYZI>());
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr
-    terrainCloud(new pcl::PointCloud<pcl::PointXYZI>());
-pcl::PointCloud<pcl::PointXYZI>::Ptr
-    terrainCloudElev(new pcl::PointCloud<pcl::PointXYZI>());             // 存储最终地形分析完的被认为是墙面障碍的点
-pcl::PointCloud<pcl::PointXYZI>::Ptr terrainVoxelCloud[terrainVoxelNum]; // 智能指针,地形体素和对应初始的点云,更新(下采样和筛选)后还是他来存
+pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudCrop(new pcl::PointCloud<pcl::PointXYZI>()); // 回调函数筛选后的最原始点云
+pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudDwz(new pcl::PointCloud<pcl::PointXYZI>());  // 下采样后
+
+pcl::PointCloud<pcl::PointXYZI>::Ptr terrainCloud(new pcl::PointCloud<pcl::PointXYZI>());
+pcl::PointCloud<pcl::PointXYZI>::Ptr terrainCloudElev(new pcl::PointCloud<pcl::PointXYZI>()); // 存储最终地形分析完的被认为是墙面障碍的点
+pcl::PointCloud<pcl::PointXYZI>::Ptr terrainVoxelCloud[terrainVoxelNum];                      // 智能指针,地形体素和对应初始的点云,更新(下采样和筛选)后还是他来存
 
 int terrainVoxelUpdateNum[terrainVoxelNum] = {0};    // 地形体素待更新的点云数量,表示刚刚进来体素网格的点云为未下采样和筛选
 float terrainVoxelUpdateTime[terrainVoxelNum] = {0}; // 地形体素的最后一次更新时间，以laserCloudTime - systemInitTime方式写入，为相对初始时刻的相对时间
@@ -185,11 +182,19 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloud2)
         systemInitTime = laserCloudTime;
         systemInited = true;
     }
-    // 清除上一帧处理过的点云，解放变量
+    // 清除上一次处理过的点云，解放变量
     laserCloud->clear();
-    // 将点云转换成ROS格式
+    // 将当前点云转换成ROS格式
     pcl::fromROSMsg(*laserCloud2, *laserCloud);
+    // 连续两帧点云积分
+    pcl::PointCloud<pcl::PointXYZI> laserCloud_integral;
+    laserCloud_integral = *laserCloud + *laserCloud_last;
+    // 更新上一帧的点云
+    *laserCloud_last = *laserCloud;
+    // 将积分后的点云赋值给laserCloud
+    *laserCloud = laserCloud_integral;
 
+    // 正常处理
     pcl::PointXYZI point;
     laserCloudCrop->clear(); // 解放变量
     int laserCloudSize = laserCloud->points.size();

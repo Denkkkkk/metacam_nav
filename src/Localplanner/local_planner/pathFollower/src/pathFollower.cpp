@@ -170,8 +170,8 @@ void RoboCtrl::slowStop()
 {
     if (vehicleSpeed < 0)
     {
-        vehicleSpeed += pctlPtr->get_params().maxSlowAccel * 4 / pub_rate;
-        if (vehicleSpeed > -pctlPtr->get_params().minSpeed || vehicleSpeed > -pctlPtr->get_params().maxSlowAccel * 4 / pub_rate)
+        vehicleSpeed += pctlPtr->get_params().maxSlowAccel * 10 / pub_rate;
+        if (vehicleSpeed > -pctlPtr->get_params().minSpeed || vehicleSpeed > -pctlPtr->get_params().maxSlowAccel * 10 / pub_rate)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
@@ -179,8 +179,8 @@ void RoboCtrl::slowStop()
     }
     else if (vehicleSpeed > 0)
     {
-        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel * 4 / pub_rate;
-        if (vehicleSpeed < pctlPtr->get_params().minSpeed || vehicleSpeed < pctlPtr->get_params().maxSlowAccel * 4 / pub_rate)
+        vehicleSpeed -= pctlPtr->get_params().maxSlowAccel * 10 / pub_rate;
+        if (vehicleSpeed < pctlPtr->get_params().minSpeed || vehicleSpeed < pctlPtr->get_params().maxSlowAccel * 10 / pub_rate)
         {
             vehicleSpeed = 0;
             vehicleYawRate = 0;
