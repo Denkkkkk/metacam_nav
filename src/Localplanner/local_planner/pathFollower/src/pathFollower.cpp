@@ -518,11 +518,16 @@ void RoboCtrl::pure_persuit()
         // 偏差较大减速，先转到对应方向再向前
         else
         {
+            double slowAccel_rate = 1;
+            if (fabs(dirDiff) > 0.28)
+            {
+                slowAccel_rate = 10;
+            }
             if (vehicleSpeed > 0)
-                vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate;
+                vehicleSpeed -= pctlPtr->get_params().maxSlowAccel / pub_rate * slowAccel_rate;
             else if (vehicleSpeed < 0)
-                vehicleSpeed += pctlPtr->get_params().maxSlowAccel / pub_rate;
-            if (abs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
+                vehicleSpeed += pctlPtr->get_params().maxSlowAccel / pub_rate * slowAccel_rate;
+            if (abs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate * slowAccel_rate)
             {
                 vehicleSpeed = 0;
             }
