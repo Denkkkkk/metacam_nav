@@ -20,7 +20,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   pcl_conversions
   pcl_ros
-  msg_process
 )
 
 find_package(catkin REQUIRED COMPONENTS ${ROS_CXX_DEPENDENCIES} )
