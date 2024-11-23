@@ -43,6 +43,7 @@ struct Params
     bool use_getgoal_yaw;
     double getgoal_yaw;
     double slowdown_rate;
+    double localPlanner_pathRange;
 };
 
 class ParamControl
@@ -59,6 +60,7 @@ private:
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::NodeHandle nhPrivate_actual = ros::NodeHandle("pathFollower_actual");
     ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
+    ros::NodeHandle nhlocalPlanner = ros::NodeHandle("localPlanner");
     ros::NodeHandle nh;
 
     Params param;

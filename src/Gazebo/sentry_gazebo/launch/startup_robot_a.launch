@@ -11,10 +11,14 @@
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <!--模型车的起点放置位置-->
-  <arg name="vehicleX" default="7.5" />
+  <!-- <arg name="vehicleX" default="7.5" />
   <arg name="vehicleY" default="6.0" />
   <arg name="vehicleZ" default="0.0" />
-  <arg name="vehicleYaw" default="1.57" />
+  <arg name="vehicleYaw" default="1.57" /> -->
+  <arg name="vehicleX" default="0.0" />
+  <arg name="vehicleY" default="0.0" />
+  <arg name="vehicleZ" default="0.0" />
+  <arg name="vehicleYaw" default="0.0" />
   <!-- Autonomous Exploration Development Environment参数 -->
   <arg name="world_name" default="RMUC2024" />
   <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->

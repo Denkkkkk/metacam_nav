@@ -180,8 +180,10 @@ void LpNode::local_planner()
     while ((pathScale != lctlPtr->param.minPathScale && lctlPtr->param.usePathScale) || pathRange >= lctlPtr->param.minPathRange)
     {
         ROS_INFO("Planning...pathRange: %f", pathRange);
+        // 向参数服务器设置参数pathRange
+        nhPrivate.setParam("pathRange", pathRange);
         // 动态调整规划方向,更小的范围要先判断
-        if (pathRange <= lctlPtr->param.minPathRange + lctlPtr->param.pathRangeStep)
+        if (pathRange == lctlPtr->param.minPathRange)
         {
             lctlPtr->set_enlarge_dirThre(20);
         }

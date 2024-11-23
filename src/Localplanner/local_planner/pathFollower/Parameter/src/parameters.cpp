@@ -4,6 +4,8 @@ void ParamControl::load_params()
 {
     nhUsual.getParam("maxSpeed", param.maxSpeed);
 
+    nhlocalPlanner.param("pathRange", param.localPlanner_pathRange, 3.0);
+
     nhPrivate.getParam("lookAheadDis", param.lookAheadDis);
     nhPrivate.getParam("pathSlowDisThre", param.pathSlowDisThre);
     nhPrivate.getParam("endGoalDis", param.endGoalDis);
@@ -47,6 +49,7 @@ void ParamControl::update_params()
 {
     // 允许直接更新的参数
     nhUsual.getParam("maxSpeed", param.maxSpeed);
+    nhlocalPlanner.getParam("pathRange", param.localPlanner_pathRange);
 
     nhPrivate.getParam("lookAheadDis", param.lookAheadDis);
     nhPrivate.getParam("pathSlowDisThre", param.pathSlowDisThre);
@@ -78,10 +81,10 @@ void ParamControl::update_params()
     nhPrivate.getParam("use_closeGoal_direct", param.use_closeGoal_direct);
     nhPrivate.getParam("closeGoal_direct_dis", param.closeGoal_direct_dis);
     nhPrivate.getParam("quick_turn_speed", param.quick_turn_speed);
-    nhPrivate.param("close_direct_speed", param.close_direct_speed, 0.4);
-    nhPrivate.param("use_virtual_head", param.use_virtual_head, false);
-    nhPrivate.param("use_move_base", param.use_move_base, false);
-    nhPrivate.param("use_getgoal_yaw", param.use_getgoal_yaw, false);
-    nhPrivate.param("getgoal_yaw", param.getgoal_yaw, 0.0);
-    nhPrivate.param("slowdown_rate", param.slowdown_rate, 0.7);
+    nhPrivate.getParam("close_direct_speed", param.close_direct_speed);
+    nhPrivate.getParam("use_virtual_head", param.use_virtual_head);
+    nhPrivate.getParam("use_move_base", param.use_move_base);
+    nhPrivate.getParam("use_getgoal_yaw", param.use_getgoal_yaw);
+    nhPrivate.getParam("getgoal_yaw", param.getgoal_yaw);
+    nhPrivate.getParam("slowdown_rate", param.slowdown_rate);
 }

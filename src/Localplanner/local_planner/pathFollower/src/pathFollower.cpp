@@ -56,6 +56,27 @@ RoboCtrl::RoboCtrl()
     pub_rate = 30;
 }
 
+// 外部减速
+void RoboCtrl::slowDown()
+{
+    double slowDown1_update_duaration = ros::Time::now().toSec() - slowDown1_update_time;
+    if (slowDown1_update_duaration > 2.0)
+    {
+        slowDown1 = 0;
+    }
+
+    if (pctlPtr->get_params().localPlanner_pathRange <= 1.0) // 规划范围较小优先发起减速
+    {
+        maxSpeed1 = pctlPtr->get_params().maxSpeed * 0.4;
+    }
+    else if (slowDown1 >= pctlPtr->get_params().slowBegin) // 周围点云情况减速
+    {
+        maxSpeed1 = pctlPtr->get_params().maxSpeed * pctlPtr->get_params().slowdown_rate;
+        if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
+            maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
+    }
+}
+
 /**
  * @brief 正常发布速度
  * @attention cmd_vel必须无条件相应速度值，不然跟踪器无法跟踪修正，会陷入死局
@@ -561,19 +582,6 @@ void RoboCtrl::pure_persuit()
             pubGoalPathDir.publish(goal_path_dir);
         }
     }
-}
-
-void RoboCtrl::slowDown()
-{
-    double slowDown1_update_duaration = ros::Time::now().toSec() - slowDown1_update_time;
-    if (slowDown1_update_duaration > 2.0)
-    {
-        slowDown1 = 0;
-    }
-    if (slowDown1 >= pctlPtr->get_params().slowBegin)
-        maxSpeed1 = pctlPtr->get_params().maxSpeed * pctlPtr->get_params().slowdown_rate;
-    if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
-        maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
 }
 
 int main(int argc, char **argv)

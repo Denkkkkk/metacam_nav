@@ -69,20 +69,6 @@ void LpNode::odometryHandler(const nav_msgs::Odometry::ConstPtr &odom)
     vehicleX = odom->pose.pose.position.x;
     vehicleY = odom->pose.pose.position.y;
     vehicleZ = odom->pose.pose.position.z;
-
-    // 特定区域缩小到点规划范围
-    // if (goalClearCenter_x - 1 < vehicleX && vehicleX < goalClearCenter_x + 1 && goalClearCenter_y - 1 < vehicleY && vehicleY < goalClearCenter_y + 1)
-    // {
-    //     marker.scale.x = 2;
-    //     marker.scale.y = 2;
-    //     marker.header.stamp = ros::Time::now();
-    //     pubMarker.publish(marker);
-    //     goalClearRange = 0;
-    // }
-    // else
-    // {
-    //     goalClearRange = defaultGoalDis;
-    // }
 }
 
 /**
