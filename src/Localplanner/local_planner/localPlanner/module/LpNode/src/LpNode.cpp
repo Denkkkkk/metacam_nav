@@ -132,9 +132,11 @@ void LpNode::pathRange_from_speed()
     // pathRange和pathScale的共同点都是跟车体行驶速度有关的量
     // pathScale还和进一步筛选点云有关，通过把点云缩减pathscale倍来调整碰撞检测的范围，速度越快，考虑的点云应该也多
     if (lctlPtr->param.pathRangeBySpeed)
+    {
         pathRange = pow(4, joySpeed) / planRangeK + lctlPtr->param.minPathRange; // 指数曲线
-    if (pathRange < lctlPtr->param.minSpeedRange)
-        pathRange = lctlPtr->param.minSpeedRange;
+        if (pathRange < lctlPtr->param.minSpeedRange)
+            pathRange = lctlPtr->param.minSpeedRange;
+    }
     if (pathRange < lctlPtr->param.minPathRange)
         pathRange = lctlPtr->param.minPathRange;
 
@@ -183,7 +185,7 @@ void LpNode::local_planner()
         {
             lctlPtr->set_enlarge_dirThre(20);
         }
-        else if (pathRange < lctlPtr->param.adjacentRange - 2 * lctlPtr->param.pathRangeStep)
+        else if (pathRange <= lctlPtr->param.adjacentRange - 4 * lctlPtr->param.pathRangeStep)
         {
             lctlPtr->set_enlarge_dirThre(10);
         }
@@ -338,10 +340,12 @@ void LpNode::local_planner()
             if (pathRange <= lctlPtr->param.minPathRange + 2 * lctlPtr->param.pathRangeStep)
             {
                 lctlPtr->set_add_point_radius(0.22);
+                ROS_INFO("set_add_point_radius: 0.22 .");
             }
             else
             {
                 lctlPtr->set_add_point_radius(-1); // 重置为默认
+                ROS_INFO("set_add_point_radius: default .");
             }
             // 找到了路，下次就可以扩大搜索范围
             if (pathRange < lctlPtr->param.adjacentRange - lctlPtr->param.pathRangeStep)

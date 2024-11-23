@@ -1,5 +1,5 @@
 # sports parameters
-minSpeed: 0.12  # 加减速死区阈值
+minSpeed: 0.1  # 加减速死区阈值
 yawRateGain: 2.5  # 一般情况下的车头转动增益
 stopYawRateGain: 4.0  # 静止下的车头转动增益
 maxYawRate: 40.0  # 车头最大转动角速度
