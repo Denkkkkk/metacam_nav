@@ -42,6 +42,7 @@ struct Params
     bool use_move_base;
     bool use_getgoal_yaw;
     double getgoal_yaw;
+    double slowdown_rate;
 };
 
 class ParamControl

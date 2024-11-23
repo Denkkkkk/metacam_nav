@@ -39,6 +39,7 @@ void ParamControl::load_params()
     nhPrivate.param("use_move_base", param.use_move_base, false);
     nhPrivate.param("use_getgoal_yaw", param.use_getgoal_yaw, false);
     nhPrivate.param("getgoal_yaw", param.getgoal_yaw, 0.0);
+    nhPrivate.param("slowdown_rate", param.slowdown_rate, 0.7);
     param_origin = param;
 }
 
@@ -82,4 +83,5 @@ void ParamControl::update_params()
     nhPrivate.param("use_move_base", param.use_move_base, false);
     nhPrivate.param("use_getgoal_yaw", param.use_getgoal_yaw, false);
     nhPrivate.param("getgoal_yaw", param.getgoal_yaw, 0.0);
+    nhPrivate.param("slowdown_rate", param.slowdown_rate, 0.7);
 }

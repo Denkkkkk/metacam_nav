@@ -571,7 +571,7 @@ void RoboCtrl::slowDown()
         slowDown1 = 0;
     }
     if (slowDown1 >= pctlPtr->get_params().slowBegin)
-        maxSpeed1 = pctlPtr->get_params().maxSpeed * 0.6;
+        maxSpeed1 = pctlPtr->get_params().maxSpeed * pctlPtr->get_params().slowdown_rate;
     if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
         maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
 }

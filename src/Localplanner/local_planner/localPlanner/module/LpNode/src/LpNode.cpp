@@ -131,7 +131,6 @@ void LpNode::pathRange_from_speed()
     // 将车体的路径范围（黄色）限制在minPathRange以上
     // pathRange和pathScale的共同点都是跟车体行驶速度有关的量
     // pathScale还和进一步筛选点云有关，通过把点云缩减pathscale倍来调整碰撞检测的范围，速度越快，考虑的点云应该也多
-    pathRange = lctlPtr->param.adjacentRange;
     if (lctlPtr->param.pathRangeBySpeed)
         pathRange = pow(4, joySpeed) / planRangeK + lctlPtr->param.minPathRange; // 指数曲线
     if (pathRange < lctlPtr->param.minSpeedRange)
@@ -179,18 +178,10 @@ void LpNode::local_planner()
     while ((pathScale != lctlPtr->param.minPathScale && lctlPtr->param.usePathScale) || pathRange >= lctlPtr->param.minPathRange)
     {
         ROS_INFO("Planning...pathRange: %f", pathRange);
-        if (pathRange <= lctlPtr->param.minPathRange + 2 * lctlPtr->param.pathRangeStep)
-        {
-            lctlPtr->set_add_point_radius(0.2);
-        }
-        else
-        {
-            lctlPtr->set_add_point_radius(-1); // 重置为默认
-        }
         // 动态调整规划方向,更小的范围要先判断
         if (pathRange <= lctlPtr->param.minPathRange + lctlPtr->param.pathRangeStep)
         {
-            lctlPtr->set_enlarge_dirThre(30);
+            lctlPtr->set_enlarge_dirThre(20);
         }
         else if (pathRange < lctlPtr->param.adjacentRange - 2 * lctlPtr->param.pathRangeStep)
         {
@@ -343,6 +334,24 @@ void LpNode::local_planner()
             pub_allFreePath(); // 以车头方向为参考系，发布所有的无障碍物路径
 #endif
             pathFound = true;
+            // 确认找到路之后，如果在最小范围内找到了最优路径，就把add_point_radius设置为0.22
+            if (pathRange <= lctlPtr->param.minPathRange + 2 * lctlPtr->param.pathRangeStep)
+            {
+                lctlPtr->set_add_point_radius(0.22);
+            }
+            else
+            {
+                lctlPtr->set_add_point_radius(-1); // 重置为默认
+            }
+            // 找到了路，下次就可以扩大搜索范围
+            if (pathRange < lctlPtr->param.adjacentRange - lctlPtr->param.pathRangeStep)
+            {
+                pathRange += lctlPtr->param.pathRangeStep;
+            }
+            else
+            {
+                pathRange = lctlPtr->param.adjacentRange;
+            }
             break;
         }
         else // 找不到最优路径，缩短路径规模(减小碰撞范围)再找
@@ -352,6 +361,8 @@ void LpNode::local_planner()
             // 注意，这里浮点数比较，一个float，一个double，精度不同导致一直不相等
             if (fabs(pathRange - lctlPtr->param.minPathRange) < 0.01)
             {
+                // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.22
+                lctlPtr->set_add_point_radius(0.22);
                 break;
             }
             // 先把规模调成0
