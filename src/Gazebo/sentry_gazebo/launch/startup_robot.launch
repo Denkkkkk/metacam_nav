@@ -11,10 +11,14 @@
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <!--模型车的起点放置位置-->
-  <arg name="vehicleX" default="7.5" />
+  <!-- <arg name="vehicleX" default="7.5" />
   <arg name="vehicleY" default="6.0" />
   <arg name="vehicleZ" default="0.0" />
-  <arg name="vehicleYaw" default="1.57" />
+  <arg name="vehicleYaw" default="1.57" /> -->
+  <arg name="vehicleX" default="0.0" />
+  <arg name="vehicleY" default="0.0" />
+  <arg name="vehicleZ" default="0.0" />
+  <arg name="vehicleYaw" default="0.0" />
   <!-- Autonomous Exploration Development Environment参数 -->
   <arg name="world_name" default="RMUC2024" />
   <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
@@ -28,7 +32,7 @@
     <arg name="vehicleX" value="$(arg vehicleX)" />
     <arg name="vehicleY" value="$(arg vehicleY)" />
     <arg name="vehicleZ" value="$(arg vehicleZ)" />
-    <arg name="vehicleYaw" default="1.57" />
+    <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
     <arg name="use_sim_time" value="$(arg use_sim_time)" />
     <arg name="paused" value="$(arg paused)" />
     <arg name="gui" value="$(arg gui)" />
@@ -80,6 +84,9 @@
       <arg name="odom_topic" value="/Odometry" />
     </include>
   </group>
+
+  <!--启动重定位-->
+  <!-- <include file="$(find relocalization)/launch/relocalization.launch" /> -->
 
   <!-- 启动服务通信 -->
   <!-- <include file="$(find nav_service)/launch/nav_service.launch" /> -->

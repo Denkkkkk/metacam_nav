@@ -1,0 +1,19 @@
+<launch>
+
+    <arg name="pcd_path"
+        default="$(find relocalization)/pcd/prior_map.pcd" />
+    <arg name="sector_angle1" default="0" />
+    <arg name="sector_angle2" default="180" />
+    <arg name="sector_angle3" default="0" />
+    <arg name="sector_angle4" default="-180" />
+
+    <node name="relocalization" pkg="relocalization" type="relocalization" output="screen"
+        respawn="true">
+        <rosparam file="$(find relocalization)/param/icp_params.yaml" command="load" />
+        <param name="pcd_path" value="$(arg pcd_path)" />
+        <param name="sector_angle1" value="$(arg sector_angle1)" />
+        <param name="sector_angle2" value="$(arg sector_angle2)" />
+        <param name="sector_angle3" value="$(arg sector_angle3)" />
+        <param name="sector_angle4" value="$(arg sector_angle4)" />
+    </node>
+</launch>

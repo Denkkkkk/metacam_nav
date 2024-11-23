@@ -812,14 +812,6 @@ Visualization Manager:
       Topic: /turn_point
       Unreliable: false
       Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /circle_marker
-      Name: Marker_circle
-      Namespaces:
-        {}
-      Queue Size: 100
-      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: false
       Autocompute Value Bounds:
@@ -850,6 +842,34 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: false
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: relocalization_map
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.05000000074505806
+      Style: Flat Squares
+      Topic: /scan_map
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -867,7 +887,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 24.032560348510742
+      Distance: 16.377517700195312
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -875,17 +895,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 5.09829044342041
-        Y: 1.192690134048462
+        X: -1.4220046997070312
+        Y: -3.5743093490600586
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 0.604796826839447
       Target Frame: vehicle
-      Yaw: 4.865384101867676
+      Yaw: 4.3403754234313965
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055
@@ -924,4 +944,4 @@ Window Geometry:
     collapsed: false
   Width: 2736
   X: 144
-  Y: 1624
+  Y: 54

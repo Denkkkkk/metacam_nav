@@ -100,13 +100,13 @@
             <izz>0.166667</izz>
           </inertia>
         </inertial>
-        <pose>0 15 0 0 -0 -1.57</pose>
+        <pose>0 0 0 0 -0 -1.57</pose>
         <visual name='visual'>
-          <pose>0 15 0 0 -0 -1.57</pose>
+          <pose>0 0 0 0 -0 -1.57</pose>
           <geometry>
             <mesh>
-              <uri>../meshes/base_link.stl</uri>
-              <scale>1 1 1</scale>
+              <uri>../meshes/RMUCs_2024_s5.STL</uri>
+              <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
           <material>
@@ -123,11 +123,11 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-          <pose>0 15 0 0 -0 -1.57</pose>
+          <pose>0 0 0 0 -0 -1.57</pose>
           <geometry>
             <mesh>
-              <uri>../meshes/base_link.stl</uri>
-              <scale>1 1 1</scale>
+              <uri>../meshes/RMUCs_2024_s5.STL</uri>
+              <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
           <surface>
