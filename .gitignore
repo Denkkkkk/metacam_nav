@@ -10,7 +10,6 @@ cmake-build-debug
 .idea
 .DS_Store
 .active
-*~
 *.STL
 
 src/vehicle_simulator/mesh/*
