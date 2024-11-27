@@ -1,5 +1,5 @@
 <launch>
-  <arg name="usual_pcd_path" default="" />
+  <arg name="usual_pcd_path" default="$(find local_planner)/pcd/planning_map.pcd" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
