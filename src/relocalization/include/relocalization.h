@@ -6,6 +6,8 @@
 #include <thread>
 #include <typeinfo>
 #include <vector>
+#include <yaml-cpp/yaml.h>
+#include <cpu_bbs3d/bbs3d.hpp>
 
 // ros
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
@@ -31,7 +33,8 @@
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/point_cloud.h>
-
+#include <pointcloud_iof/pcl_eigen_converter.hpp>
+#include <pointcloud_iof/pcd_loader.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/registration/icp.h>
 #include <pcl/registration/ndt.h>
@@ -81,18 +84,14 @@ private:
     ros::Subscriber need_relocal_sub;
 
     ros::Publisher scan_pointcloud_publisher_;
-    ros::Publisher removal_pointcloud_publisher_;
     ros::Publisher icp_pointcloud_publisher_;
-    ros::Publisher rotate_pointcloud_publisher_;
+    ros::Publisher fgr_pointcloud_publisher_;
     ros::Publisher location_publisher_;
-    ros::Publisher relocate_tranform_visuial_publisher_;
     ros::Publisher match_point_publisher_;
     ros::Publisher scan_map_publisher_;
 
     ros::Publisher vehicle_publisher_;
-    ros::Publisher safetyStop_publisher_;
 
-    ros::ServiceServer relocalization_srv_; // 重定位服务
 
     geometry_msgs::PoseWithCovarianceStamped location_match; // 定位结果
     geometry_msgs::PoseStamped pub_match_result;             // 定位结果
@@ -101,8 +100,6 @@ private:
     tf2_ros::TransformListener tf_listener_;
     tf2_ros::TransformBroadcaster tf_broadcaster_;
 
-    tf2::Transform base_in_odom_;          // base_link在odom坐标系下的坐标
-    tf2::Transform base_in_odom_keyframe_; // base_link在odom坐标系下的keyframe的坐标
 
     Eigen::Isometry3d map_to_base_ = Eigen::Isometry3d::Identity();       // map到base的欧式变换矩阵4x4
     Eigen::Isometry3d match_result_ = Eigen::Isometry3d::Identity();      // icp匹配结果
@@ -120,45 +117,17 @@ private:
     std::string map_frame_;
     std::string lidar_frame_;
 
-    // 用于计算时间
-    std::chrono::steady_clock::time_point scan_start_time_;
-    std::chrono::steady_clock::time_point scan_end_time_;
-    std::chrono::steady_clock::time_point scan_last_end_time_;
-    std::chrono::duration<double> scan_time_used_;
-
-    std::chrono::steady_clock::time_point start_time_;
-    std::chrono::steady_clock::time_point end_time_;
-    std::chrono::duration<double> time_used_;
-
     double vehicleX;
     double vehicleY;
     double vehicleZ;
     double vehicleYaw;
 
-    double match_time_;          // 当前匹配的时间
-    double last_match_time_ = 0; // 上一帧匹配的时间
-
-    double scan_time_; // 当前用于匹配的雷达数据时间
-    float best_score;
-    double globle_x;
-    double globle_y;
-    double globle_yaw;
-    double sector_angel1;
-    double sector_angel2;
-    double sector_angel3;
-    double sector_angel4;
 
     // 用于odom获取坐标变换
     std::mutex odom_lock_;
     std::deque<nav_msgs::Odometry> odom_queue_;
     int odom_queue_length_;
 
-    // relocation
-    double Relocation_Weight_Score_;
-    double Relocation_Weight_Distance_;
-    double Relocation_Weight_Yaw_;
-    double Relocation_Maximum_Iterations_;
-    double Relocation_Score_Threshold_Max_;
 
     std::vector<double> location_restricted_zone_;
 
@@ -167,33 +136,64 @@ private:
     double Variance_Yaw;
     double obstacleHeightThre = 0.01;
     std::string pcd_path;
+    std::string config_path;
     tf::TransformListener listener; // tf监听器
 
     // pcl
     typedef pcl::PointXYZ PointT;
     typedef pcl::PointCloud<pcl::PointXYZ> PointCloudT;
 
-    // 初始化icp算法对象
+    // 初始化fgr算法对象
     PointCloudT::Ptr cloud_map_;
+    std::vector<Eigen::Vector3d> tar_points;
     PointCloudT::Ptr cloud_scan_;
+    PointCloudT::Ptr submap;
+    PointCloudT::Ptr submap_coarse;
+    PointCloudT::Ptr submap_fine;
+    pcl::VoxelGrid<pcl::PointXYZ> coarse_filter;
+    pcl::VoxelGrid<pcl::PointXYZ> fine_filter;
+
+    // 3D-BBS parameters
+    std::unique_ptr<cpu::BBS3D> bbs3d_ptr;
+    std::unique_ptr<pcl::GeneralizedIterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>> gicp_ptr;
+    double min_level_res;
+    int max_level;
+    // angular search range
+    Eigen::Vector3d min_rpy;
+    Eigen::Vector3d max_rpy;
+
+    // score threshold percentage
+    double score_threshold_percentage;
+
+    // downsample
+    float tar_leaf_size, src_leaf_size;
+    double min_scan_range, max_scan_range;
+
+    // timeout
+    int timeout_msec;
+
+    // align
+    bool use_gicp;
+
+    bool reloc_active = false;
+    PointCloudT::Ptr odom_cloud_;
+    pcl::VoxelGrid<pcl::PointXYZ> odom_filter;
+
+
     Eigen::Matrix4f init_transform = Eigen::Matrix4f::Identity();
     sensor_msgs::PointCloud2::Ptr scan_resoult;
-    std_msgs::Bool need_stop;
+
+
 
     void InitParams();
-    // 坐标变换
-    bool Get2TimeTransform(Eigen::Isometry3d &trans);
+    void Init3DBBS();
 
 public:
     Scan2MapLocation();
-    void ScanCallback(const sensor_msgs::PointCloud2::ConstPtr &scan_msg);
+    bool load_config(const std::string& config);
+    void Scan2SubmapCallback(const sensor_msgs::PointCloud2::ConstPtr &scan_msg);
     void OdomCallback(const nav_msgs::Odometry::ConstPtr &odometryMsg);
     void needRelocCallBack(const std_msgs::Bool::ConstPtr &need_status);
 
-    void rotatePointCloud(PointCloudT::Ptr &cloud_msg, const Eigen::Affine3f &rotation, const Eigen::Affine3f &robo_pose);
     bool is_coordinate_in_range(const std::vector<double> &vec, const Eigen::Isometry3d &coord);
-    void Filter(const sensor_msgs::PointCloud2::Ptr &scan_resoult, PointCloudT::Ptr filtered_cloud);
-    geometry_msgs::PoseWithCovarianceStamped Isometry3d_to_PoseWithCovarianceStamped(const Eigen::Isometry3d &iso);
-    void gicp_registration(Eigen::Isometry3d &trans, PointCloudT::Ptr source, PointCloudT::Ptr target, const Eigen::Isometry3d &robot_pose);
-    bool GetTransform(Eigen::Isometry3d &trans, const std::string parent_frame, const std::string child_frame, const ros::Time stamp);
 };

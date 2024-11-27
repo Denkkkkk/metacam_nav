@@ -1,0 +1,63 @@
+################[Necessary]################
+## Folder paths
+target_clouds: "../test_data/BIM/2F"
+source_clouds: "../test_data/BuildingDay/15m/occupied_pcd_flatten"
+gt: "../test_data/BuildingDay/15m/gt"
+output_folder: "../test_data/output"
+
+## 3D-BBS parameters
+
+min_level_res: 0.2 # [m], e.g. outdoor: 1.0, indoor: 0.5
+
+max_level: 6
+
+
+## Angular search range [rad]
+
+# 6.28 input is converted to 2*M_PI
+
+min_rpy: [-0.00, -0.00, 0.0] # [roll, pitch, yaw]
+
+max_rpy: [0.00, 0.00, 6.28] # [roll, pitch, yaw]
+
+
+
+
+## Score threshold
+
+# score_threshold = floor(src_points.size() * score_threshold_percentage)
+
+score_threshold_percentage: 0.5
+
+
+################[Optional]################
+
+## Downsample target clouds [m]
+
+tar_leaf_size: 0.0 # off: 0.0
+
+
+## Downsample source clouds [m]
+
+src_leaf_size: 2.0 # off: 0.0
+
+
+## Crop source clouds [m]
+
+min_scan_range: 0.0 # [m]
+
+max_scan_range: 100.0 # [m]
+
+# off: set 0.0 to both min_scan_range and max_scan_range
+
+
+## Timeout [msec]
+
+# Enter the number as int
+
+timeout_msec: 0 # off: 0
+
+
+## Final align (evaluate the error)
+
+use_gicp: false 

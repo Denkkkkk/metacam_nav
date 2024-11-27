@@ -1,0 +1,38 @@
+################[Necessary]################
+## Folder paths
+target_clouds: "../test_data/xbotpark_4f_000/target"
+source_clouds: "../test_data/xbotpark_4f_000/submap3d/05m/points"
+gt: "../test_data/easy/gt"
+output_folder: "../test_data/output"
+
+## 3D-BBS parameters
+min_level_res: 0.5 # [m], e.g. outdoor: 1.0, indoor: 0.5
+max_level: 6
+
+## Angular search range [rad]
+# 6.28 input is converted to 2*M_PI
+min_rpy: [ -0.00,-0.00,0.0 ] # [roll, pitch, yaw]
+max_rpy: [ 0.00,0.00,6.28 ] # [roll, pitch, yaw]
+
+## Score threshold
+# score_threshold = floor(src_points.size() * score_threshold_percentage)
+score_threshold_percentage: 0.8
+
+################[Optional]################
+## Downsample target clouds [m]
+tar_leaf_size: 0.0 # off: 0.0
+
+## Downsample source clouds [m]
+src_leaf_size: 0.8 # off: 0.0 default: 2.0 for outdoor
+
+## Crop source clouds [m]
+min_scan_range: 0.0 # [m]
+max_scan_range: 100.0 # [m] default: 100.0 for outdoor
+# off: set 0.0 to both min_scan_range and max_scan_range
+
+## Timeout [msec]
+# Enter the number as int
+timeout_msec: 0 # off: 0
+
+## Final align (evaluate the error)
+use_gicp: true

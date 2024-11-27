@@ -4,7 +4,6 @@ project(map_manager)
 
 add_subdirectory(module)
 find_package(catkin REQUIRED COMPONENTS
-        msg_process
         roscpp
         std_msgs
         geometry_msgs

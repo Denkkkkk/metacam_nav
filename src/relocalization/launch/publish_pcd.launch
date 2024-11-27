@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_publisher" output="screen">
+    <param name="frame_id" value="map"/>
+    <param name="file_name" value="/home/bob/datasets/Skyland/Registration/xbotpark-raw/4F_000/submap3d/05m/points/000000.pcd"/>
+    <remap from="/cloud_pcd" to="/cloud_registered"/>
+    <param name="interval" value="1.0"/>
+    </node>
+</launch>

@@ -9,6 +9,9 @@ source ~/.bashrc
 sudo apt -y install  wmctrl # 安装wmctrl令窗口置顶
 sudo chmod +x all_kill.sh all_run.sh run.sh
 sudo apt install --upgrade ros-noetic-octomap*
+sudo apt-get install libsdl1.2-dev
+sudo apt-get install libsdl-image1.2-dev
+
 
 cd ..
 dir=$(pwd);

@@ -21,12 +21,22 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_conversions
   pcl_ros
 )
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/home/bob/code/reloc_ws/src/relocalization/cmake")
+message("CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+option(BUILD_CUDA "Build GPU ver" OFF)
 
 find_package(catkin REQUIRED COMPONENTS ${ROS_CXX_DEPENDENCIES} )
 
 
 # 寻找PCL的库
-find_package(PCL REQUIRED COMPONENT common io visualization filters)
+find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(OpenMP)
+
+if (OpenMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif ()
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -43,16 +53,27 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   include
+  ${EIGEN3_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
+  3d_bbs_lib/bbs3d/include
 )
 
 include_directories("/usr/include/eigen3")
+
+
+add_subdirectory(3d_bbs_lib)
+set(COMMON_LIBRARIES
+        ${PCL_LIBRARIES}
+        yaml-cpp
+        )
 
 # relocalization
 add_executable(relocalization src/relocalization.cpp)
 
 target_link_libraries(relocalization 
-${catkin_LIBRARIES} 
+${catkin_LIBRARIES}
+${COMMON_LIBRARIES}
+cpu_bbs3d
 )
 
 #############
