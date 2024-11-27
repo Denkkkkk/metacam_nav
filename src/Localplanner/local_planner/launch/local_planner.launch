@@ -1,9 +1,9 @@
 <launch>
+  <arg name="use_map" default="true" />
   <arg name="usual_pcd_path" default="$(find local_planner)/pcd/planning_map.pcd" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
-  <arg name="use_map" default="false" />
   <arg name="robot" default="tita" />
 
   <!-- load global params -->

@@ -25,6 +25,7 @@
             <arg name="vehicleX" value="$(arg vehicleX)" />
             <arg name="vehicleY" value="$(arg vehicleY)" />
             <arg name="ns" value="$(arg ns)" />
+            <arg name="use_map" value="$(arg use_map)"/>
       </include>
 
 </launch>

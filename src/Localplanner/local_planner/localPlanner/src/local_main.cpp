@@ -9,6 +9,8 @@
  *
  */
 #include "LpNode.h"
+#include <chrono>
+int need_pub_Map = 10;
 
 int main(int argc, char **argv)
 {
@@ -17,8 +19,10 @@ int main(int argc, char **argv)
     LocalPanner.read_pathfile(); // 初始化容器，并读取保存各个path数据文件
     ros::Rate rate(20);
     bool status = ros::ok();
+
     while (status)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         /**
          * @brief 外部参数更新，选择地图后再完成回调
          *
@@ -35,7 +39,11 @@ int main(int argc, char **argv)
             LocalPanner.need_read_path = false;
         }
         // 可视化pcd地图
-        LocalPanner.pub_Map();
+        if (need_pub_Map > 0)
+        {
+            LocalPanner.pub_Map();
+            need_pub_Map -= 1;
+        }
         /**
          * @brief 外部请求关闭地图相关机制
          *
@@ -77,6 +85,9 @@ int main(int argc, char **argv)
                 LocalPanner.fail_local_planner(); // 找不到路径，发布一个原地的路径点
             }
         }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
         status = ros::ok();
         rate.sleep();
     }

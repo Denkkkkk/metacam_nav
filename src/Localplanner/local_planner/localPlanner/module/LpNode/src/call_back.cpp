@@ -87,8 +87,22 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     terrainCloudCrop->clear();
     if (lctlPtr->param.useMap)
     {
-        *terrainCloudCrop = *terrainMapRecord_pcl;
+        // 对全局地图排除较远的点
+        for (int i = 0; i < terrainMapRecord_pcl->points.size(); i++)
+        {
+            point = terrainMapRecord_pcl->points[i];
+            float pointX = point.x;
+            float pointY = point.y;
+            // 计算点云到车体的距离
+            float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) + (pointY - vehicleY) * (pointY - vehicleY));
+
+            if (dis < pathScale * lctlPtr->param.adjacentRange + 0.5)
+            {
+                terrainCloudCrop->push_back(point);
+            }
+        }
     }
+
     int terrainCloudSize = terrainCloud->points.size();
     // 排除掉->太远，（太低或代价评价）
     for (int i = 0; i < terrainCloudSize; i++)
@@ -102,7 +116,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
         // 只保存满足下列条件的点云
         // ①距离车体小于adjacentRange的点云
         // ②使用对于低于阈值的点云进行路径评分useCost，只要障碍物点云距离地面点云的相对高度大于obstacleHeightThre（地形裁剪）
-        if ((pathScale * lctlPtr->param.adjacentRange) && (point.intensity > lctlPtr->param.obstacleHeightThre || lctlPtr->param.useCost))
+        if ((dis < pathScale * lctlPtr->param.adjacentRange + 0.5) && (point.intensity > lctlPtr->param.obstacleHeightThre || lctlPtr->param.useCost))
         {
             terrainCloudCrop->push_back(point);
         }
