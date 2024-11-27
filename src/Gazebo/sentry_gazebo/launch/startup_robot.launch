@@ -6,7 +6,7 @@
   <arg name="use_map" default="true" />
 
   <!-- 仿真系统参数 -->
-  <arg name="ns" default="TITA" />
+  <arg name="ns" default="" />
   <arg name="paused" default="false" />
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />

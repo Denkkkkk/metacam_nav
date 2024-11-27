@@ -24,23 +24,21 @@
     <arg name="world_name" value="$(find sentry_gazebo)/worlds/$(arg world_name).world" />
   </include>
 
-  <group ns="$(arg ns)">
-    <param name="robot_description"
-      command="$(find xacro)/xacro $(find sentry_gazebo)/urdf/xacro/robot.urdf.xacro ns:=$(arg ns)" />
-    <node name="joint_state_publisher" pkg="joint_state_publisher"
-      type="joint_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
-      <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
-    </node>
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-      output="screen">
-      <param name="publish_frequency" type="double" value="50.0" />
-      <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
-    </node>
-    <node name="$(arg ns)_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
-      output="screen"
-      args="-unpause -urdf -model $(arg ns) -param robot_description -x $(arg vehicleX) -y $(arg vehicleY) -z $(arg vehicleZ) -Y $(arg vehicleYaw)" />
-  </group>
+  <param name="robot_description"
+    command="$(find xacro)/xacro $(find sentry_gazebo)/urdf/xacro/robot.urdf.xacro" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher"
+    type="joint_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    output="screen">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+  </node>
+  <node name="$(arg ns)_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
+    output="screen"
+    args="-unpause -urdf -model $(arg ns) -param robot_description -x $(arg vehicleX) -y $(arg vehicleY) -z $(arg vehicleZ) -Y $(arg vehicleYaw)" />
 
   <group if="$(arg use_2dlaser)">
     <include file="$(find sentry_gazebo)/launch/environment/startup_laser.launch">

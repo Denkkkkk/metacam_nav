@@ -213,6 +213,7 @@ void RoboCtrl::slowStop()
 
 void RoboCtrl::pure_persuit()
 {
+
     maxSpeed1 = pctlPtr->get_params().maxSpeed; // 恢复最大速度
     // 全局目标点到最新车体位置的距离
     if (pctlPtr->get_params().use_move_base)

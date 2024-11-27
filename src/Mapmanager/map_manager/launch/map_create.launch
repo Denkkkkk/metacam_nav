@@ -1,0 +1,13 @@
+<launch>
+    <arg name="create_map" default="true" />
+    <arg name="min_intensity" default="0.2" />
+    <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" />
+
+    <arg name="leaf_size" default="0.2" />
+
+    <group if="$(arg create_map)">
+        <include file="$(find map_manager)/launch/interface/octomap_server.launch">
+        </include>
+    </group>
+
+</launch>
