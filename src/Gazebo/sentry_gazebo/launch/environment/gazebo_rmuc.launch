@@ -1,5 +1,5 @@
 <launch>
-  <arg name="ns" default="Sentry" />
+  <arg name="ns" default="" />
   <arg name="paused" default="false" />
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
@@ -29,16 +29,17 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher"
     type="joint_state_publisher">
     <param name="publish_frequency" type="double" value="50.0" />
-    <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+    <param name="tf_prefix" value="$(arg ns)" />
   </node>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
     output="screen">
     <param name="publish_frequency" type="double" value="50.0" />
-    <!-- <param name="tf_prefix" value="$(arg ns)" /> -->
+    <param name="tf_prefix" value="$(arg ns)" />
   </node>
-  <node name="$(arg ns)_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false"
+  <node name="spawner_$(arg ns)" pkg="gazebo_ros" type="spawn_model" respawn="false"
     output="screen"
-    args="-unpause -urdf -model $(arg ns) -param robot_description -x $(arg vehicleX) -y $(arg vehicleY) -z $(arg vehicleZ) -Y $(arg vehicleYaw)" />
+    args="-unpause -urdf -model model_$(arg ns) -param robot_description -x $(arg vehicleX) -y $(arg vehicleY) -z $(arg vehicleZ) -Y $(arg vehicleYaw)" />
+
 
   <group if="$(arg use_2dlaser)">
     <include file="$(find sentry_gazebo)/launch/environment/startup_laser.launch">

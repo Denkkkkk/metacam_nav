@@ -4,13 +4,13 @@
   <xacro:macro name="VLP-16"
     params="*origin parent:=base_link name:=velodyne topic:=/velodyne_points organize_cloud:=false hz:=10 lasers:=16 samples:=1875 collision_range:=0.5 min_range:=0.6 max_range:=30.0 noise:=0.008 min_angle:=-${M_PI} max_angle:=${M_PI} gpu:=false vmin_angle:=-${M_PI} vmax_angle:=${M_PI}">
 
-    <joint name="${ns}${name}_base_mount_joint" type="fixed">
+    <joint name="${name}_base_mount_joint" type="fixed">
       <xacro:insert_block name="origin" />  <!--插入参数宏，对应第一个参数*origin-->
-      <parent link="${ns}${parent}" />
-      <child link="${ns}${name}_base_link" />
+      <parent link="${parent}" />
+      <child link="${name}_base_link" />
     </joint>
 
-    <link name="${ns}${name}_base_link">
+    <link name="${name}_base_link">
       <inertial>
         <mass value="0.83" />
         <origin xyz="0 0 0.03585" />
@@ -36,13 +36,13 @@
       </collision>
     </link>
 
-    <joint name="${ns}${name}_base_scan_joint" type="fixed">
+    <joint name="${name}_base_scan_joint" type="fixed">
       <origin xyz="0 0 0.0377" rpy="0 0 0" />
-      <parent link="${ns}${name}_base_link" />
-      <child link="${ns}${name}" />
+      <parent link="${name}_base_link" />
+      <child link="${name}" />
     </joint>
 
-    <link name="${ns}${name}">
+    <link name="${name}">
       <inertial>
         <mass value="0.01" />
         <origin xyz="0 0 0" />
@@ -57,7 +57,7 @@
     </link>
 
     <!-- Gazebo requires the velodyne_gazebo_plugins package -->
-    <gazebo reference="${ns}${name}">
+    <gazebo reference="${name}">
       <xacro:if value="${gpu}">
         <sensor type="gpu_ray" name="${name}-VLP16">
           <pose>0 0 0 0 0 0</pose>
@@ -90,8 +90,8 @@
             </noise>
           </ray>
           <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_gpu_laser.so">
-            <topicName>/${ns}${topic}</topicName>
-            <frameName>/${ns}${name}</frameName>
+            <topicName>/${topic}</topicName>
+            <frameName>/${name}</frameName>
             <organize_cloud>${organize_cloud}</organize_cloud>
             <min_range>${min_range}</min_range>
             <max_range>${max_range}</max_range>
@@ -131,8 +131,8 @@
             </noise>
           </ray>
           <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_laser.so">
-            <topicName>/${ns}${topic}</topicName>
-            <frameName>/${ns}${name}</frameName>
+            <topicName>/${topic}</topicName>
+            <frameName>/${name}</frameName>
             <organize_cloud>${organize_cloud}</organize_cloud>
             <min_range>${min_range}</min_range>
             <max_range>${max_range}</max_range>

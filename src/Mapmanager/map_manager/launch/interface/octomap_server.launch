@@ -1,5 +1,5 @@
 <launch>
-    <arg name="base_frame_id" default="Sentry/vehicle" />
+    <arg name="base_frame_id" default="vehicle" />
     <arg name="cloud_in_topic" default="/terrain_map" />
 
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">

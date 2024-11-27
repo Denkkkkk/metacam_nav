@@ -1,13 +1,20 @@
 <launch>
-    <arg name="create_map" default="true" />
     <arg name="min_intensity" default="0.2" />
     <arg name="pcd_path" default="$(find map_manager)/pcd/qingqing.pcd" />
+    <arg name="leaf_size" default="0.01" />
+    <arg name="cloud_in_topic" default="/map_manager_result" />
 
-    <arg name="leaf_size" default="0.2" />
+    <node pkg="map_create" type="map_create" name="map_create" output="screen">
+        <param name="read_from_pcd" value="true" />
+        <param name="leaf_size" value="$(arg leaf_size)" />
+        <param name="pcd_path" value="$(arg pcd_path)" />
+        <param name="min_intensity" value="$(arg min_intensity)" />
+        <param name="use_sim_time" value="false" />
+    </node>
 
-    <group if="$(arg create_map)">
-        <include file="$(find map_manager)/launch/interface/octomap_server.launch">
-        </include>
-    </group>
+
+    <include file="$(find map_manager)/launch/interface/octomap_server.launch">
+        <arg name="cloud_in_topic" value="$(arg cloud_in_topic)" />
+    </include>
 
 </launch>

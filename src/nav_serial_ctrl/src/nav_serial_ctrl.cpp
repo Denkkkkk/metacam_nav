@@ -36,8 +36,7 @@ namespace info_update_and_ctrl {
         STATUSPublisher = n_.advertise<diablo_sdk::OSDK_STATUS>("diablo_ros_STATUS_b", 10);
 
         // Topic you want to subscribe
-        sub_ = n_.subscribe("/TITA/cmd_vel", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
-        sub_ = n_.subscribe("/TITA/cmd_vel", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
+        sub_ = n_.subscribe("/cmd_vel", 1, &InfoUpdateAndCtrl::navCtrlCallBack, this);
 
         ros::spin();
     }

@@ -10,7 +10,7 @@
         </gazebo>
 
         <!-- mu1静,mu2动，kp 刚度系数 kd 阻尼系数 -->
-        <gazebo reference="${ns}front_left_wheel">
+        <gazebo reference="front_left_wheel">
             <mu1>0.0</mu1>
             <mu2>0.0</mu2>
             <kp>20000.0</kp>
@@ -19,7 +19,7 @@
             <maxVel>100.0</maxVel>
         </gazebo>
 
-        <gazebo reference="${ns}front_right_wheel">
+        <gazebo reference="front_right_wheel">
             <mu1>0.0</mu1>
             <mu2>0.0</mu2>
             <kp>20000.0</kp>
@@ -28,7 +28,7 @@
             <maxVel>100.0</maxVel>
         </gazebo>
 
-        <gazebo reference="${ns}back_left_wheel">
+        <gazebo reference="back_left_wheel">
             <mu1>0.0</mu1>
             <mu2>0.0</mu2>
             <kp>20000.0</kp>
@@ -37,7 +37,7 @@
             <maxVel>100.0</maxVel>
         </gazebo>
 
-        <gazebo reference="${ns}back_right_wheel">
+        <gazebo reference="back_right_wheel">
             <mu1>0.0</mu1>
             <mu2>0.0</mu2>
             <kp>20000.0</kp>
@@ -50,15 +50,15 @@
             <plugin name="mecanum_controller" filename="libgazebo_ros_planar_move.so">
                 <commandTopic>cmd_vel</commandTopic>
                 <odometryTopic>odom</odometryTopic>
-                <odometryFrame>${ns}odom</odometryFrame>
+                <odometryFrame>odom</odometryFrame>
                 <publishWheelTF>false</publishWheelTF>
                 <publishWheelJointState>false</publishWheelJointState>
-                <leftFrontJoint>${ns}front_left_wheel</leftFrontJoint>
-                <rightFrontJoint>${ns}front_right_wheel</rightFrontJoint>
-                <leftRearJoint>${ns}back_left_wheel</leftRearJoint>
-                <rightRearJoint>${ns}back_right_wheel</rightRearJoint>
+                <leftFrontJoint>front_left_wheel</leftFrontJoint>
+                <rightFrontJoint>front_right_wheel</rightFrontJoint>
+                <leftRearJoint>back_left_wheel</leftRearJoint>
+                <rightRearJoint>back_right_wheel</rightRearJoint>
                 <odometryRate>10</odometryRate>
-                <robotBaseFrame>${ns}base_footprint</robotBaseFrame>
+                <robotBaseFrame>base_footprint</robotBaseFrame>
                 <cmdTimeout>-1.0</cmdTimeout>
             </plugin>
         </gazebo>

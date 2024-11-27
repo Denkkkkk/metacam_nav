@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Vehicle1
         - /Local Map1/Costmap1
       Splitter Ratio: 0.5252659320831299
     Tree Height: 1406
@@ -37,7 +38,7 @@ Visualization Manager:
       Length: 0.5
       Name: Vehicle
       Radius: 0.05000000074505806
-      Reference Frame: TITA/vehicle
+      Reference Frame: vehicle
       Show Trail: false
       Value: true
     - Alpha: 1
@@ -887,7 +888,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 16.377517700195312
+      Distance: 23.009231567382812
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -895,17 +896,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -1.4220046997070312
-        Y: -3.5743093490600586
+        X: 1.7660295963287354
+        Y: 6.936179161071777
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.604796826839447
+      Pitch: 1.5697963237762451
       Target Frame: vehicle
-      Yaw: 4.3403754234313965
+      Yaw: 1.6603676080703735
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055

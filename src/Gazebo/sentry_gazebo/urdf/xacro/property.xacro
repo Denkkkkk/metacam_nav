@@ -1,5 +1,4 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
-    <xacro:property name="ns" value="$(arg ns)/" />
     <!-- 惯性矩阵 -->
     <!-- sphere球体 -->
     <xacro:macro name="sphere_inertial_matrix" params="m r">
