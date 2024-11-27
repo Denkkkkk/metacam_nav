@@ -24,5 +24,5 @@ include_directories(
 )
 
 add_executable(map_manager src/map_manager.cpp )
-# target_link_libraries(map_manager ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
+target_link_libraries(map_manager ${catkin_LIBRARIES} )
 
