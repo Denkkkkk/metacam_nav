@@ -23,7 +23,7 @@ score_threshold_percentage: 0.8
 tar_leaf_size: 0.0 # off: 0.0
 
 ## Downsample source clouds [m]
-src_leaf_size: 0.8 # off: 0.0 default: 2.0 for outdoor
+src_leaf_size: 2.0 # off: 0.0 default: 2.0 for outdoor
 
 ## Crop source clouds [m]
 min_scan_range: 0.0 # [m]
