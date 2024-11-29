@@ -48,13 +48,11 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
 {
     std::string config;
     if (ros::param::get("/nav/config", config))
-    // if (true)
     {
         nlohmann::json json_data = nlohmann::json::parse(config);
         nav_model = json_data.get<NavigationModel>();
         res.success = true;
         res.message = "get navigation config successfully!";
-
         nav_index = 0;
     }
     else
@@ -65,10 +63,14 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
     ROS_WARN("config:%s", config.c_str());
 
     if (res.success)
+    {
         ROS_INFO("%s", res.message.c_str());
+    }
     else
+    {
         ROS_ERROR("%s", res.message.c_str());
-    return true;
+    }
+    return res.success;
 }
 
 /**
@@ -82,28 +84,27 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
 bool startCallback(std_srvs::Trigger::Request &req,
                    std_srvs::Trigger::Response &res)
 {
+    // 输出提示信息
+    ROS_INFO("start navigation service!");
+
     if (is_running)
     {
         res.success = false;
         res.message = "fail to request start navigation since it has been started!";
     }
-    else if (updateConfigCallback(req, res))
+    else
     {
+        updateConfigCallback(req, res);
         res.success = true;
         res.message = "request start navigation successfully!";
         is_running = true;
-    }
-    else
-    {
-        res.success = false;
-        res.message = "rupdateConfig failed!";
     }
 
     if (res.success)
         ROS_INFO("%s", res.message.c_str());
     else
         ROS_ERROR("%s", res.message.c_str());
-    return true;
+    return res.success;
 }
 
 /**
@@ -183,6 +184,11 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(10);
     ParamControl nav_service_params;
     geometry_msgs::PoseStamped way_point;
+    // 初始化nav_model
+    nav_model.mode = 0;
+    nav_model.points = {};
+    nav_model.parameters = {0};
+
     while (ros::ok())
     {
         loop_rate.sleep();

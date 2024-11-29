@@ -62,4 +62,4 @@ do
 done
 echo "……"
 
-gnome-terminal --tab -- bash -c "./quickStart/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"
+gnome-terminal --tab -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;./quickStart/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"

@@ -4,7 +4,7 @@ void ParamControl::load_params()
 {
     // 从参数服务器中获取参数
     nh.getParam("/pathFollower/endGoalDis", param.endGoalDis);
-    nhPrivate.getParam("use_prior_path", param.use_prior_path);
+    nhPrivate.param("use_prior_path", param.use_prior_path, false);
     // 读取文件
     nhPrivate.getParam("prior_path_file", param.prior_path_file);
     if (param.use_prior_path)
