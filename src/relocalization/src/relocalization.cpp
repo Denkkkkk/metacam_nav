@@ -237,11 +237,10 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
     pub_vehicle_pose_map.pose.orientation.z = q_map.z();
     pub_vehicle_pose_map.pose.orientation.w = q_map.w();
 
-
-
     vehicle_pose_publisher_.publish(pub_vehicle_pose);
     vehicle_pose_map_publisher_.publish(pub_vehicle_pose_map);
-    if (need_reloc.data) {
+    if (need_reloc.data)
+    {
 
         pcl::PointXYZ point;
         point.x = vehicleX;
@@ -256,12 +255,13 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_filter.filter(*odom_cloud_);
         if (!reloc_active)
         {
-            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
+            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.5 << "m" << std::endl;
         }
 
-        if (odom_cloud_->points.size() > 6 && reloc_active==false) {
+        if (odom_cloud_->points.size() > 6 && reloc_active == false)
+        {
             reloc_active = true;
-//            need_reloc.data = false;
+            //            need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;
         }
     }
@@ -274,13 +274,16 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     map_pointcloud.header.frame_id = "map";
     map_pointcloud.header.stamp = ros::Time::now();
     scan_map_publisher_.publish(map_pointcloud);
-    if (!need_reloc.data){
-        return ;
+    if (!need_reloc.data)
+    {
+        return;
     }
-    else {
-        if (!reloc_active) {
+    else
+    {
+        if (!reloc_active)
+        {
             // transfer scan_msg to PointCloudT and add to submap
-            std::cout << "[Reloc] Accumulating submap...   "<< std::endl;
+            std::cout << "[Reloc] Accumulating submap...   " << std::endl;
             PointCloudT::Ptr scan_cloud(new PointCloudT());
             pcl::fromROSMsg(*scan_msg, *scan_cloud);
             *submap += *scan_cloud;
@@ -290,83 +293,83 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
             return;
         }
 
-
-    else{
-    // 输出提示
-    ROS_INFO_STREAM("\033[1;32m----> Relocation started.\033[0m");
-    // 判断地图和里程计数据是否初始化，如果没有则退出
-    if (!map_initialized_)
-    {
-        ROS_WARN("map or odom not initialized");
-        return;
-    }
-
-//    pcl::fromROSMsg(*scan_msg, *submap);
-    std::cout << "[Reloc] submap size: " << submap->points.size() << std::endl;
-    auto initi_t1 = std::chrono::high_resolution_clock::now();
-    coarse_filter.setInputCloud(submap);
-    coarse_filter.setLeafSize(src_leaf_size, src_leaf_size, src_leaf_size);
-    coarse_filter.filter(*submap_coarse);
-    fine_filter.setInputCloud(submap);
-    fine_filter.setLeafSize(0.1, 0.1, 0.1);
-    fine_filter.filter(*submap_fine);
-    auto init_t2 = std::chrono::high_resolution_clock::now();
-    double init_time = std::chrono::duration_cast<std::chrono::nanoseconds>(init_t2 - initi_t1).count() / 1e6;
-    std::cout << "[Downsample] Execution time: " << init_time << "[msec] " << std::endl;
-    std::vector<Eigen::Vector3d> src_points;
-    pciof::pcl_to_eigen(submap_coarse, src_points);
-    bbs3d_ptr->set_src_points(src_points);
-    bbs3d_ptr->localize();
-
-    std::cout << "[Localize] Execution time: " << bbs3d_ptr->get_elapsed_time() << "[msec] " << std::endl;
-    std::cout << "[Localize] Score: " << bbs3d_ptr->get_best_score() << std::endl;
-
-    if (!bbs3d_ptr->has_localized())
-    {
-        if (bbs3d_ptr->has_timed_out())
-            std::cout << "[Failed] Localization timed out." << std::endl;
         else
-            std::cout << "[Failed] Score is below the threshold." << std::endl;
-        return;
-    }
-    pcl::PointCloud<pcl::PointXYZ>::Ptr output_cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>());
-    if (use_gicp)
-    {
-        auto gicp_t1 = std::chrono::high_resolution_clock::now();
-        gicp_ptr->setInputSource(submap_fine);
-        gicp_ptr->align(*output_cloud_ptr, bbs3d_ptr->get_global_pose().cast<float>());
-        match_result_.matrix() = gicp_ptr->final_transformation_.cast<double>();
-        auto gicp_t2 = std::chrono::high_resolution_clock::now();
-        double gicp_time = std::chrono::duration_cast<std::chrono::nanoseconds>(gicp_t2 - gicp_t1).count() / 1e6;
-        std::cout << "[GICP] Execution time: " << init_time << "[msec] " << std::endl;
-    }
-    else
-    {
-        pcl::transformPointCloud(*submap_fine, *output_cloud_ptr, bbs3d_ptr->get_global_pose());
-        match_result_.matrix() = bbs3d_ptr->get_global_pose();
-    }
-    need_reloc.data = false;
-    reloc_active = false;
-    odom_cloud_->clear();
-    submap->clear();
-    submap_coarse->clear();
-    submap_fine->clear();
-    // 发布定位结果
+        {
+            // 输出提示
+            ROS_INFO_STREAM("\033[1;32m----> Relocation started.\033[0m");
+            // 判断地图和里程计数据是否初始化，如果没有则退出
+            if (!map_initialized_)
+            {
+                ROS_WARN("map or odom not initialized");
+                return;
+            }
 
-    pub_match_result.header.frame_id = "map";
-    pub_match_result.header.stamp = ros::Time::now();
-    pub_match_result.pose.position.x = match_result_.matrix()(0, 3);
-    pub_match_result.pose.position.y = match_result_.matrix()(1, 3);
-    pub_match_result.pose.position.z = match_result_.matrix()(2, 3);
-    Eigen::Quaterniond q(match_result_.matrix().block<3, 3>(0, 0));
-    pub_match_result.pose.orientation.x = q.x();
-    pub_match_result.pose.orientation.y = q.y();
-    pub_match_result.pose.orientation.z = q.z();
-    pub_match_result.pose.orientation.w = q.w();
-    match_point_publisher_.publish(pub_match_result);
-    output_cloud_ptr->header.frame_id = "map";
-    fgr_pointcloud_publisher_.publish(*output_cloud_ptr);
-    }
+            //    pcl::fromROSMsg(*scan_msg, *submap);
+            std::cout << "[Reloc] submap size: " << submap->points.size() << std::endl;
+            auto initi_t1 = std::chrono::high_resolution_clock::now();
+            coarse_filter.setInputCloud(submap);
+            coarse_filter.setLeafSize(src_leaf_size, src_leaf_size, src_leaf_size);
+            coarse_filter.filter(*submap_coarse);
+            fine_filter.setInputCloud(submap);
+            fine_filter.setLeafSize(0.1, 0.1, 0.1);
+            fine_filter.filter(*submap_fine);
+            auto init_t2 = std::chrono::high_resolution_clock::now();
+            double init_time = std::chrono::duration_cast<std::chrono::nanoseconds>(init_t2 - initi_t1).count() / 1e6;
+            std::cout << "[Downsample] Execution time: " << init_time << "[msec] " << std::endl;
+            std::vector<Eigen::Vector3d> src_points;
+            pciof::pcl_to_eigen(submap_coarse, src_points);
+            bbs3d_ptr->set_src_points(src_points);
+            bbs3d_ptr->localize();
+
+            std::cout << "[Localize] Execution time: " << bbs3d_ptr->get_elapsed_time() << "[msec] " << std::endl;
+            std::cout << "[Localize] Score: " << bbs3d_ptr->get_best_score() << std::endl;
+
+            if (!bbs3d_ptr->has_localized())
+            {
+                if (bbs3d_ptr->has_timed_out())
+                    std::cout << "[Failed] Localization timed out." << std::endl;
+                else
+                    std::cout << "[Failed] Score is below the threshold." << std::endl;
+                return;
+            }
+            pcl::PointCloud<pcl::PointXYZ>::Ptr output_cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>());
+            if (use_gicp)
+            {
+                auto gicp_t1 = std::chrono::high_resolution_clock::now();
+                gicp_ptr->setInputSource(submap_fine);
+                gicp_ptr->align(*output_cloud_ptr, bbs3d_ptr->get_global_pose().cast<float>());
+                match_result_.matrix() = gicp_ptr->final_transformation_.cast<double>();
+                auto gicp_t2 = std::chrono::high_resolution_clock::now();
+                double gicp_time = std::chrono::duration_cast<std::chrono::nanoseconds>(gicp_t2 - gicp_t1).count() / 1e6;
+                std::cout << "[GICP] Execution time: " << init_time << "[msec] " << std::endl;
+            }
+            else
+            {
+                pcl::transformPointCloud(*submap_fine, *output_cloud_ptr, bbs3d_ptr->get_global_pose());
+                match_result_.matrix() = bbs3d_ptr->get_global_pose();
+            }
+            need_reloc.data = false;
+            reloc_active = false;
+            odom_cloud_->clear();
+            submap->clear();
+            submap_coarse->clear();
+            submap_fine->clear();
+            // 发布定位结果
+
+            pub_match_result.header.frame_id = "map";
+            pub_match_result.header.stamp = ros::Time::now();
+            pub_match_result.pose.position.x = match_result_.matrix()(0, 3);
+            pub_match_result.pose.position.y = match_result_.matrix()(1, 3);
+            pub_match_result.pose.position.z = match_result_.matrix()(2, 3);
+            Eigen::Quaterniond q(match_result_.matrix().block<3, 3>(0, 0));
+            pub_match_result.pose.orientation.x = q.x();
+            pub_match_result.pose.orientation.y = q.y();
+            pub_match_result.pose.orientation.z = q.z();
+            pub_match_result.pose.orientation.w = q.w();
+            match_point_publisher_.publish(pub_match_result);
+            output_cloud_ptr->header.frame_id = "map";
+            fgr_pointcloud_publisher_.publish(*output_cloud_ptr);
+        }
     }
 }
 

@@ -64,6 +64,8 @@ private:
     int restart_mapping_last = 0;
     bool safetyStop;
     std::string ns;
+    Eigen::Isometry3d actu_odom;
+    bool get_odom = false;
 
 public:
     map_to_odom();

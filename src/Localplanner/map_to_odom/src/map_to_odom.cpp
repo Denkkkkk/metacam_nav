@@ -35,22 +35,25 @@ map_to_odom::map_to_odom()
     map_to_odom_trans.pose.position.z = 0;
     geometry_msgs::Quaternion geoQuat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, defaultYaw);
     map_to_odom_trans.pose.orientation = geoQuat;
+    actu_odom = Eigen::Isometry3d::Identity();
 }
 
 void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
 {
+
+    get_odom = true;
     // 将里程计转成Eigen::Isometry3d
-    Eigen::Isometry3d vehicle_to_map = Eigen::Isometry3d::Identity();
-    double roll_vTm, pitch_vTm, yaw_vTm;
-    tf::Matrix3x3(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w)).getEulerYPR(yaw_vTm, pitch_vTm, roll_vTm);
-    Eigen::Matrix3d vehicle_to_map_rotation;
-    vehicle_to_map_rotation = Eigen::AngleAxisd(yaw_vTm, Eigen::Vector3d::UnitZ()) *
-                              Eigen::AngleAxisd(pitch_vTm, Eigen::Vector3d::UnitY()) *
-                              Eigen::AngleAxisd(roll_vTm, Eigen::Vector3d::UnitX());
-    vehicle_to_map.rotate(vehicle_to_map_rotation);
-    vehicle_to_map.pretranslate(Eigen::Vector3d(vTm_msg->pose.position.x,
-                                                vTm_msg->pose.position.y,
-                                                transform.getOrigin().getZ())); // 保持z轴不变
+    double roll, pitch, yaw;
+    geometry_msgs::Quaternion geoQuat = msg->pose.pose.orientation;
+    tf::Matrix3x3(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w)).getEulerYPR(yaw, pitch, roll);
+    Eigen::Matrix3d actu_odom_rotation;
+    actu_odom_rotation = Eigen::AngleAxisd(yaw, Eigen::Vector3d::UnitZ()) *
+                         Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()) *
+                         Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitX());
+    actu_odom.rotate(actu_odom_rotation);
+    actu_odom.pretranslate(Eigen::Vector3d(msg->pose.pose.position.x,
+                                           msg->pose.pose.position.y,
+                                           msg->pose.pose.position.z));
 }
 
 void map_to_odom::stopCallBack(const std_msgs::Bool::ConstPtr &stop)
@@ -119,6 +122,7 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     vehicle_to_map.pretranslate(Eigen::Vector3d(vTm_msg->pose.position.x,
                                                 vTm_msg->pose.position.y,
                                                 transform.getOrigin().getZ())); // 保持z轴不变
+    vehicle_to_map = actu_odom * vehicle_to_map;                                // 对于只发布转换的点云，只修正vehicle到map的变换
 
     // 计算odom到map的坐标变换
     Eigen::Isometry3d odom_to_map = vehicle_to_map * vehicle_to_odom.inverse();
