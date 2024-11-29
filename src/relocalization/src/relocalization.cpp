@@ -248,7 +248,7 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
             std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
         }
 
-        if (odom_cloud_->points.size() > 6 && reloc_active==false) {
+        if (odom_cloud_->points.size() > 4 && reloc_active==false) {
             reloc_active = true;
 //            need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;
