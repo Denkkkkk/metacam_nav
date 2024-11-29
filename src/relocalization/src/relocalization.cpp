@@ -28,6 +28,10 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
 
     match_point_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("relocalization", 1, this);
 
+    vehicle_pose_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("vehicle_pose", 1, this);
+
+    vehicle_pose_map_publisher_ = node_handle_.advertise<geometry_msgs::PoseStamped>("vehicle_pose_map", 1, this);
+
     need_relocal_sub = node_handle_.subscribe<std_msgs::Bool>("/need_reloc", 1, &Scan2MapLocation::needRelocCallBack, this);
 
     vehicle_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("rector_points", 1, this);
@@ -194,8 +198,40 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
     vehicleY = odometry_msg->pose.pose.position.y;
     vehicleZ = odometry_msg->pose.pose.position.z;
     vehicleYaw = yaw;
+    vehicleRoll = roll;
+    vehiclePitch = pitch;
+
+    pub_vehicle_pose.header.frame_id = "map";
+    pub_vehicle_pose.header.stamp = ros::Time::now();
+    pub_vehicle_pose.pose.position.x = vehicleX;
+    pub_vehicle_pose.pose.position.y = vehicleY;
+    pub_vehicle_pose.pose.position.z = vehicleZ;
+    pub_vehicle_pose.pose.orientation.x = geoQuat.x;
+    pub_vehicle_pose.pose.orientation.y = geoQuat.y;
+    pub_vehicle_pose.pose.orientation.z = geoQuat.z;
+    pub_vehicle_pose.pose.orientation.w = geoQuat.w;
+    Eigen::Isometry3d vehicle_pose = Eigen::Isometry3d::Identity();
+    vehicle_pose.translation() = Eigen::Vector3d(vehicleX, vehicleY, vehicleZ);
+    Eigen::Quaterniond q(geoQuat.w, geoQuat.x, geoQuat.y, geoQuat.z);
+    vehicle_pose.linear() = q.toRotationMatrix();
+    Eigen::Isometry3d vehicle_pose_map = match_result_ * vehicle_pose;
+    pub_vehicle_pose_map.header.frame_id = "map";
+    pub_vehicle_pose_map.header.stamp = ros::Time::now();
+    pub_vehicle_pose_map.pose.position.x = vehicle_pose_map.translation().x();
+    pub_vehicle_pose_map.pose.position.y = vehicle_pose_map.translation().y();
+    pub_vehicle_pose_map.pose.position.z = vehicle_pose_map.translation().z();
+    Eigen::Quaterniond q_map(vehicle_pose_map.linear());
+    pub_vehicle_pose_map.pose.orientation.x = q_map.x();
+    pub_vehicle_pose_map.pose.orientation.y = q_map.y();
+    pub_vehicle_pose_map.pose.orientation.z = q_map.z();
+    pub_vehicle_pose_map.pose.orientation.w = q_map.w();
+
+
+
+    vehicle_pose_publisher_.publish(pub_vehicle_pose);
+    vehicle_pose_map_publisher_.publish(pub_vehicle_pose_map);
     if (need_reloc.data) {
-        std::cout << "[Reloc] Accumulating submap...  trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
+        std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
         pcl::PointXYZ point;
         point.x = vehicleX;
         point.y = vehicleY;
@@ -207,9 +243,11 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_filter.setInputCloud(odom_cloud_);
         odom_filter.setLeafSize(0.5, 0.5, 0.5);
         odom_filter.filter(*odom_cloud_);
-        if (odom_cloud_->points.size() > 6) {
+
+
+        if (odom_cloud_->points.size() > 6 && reloc_active==false) {
             reloc_active = true;
-            need_reloc.data = false;
+//            need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;
 
         }
@@ -222,11 +260,24 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     map_pointcloud.header.frame_id = "map";
     map_pointcloud.header.stamp = ros::Time::now();
     scan_map_publisher_.publish(map_pointcloud);
-
-    if (!reloc_active) {
-        return;
+    if (!need_reloc.data){
+        return ;
     }
+    else {
+        if (!reloc_active) {
+            // transfer scan_msg to PointCloudT and add to submap
+            std::cout << "[Reloc] Accumulating submap...   "<< std::endl;
+            PointCloudT::Ptr scan_cloud(new PointCloudT());
+            pcl::fromROSMsg(*scan_msg, *scan_cloud);
+            *submap += *scan_cloud;
+            fine_filter.setInputCloud(submap);
+            fine_filter.setLeafSize(0.1, 0.1, 0.1);
+            fine_filter.filter(*submap);
+            return;
+        }
 
+
+    else{
     // 输出提示
     ROS_INFO_STREAM("\033[1;32m----> Relocation started.\033[0m");
     // 判断地图和里程计数据是否初始化，如果没有则退出
@@ -235,7 +286,8 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
         return;
     }
 
-    pcl::fromROSMsg(*scan_msg, *submap);
+//    pcl::fromROSMsg(*scan_msg, *submap);
+    std::cout << "[Reloc] submap size: " << submap->points.size() << std::endl;
     auto initi_t1 = std::chrono::high_resolution_clock::now();
     coarse_filter.setInputCloud(submap);
     coarse_filter.setLeafSize(src_leaf_size, src_leaf_size, src_leaf_size);
@@ -280,10 +332,8 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     submap->clear();
     submap_coarse->clear();
     submap_fine->clear();
-//    std::cout << "[Localize] Transformation matrix: " << std::endl << match_result_.matrix() << std::endl;
-//    Eigen::Vector3d euler = match_result_.matrix().block<3, 3>(0, 0).eulerAngles(0, 1, 2);
-//    std::cout << "[Localize] Translation: " << match_result_.matrix().block<3, 1>(0, 3).transpose() << std::endl;
-//    std::cout << "[Localize] Rotation: " << euler.transpose() << std::endl;
+    // 发布定位结果
+
     pub_match_result.header.frame_id = "map";
     pub_match_result.header.stamp = ros::Time::now();
     pub_match_result.pose.position.x = match_result_.matrix()(0, 3);
@@ -295,8 +345,10 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     pub_match_result.pose.orientation.z = q.z();
     pub_match_result.pose.orientation.w = q.w();
     match_point_publisher_.publish(pub_match_result);
+    output_cloud_ptr->header.frame_id = "map";
     fgr_pointcloud_publisher_.publish(*output_cloud_ptr);
-
+    }
+    }
 }
 
 

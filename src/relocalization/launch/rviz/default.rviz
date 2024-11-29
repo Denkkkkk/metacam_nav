@@ -11,6 +11,9 @@ Panels:
         - /PointCloud21
         - /PointCloud22
         - /PointCloud23
+        - /Pose1
+        - /Pose2
+        - /Pose3
       Splitter Ratio: 0.5676470398902893
     Tree Height: 1147
   - Class: rviz/Selection
@@ -166,6 +169,54 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
+      Value: true
+    - Alpha: 1
+      Axes Length: 3
+      Axes Radius: 0.800000011920929
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Axes
+      Topic: /relocalization
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 2
+      Axes Radius: 0.4000000059604645
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Axes
+      Topic: /vehicle_pose
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 2
+      Axes Radius: 0.4000000059604645
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Axes
+      Topic: /vehicle_pose_map
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:

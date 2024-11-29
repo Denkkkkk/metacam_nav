@@ -88,6 +88,8 @@ private:
     ros::Publisher fgr_pointcloud_publisher_;
     ros::Publisher location_publisher_;
     ros::Publisher match_point_publisher_;
+    ros::Publisher vehicle_pose_publisher_;
+    ros::Publisher vehicle_pose_map_publisher_;
     ros::Publisher scan_map_publisher_;
 
     ros::Publisher vehicle_publisher_;
@@ -95,6 +97,8 @@ private:
 
     geometry_msgs::PoseWithCovarianceStamped location_match; // 定位结果
     geometry_msgs::PoseStamped pub_match_result;             // 定位结果
+    geometry_msgs::PoseStamped pub_vehicle_pose;                 // 车辆位置
+    geometry_msgs::PoseStamped pub_vehicle_pose_map;             // 车辆位置
 
     tf2_ros::Buffer tfBuffer_;
     tf2_ros::TransformListener tf_listener_;
@@ -121,6 +125,8 @@ private:
     double vehicleY;
     double vehicleZ;
     double vehicleYaw;
+    double vehicleRoll;
+    double vehiclePitch;
 
 
     // 用于odom获取坐标变换
