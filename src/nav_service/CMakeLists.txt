@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.10)
 project(nav_service)
 
 set(CMAKE_CXX_SIMULATE 17)
-
+add_subdirectory(Parameter)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         std_msgs
         geometry_msgs
         std_srvs
         nav_msgs
+        tf
 )
 
 catkin_package(
@@ -25,7 +26,7 @@ include_directories(
 )
 
 add_executable(nav_service src/nav_service.cpp)
-target_link_libraries(nav_service ${catkin_LIBRARIES})
+target_link_libraries(nav_service ${catkin_LIBRARIES} nav_service_param)
 
 install(
         TARGETS

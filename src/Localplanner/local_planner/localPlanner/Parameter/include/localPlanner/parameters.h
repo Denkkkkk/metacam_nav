@@ -47,6 +47,10 @@ struct Params
 class ParamControl
 {
 public:
+    ParamControl()
+    {
+        load_params();
+    }
     void load_params();
     void update_params();
     inline void reset_params()

@@ -19,7 +19,6 @@ RoboCtrl::RoboCtrl()
     nhPrivate.getParam("vehicleY", way_point.pose.position.y);
     nhPrivate.getParam("ns", ns);
     goal_point_origin = way_point;
-    pctlPtr->load_params();
     use_real_goal = true;
     cmdTopic = ns + "/cmd_vel";
     if (ns != "")
@@ -333,21 +332,21 @@ void RoboCtrl::pure_persuit()
         slowStop();
         if (get_goal.data)
         {
-            ROS_INFO("GetGoal!");
+            ROS_WARN("GetGoal!");
         }
         if (no_odom_flag)
         {
-            ROS_INFO("NoOdom_get!");
+            ROS_WARN("NoOdom_get!");
         }
         if (safetyStop)
         {
             // 外部请求强制停车
             pathInit = false;
-            ROS_INFO("SafetyStop!");
+            ROS_WARN("SafetyStop!");
         }
         if (pathSize < 2 || pathInit)
         {
-            ROS_INFO("NoPath_get!");
+            ROS_WARN("NoPath_get!");
         }
         return;
     }

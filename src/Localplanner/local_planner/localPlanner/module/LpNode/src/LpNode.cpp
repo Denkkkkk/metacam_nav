@@ -28,7 +28,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     }
     robotFrame = ns + "vehicle";
     lctlPtr = new ParamControl();
-    lctlPtr->load_params();
+    
     load_pcd_map();
     // 全局目标点初始化到很远
     goal_point.pose.position.x = 100;
