@@ -54,20 +54,25 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     // 3D-BBS初始化
     Init3DBBS();
     odom_cloud_ = boost::shared_ptr<PointCloudT>(new PointCloudT());
-
 }
-Eigen::Vector3d to_eigen(const std::vector<double>& vec) {
+Eigen::Vector3d to_eigen(const std::vector<double> &vec)
+{
     Eigen::Vector3d e_vec;
-    for (int i = 0; i < 3; ++i) {
-        if (vec[i] == 6.28) {
+    for (int i = 0; i < 3; ++i)
+    {
+        if (vec[i] == 6.28)
+        {
             e_vec(i) = 2 * M_PI;
-        } else {
+        }
+        else
+        {
             e_vec(i) = vec[i];
         }
     }
     return e_vec;
 }
-bool Scan2MapLocation::load_config(const std::string& config) {
+bool Scan2MapLocation::load_config(const std::string &config)
+{
     YAML::Node conf = YAML::LoadFile(config);
 
     std::cout << "[YAML] Loading paths..." << std::endl;
@@ -76,7 +81,8 @@ bool Scan2MapLocation::load_config(const std::string& config) {
     min_level_res = conf["min_level_res"].as<double>();
     max_level = conf["max_level"].as<int>();
 
-    if (min_level_res == 0.0 || max_level == 0) {
+    if (min_level_res == 0.0 || max_level == 0)
+    {
         std::cout << "[ERROR] Set min_level and num_layers except for 0" << std::endl;
         return false;
     }
@@ -84,10 +90,13 @@ bool Scan2MapLocation::load_config(const std::string& config) {
     std::cout << "[YAML] Loading angular search range..." << std::endl;
     std::vector<double> min_rpy_temp = conf["min_rpy"].as<std::vector<double>>();
     std::vector<double> max_rpy_temp = conf["max_rpy"].as<std::vector<double>>();
-    if (min_rpy_temp.size() == 3 && max_rpy_temp.size() == 3) {
+    if (min_rpy_temp.size() == 3 && max_rpy_temp.size() == 3)
+    {
         min_rpy = to_eigen(min_rpy_temp);
         max_rpy = to_eigen(max_rpy_temp);
-    } else {
+    }
+    else
+    {
         std::cout << "[ERROR] Set min_rpy and max_rpy correctly" << std::endl;
         return false;
     }
@@ -132,14 +141,16 @@ void Scan2MapLocation::InitParams()
     private_node_.param<std::string>("pcd_path", pcd_path, "-1");
     private_node_.param<std::string>("config_path", config_path, "-1");
 
-    if (!load_config(config_path)) {
+    if (!load_config(config_path))
+    {
         std::cout << "[ERROR]  Loading config file failed" << std::endl;
     };
 }
 void Scan2MapLocation::Init3DBBS()
 {
     // 3D-BBS初始化
-    if (use_gicp) {
+    if (use_gicp)
+    {
         gicp_ptr = std::make_unique<pcl::GeneralizedIterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>>();
         gicp_ptr->setInputTarget(cloud_map_);
     };
@@ -157,7 +168,8 @@ void Scan2MapLocation::Init3DBBS()
 
     bbs3d_ptr->set_angular_search_range(min_rpy, max_rpy);
     bbs3d_ptr->set_score_threshold_percentage(score_threshold_percentage);
-    if (timeout_msec > 0) {
+    if (timeout_msec > 0)
+    {
         bbs3d_ptr->enable_timeout();
         bbs3d_ptr->set_timeout_duration_in_msec(timeout_msec);
     }
@@ -172,7 +184,6 @@ void Scan2MapLocation::Init3DBBS()
     map_pointcloud.header.frame_id = "map";
     map_pointcloud.header.stamp = ros::Time::now();
     scan_map_publisher_.publish(map_pointcloud);
-
 }
 void Scan2MapLocation::needRelocCallBack(const std_msgs::Bool::ConstPtr &need_status)
 {
@@ -194,8 +205,9 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
     vehicleY = odometry_msg->pose.pose.position.y;
     vehicleZ = odometry_msg->pose.pose.position.z;
     vehicleYaw = yaw;
-    if (need_reloc.data) {
-        std::cout << "[Reloc] Accumulating submap...  trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
+    if (need_reloc.data)
+    {
+        std::cout << "[Reloc] Accumulating submap...  trajectory: " << odom_cloud_->points.size() * 0.5 << "m" << std::endl;
         pcl::PointXYZ point;
         point.x = vehicleX;
         point.y = vehicleY;
@@ -207,15 +219,16 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_filter.setInputCloud(odom_cloud_);
         odom_filter.setLeafSize(0.5, 0.5, 0.5);
         odom_filter.filter(*odom_cloud_);
-        if (odom_cloud_->points.size() > 6) {
+        if (odom_cloud_->points.size() > 6)
+        {
             reloc_active = true;
             need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;
-
         }
     }
 }
-void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::ConstPtr &scan_msg) {
+void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::ConstPtr &scan_msg)
+{
     // 发布地图点云
     sensor_msgs::PointCloud2 map_pointcloud;
     pcl::toROSMsg(*cloud_map_, map_pointcloud);
@@ -223,14 +236,16 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     map_pointcloud.header.stamp = ros::Time::now();
     scan_map_publisher_.publish(map_pointcloud);
 
-    if (!reloc_active) {
+    if (!reloc_active)
+    {
         return;
     }
 
     // 输出提示
     ROS_INFO_STREAM("\033[1;32m----> Relocation started.\033[0m");
     // 判断地图和里程计数据是否初始化，如果没有则退出
-    if (!map_initialized_) {
+    if (!map_initialized_)
+    {
         ROS_WARN("map or odom not initialized");
         return;
     }
@@ -254,7 +269,8 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     std::cout << "[Localize] Execution time: " << bbs3d_ptr->get_elapsed_time() << "[msec] " << std::endl;
     std::cout << "[Localize] Score: " << bbs3d_ptr->get_best_score() << std::endl;
 
-    if (!bbs3d_ptr->has_localized()) {
+    if (!bbs3d_ptr->has_localized())
+    {
         if (bbs3d_ptr->has_timed_out())
             std::cout << "[Failed] Localization timed out." << std::endl;
         else
@@ -262,7 +278,8 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
         return;
     }
     pcl::PointCloud<pcl::PointXYZ>::Ptr output_cloud_ptr(new pcl::PointCloud<pcl::PointXYZ>());
-    if (use_gicp) {
+    if (use_gicp)
+    {
         auto gicp_t1 = std::chrono::high_resolution_clock::now();
         gicp_ptr->setInputSource(submap_fine);
         gicp_ptr->align(*output_cloud_ptr, bbs3d_ptr->get_global_pose().cast<float>());
@@ -270,7 +287,9 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
         auto gicp_t2 = std::chrono::high_resolution_clock::now();
         double gicp_time = std::chrono::duration_cast<std::chrono::nanoseconds>(gicp_t2 - gicp_t1).count() / 1e6;
         std::cout << "[GICP] Execution time: " << init_time << "[msec] " << std::endl;
-    } else {
+    }
+    else
+    {
         pcl::transformPointCloud(*submap_fine, *output_cloud_ptr, bbs3d_ptr->get_global_pose());
         match_result_.matrix() = bbs3d_ptr->get_global_pose();
     }
@@ -280,10 +299,10 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     submap->clear();
     submap_coarse->clear();
     submap_fine->clear();
-//    std::cout << "[Localize] Transformation matrix: " << std::endl << match_result_.matrix() << std::endl;
-//    Eigen::Vector3d euler = match_result_.matrix().block<3, 3>(0, 0).eulerAngles(0, 1, 2);
-//    std::cout << "[Localize] Translation: " << match_result_.matrix().block<3, 1>(0, 3).transpose() << std::endl;
-//    std::cout << "[Localize] Rotation: " << euler.transpose() << std::endl;
+    //    std::cout << "[Localize] Transformation matrix: " << std::endl << match_result_.matrix() << std::endl;
+    //    Eigen::Vector3d euler = match_result_.matrix().block<3, 3>(0, 0).eulerAngles(0, 1, 2);
+    //    std::cout << "[Localize] Translation: " << match_result_.matrix().block<3, 1>(0, 3).transpose() << std::endl;
+    //    std::cout << "[Localize] Rotation: " << euler.transpose() << std::endl;
     pub_match_result.header.frame_id = "map";
     pub_match_result.header.stamp = ros::Time::now();
     pub_match_result.pose.position.x = match_result_.matrix()(0, 3);
@@ -296,9 +315,7 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
     pub_match_result.pose.orientation.w = q.w();
     match_point_publisher_.publish(pub_match_result);
     fgr_pointcloud_publisher_.publish(*output_cloud_ptr);
-
 }
-
 
 // 检查给定坐标是否在范围内
 bool Scan2MapLocation::is_coordinate_in_range(const std::vector<double> &vec, const Eigen::Isometry3d &coord)

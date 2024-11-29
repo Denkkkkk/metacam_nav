@@ -26,6 +26,7 @@ map_to_odom::map_to_odom()
     pubGoalPoint = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5);
 
     subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 2, &map_to_odom::reLocalizationCallBack, this);
+    subOdom = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &map_to_odom::odomCallBack, this);
     subInitOdom = nh.subscribe<std_msgs::Bool>("/init_odom", 2, &map_to_odom::initOdomCallBack, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &map_to_odom::stopCallBack, this);
 
@@ -34,6 +35,22 @@ map_to_odom::map_to_odom()
     map_to_odom_trans.pose.position.z = 0;
     geometry_msgs::Quaternion geoQuat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, defaultYaw);
     map_to_odom_trans.pose.orientation = geoQuat;
+}
+
+void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
+{
+    // 将里程计转成Eigen::Isometry3d
+    Eigen::Isometry3d vehicle_to_map = Eigen::Isometry3d::Identity();
+    double roll_vTm, pitch_vTm, yaw_vTm;
+    tf::Matrix3x3(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w)).getEulerYPR(yaw_vTm, pitch_vTm, roll_vTm);
+    Eigen::Matrix3d vehicle_to_map_rotation;
+    vehicle_to_map_rotation = Eigen::AngleAxisd(yaw_vTm, Eigen::Vector3d::UnitZ()) *
+                              Eigen::AngleAxisd(pitch_vTm, Eigen::Vector3d::UnitY()) *
+                              Eigen::AngleAxisd(roll_vTm, Eigen::Vector3d::UnitX());
+    vehicle_to_map.rotate(vehicle_to_map_rotation);
+    vehicle_to_map.pretranslate(Eigen::Vector3d(vTm_msg->pose.position.x,
+                                                vTm_msg->pose.position.y,
+                                                transform.getOrigin().getZ())); // 保持z轴不变
 }
 
 void map_to_odom::stopCallBack(const std_msgs::Bool::ConstPtr &stop)
@@ -59,6 +76,7 @@ void map_to_odom::initOdomCallBack(const std_msgs::Bool::ConstPtr &msg)
  */
 void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &vTm_msg)
 {
+
     geometry_msgs::Quaternion geoQuat = vTm_msg->pose.orientation;
     if (fabs((geoQuat.x * geoQuat.x + geoQuat.y * geoQuat.y + geoQuat.z * geoQuat.z + geoQuat.w * geoQuat.w) - 1) > 0.01)
     {
