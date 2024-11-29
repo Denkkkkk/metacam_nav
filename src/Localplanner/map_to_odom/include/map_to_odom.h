@@ -43,6 +43,7 @@ private:
     ros::Subscriber subInitOdom;                      // 订阅重定位功能包发来的位姿信息
     ros::Subscriber subReceiveData;                   // 订阅串口接收到的消息
     ros::Subscriber subStop;                          // 订阅车强制停止
+    ros::Subscriber subOdom;                          // 订阅里程计信息
     ros::Publisher pubVehicleToMapPose;               // 发布想要的vehicle到map的坐标变换
     ros::Publisher pubOdomToMapPose;                  // 发布想要的odom到map的坐标变换
     ros::Publisher pubvehicleToOdom;                  // 发布想要的vehicle到odom的坐标变换
@@ -63,6 +64,8 @@ private:
     int restart_mapping_last = 0;
     bool safetyStop;
     std::string ns;
+    Eigen::Isometry3d actu_odom;
+    bool get_odom = false;
 
 public:
     map_to_odom();
@@ -73,4 +76,5 @@ public:
     void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &vTm_msg);
     void initOdomCallBack(const std_msgs::Bool::ConstPtr &initOdom_msg);
     void stopCallBack(const std_msgs::Bool::ConstPtr &stop);
+    void odomCallBack(const nav_msgs::Odometry::ConstPtr &msg);
 };

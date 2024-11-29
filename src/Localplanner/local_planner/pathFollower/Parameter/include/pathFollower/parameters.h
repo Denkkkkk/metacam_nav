@@ -49,6 +49,10 @@ struct Params
 class ParamControl
 {
 public:
+    ParamControl()
+    {
+        load_params();
+    }
     void load_params();
     void update_params();
     inline Params get_params() const // 设置外部只读
