@@ -231,7 +231,7 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
     vehicle_pose_publisher_.publish(pub_vehicle_pose);
     vehicle_pose_map_publisher_.publish(pub_vehicle_pose_map);
     if (need_reloc.data) {
-        std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
+
         pcl::PointXYZ point;
         point.x = vehicleX;
         point.y = vehicleY;
@@ -243,7 +243,10 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_filter.setInputCloud(odom_cloud_);
         odom_filter.setLeafSize(0.5, 0.5, 0.5);
         odom_filter.filter(*odom_cloud_);
-
+        if (!reloc_active)
+        {
+            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size()*0.5 <<"m"<< std::endl;
+        }
 
         if (odom_cloud_->points.size() > 6 && reloc_active==false) {
             reloc_active = true;
