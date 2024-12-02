@@ -1,3 +1,2 @@
 #! /bin/bash    
-
-cp -r output/*.deb ../metacam_nav_deb
+cp -r ./output/*.deb ../metacam_nav_deb
