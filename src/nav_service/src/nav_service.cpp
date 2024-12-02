@@ -20,6 +20,8 @@ double vehicle_y = 0.0;
 int nav_index = 0;
 std::vector<Coordinate> nav_path;
 std::vector<Coordinate> nav_mode_path;
+double get_relocal_begin = -100;
+bool reloc_succeed = false;
 
 std::vector<Coordinate> get_path_from_nav_model(const NavigationModel &nav_model)
 {
@@ -165,6 +167,13 @@ void navStatusPub(ros::Publisher &nav_status_pub)
     nav_status_pub.publish(status);
 }
 
+void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
+{
+    get_relocal_begin = ros::Time::now().toSec();
+    ROS_INFO("reLocalizationCallBack");
+    reloc_succeed = true;
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "nav_service");
@@ -174,12 +183,14 @@ int main(int argc, char **argv)
     ros::ServiceServer stop_service = nh.advertiseService("/nav/stop", stopCallback);
     // 里程计订阅
     ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/Odometry", 2, odomCallback);
+    ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 2, reLocalizationCallBack);
     // 发布way_point
     ros::Publisher way_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 2);
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
     // 发布导航状态
     ros::Publisher nav_status_pub = nh.advertise<std_msgs::String>("/nav/status", 2);
+    ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("need_reloc", 2);
 
     ros::Rate loop_rate(10);
     ParamControl nav_service_params;
@@ -207,6 +218,24 @@ int main(int argc, char **argv)
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
+            double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
+            if (!reloc_succeed)
+            {
+                std_msgs::Bool relo;
+                relo.data = true;
+                nav_relo_pub.publish(relo);
+                ROS_ERROR("Navigation need relocalization!");
+                // sleep 1s
+                ros::Duration(1).sleep();
+                continue;
+            }
+            else
+            {
+                if (get_relocal_duration < 1.0 && get_relocal_duration > 0)
+                {
+                    continue;
+                }
+            }
             if (nav_path.empty())
             {
                 ROS_ERROR("NO Navigation Point!");
