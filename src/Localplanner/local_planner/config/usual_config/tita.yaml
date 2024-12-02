@@ -1,2 +1,3 @@
 usualParams:
   maxSpeed: 0.7
+  use_map: false

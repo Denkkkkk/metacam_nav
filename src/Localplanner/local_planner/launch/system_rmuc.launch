@@ -3,7 +3,6 @@
       <arg name="vehicleY" default="6" />
       <arg name="vehicleYaw" default="0" />
       <arg name="ns" default="" />
-      <arg name="use_map" default="false" />
       <!-- 打开地形和扩展地形分析，
   接收：/Odometry 位姿信息
         /cloud_registered 输出点云
@@ -25,7 +24,6 @@
             <arg name="vehicleX" value="$(arg vehicleX)" />
             <arg name="vehicleY" value="$(arg vehicleY)" />
             <arg name="ns" value="$(arg ns)" />
-            <arg name="use_map" value="$(arg use_map)"/>
       </include>
 
 </launch>

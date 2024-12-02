@@ -1,5 +1,4 @@
 <launch>
-  <arg name="use_map" default="true" />
   <arg name="usual_pcd_path" default="$(find local_planner)/pcd/planning_map.pcd" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
@@ -12,7 +11,6 @@
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
     <rosparam command="load" file="$(find local_planner)/config/local_planner/$(arg robot).yaml" />
     <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
-    <param name="use_map" value="$(arg use_map)" />
     <param name="ns" type="string" value="$(arg ns)" />
     <param name="usual_pcd_path" value="$(arg usual_pcd_path)" />
     <param name="goalX" type="double" value="$(arg vehicleX)" />

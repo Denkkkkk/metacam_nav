@@ -4,6 +4,7 @@ void ParamControl::load_params()
 {
     // 加载通用参数
     nhUsual.getParam("maxSpeed", param.maxSpeed);
+    nhUsual.getParam("use_map", param.useMap);
 
     nhPrivate.getParam("terrainVoxelSize", param.terrainVoxelSize);
     nhPrivate.getParam("checkRotObstacle", param.checkRotObstacle);
@@ -30,7 +31,6 @@ void ParamControl::load_params()
     nhPrivate.getParam("defPathScale", param.defPathScale);
     nhPrivate.getParam("usePathScale", param.usePathScale);
     nhPrivate.getParam("minSpeedRange", param.minSpeedRange);
-    nhPrivate.getParam("use_map", param.useMap);
     nhPrivate.getParam("close_map_time", param.close_map_time);
     nhPrivate.getParam("use_fail_closemap", param.use_fail_closemap);
     nhPrivate.getParam("goalClearRange_global", param.goalClearRange_global);
@@ -43,6 +43,7 @@ void ParamControl::load_params()
 void ParamControl::update_params()
 {
     nhUsual.getParam("maxSpeed", param.maxSpeed);
+    nhUsual.getParam("use_map", param.useMap);
 
     nhPrivate.getParam("terrainVoxelSize", param.terrainVoxelSize);
     nhPrivate.getParam("checkRotObstacle", param.checkRotObstacle);
@@ -69,7 +70,6 @@ void ParamControl::update_params()
     nhPrivate.getParam("defPathScale", param.defPathScale);
     nhPrivate.getParam("usePathScale", param.usePathScale);
     nhPrivate.getParam("minSpeedRange", param.minSpeedRange);
-    nhPrivate.getParam("use_map", param.useMap);
     nhPrivate.getParam("close_map_time", param.close_map_time);
     nhPrivate.getParam("use_fail_closemap", param.use_fail_closemap);
     nhPrivate.getParam("goalClearRange_global", param.goalClearRange_global);
