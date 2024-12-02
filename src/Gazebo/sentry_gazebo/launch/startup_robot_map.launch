@@ -25,10 +25,10 @@
   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
     <arg name="world_name" value="$(arg world_name)" />
     <arg name="ns" value="$(arg ns)" />
-    <arg name="vehicleX" value="$(arg vehicleX)" />
-    <arg name="vehicleY" value="$(arg vehicleY)" />
-    <arg name="vehicleZ" value="$(arg vehicleZ)" />
-    <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
+    <arg name="vehicleX" value="0" />
+    <arg name="vehicleY" value="0" />
+    <arg name="vehicleZ" value="0" />
+    <arg name="vehicleYaw" default="0" />
     <arg name="use_sim_time" value="$(arg use_sim_time)" />
     <arg name="paused" value="$(arg paused)" />
     <arg name="gui" value="$(arg gui)" />
@@ -46,9 +46,9 @@
 
   <!-- odom-map -->
   <include file="$(find map_to_odom)/launch/map_to_odom.launch">
-    <arg name="vehicleX" value="0.0" />
-    <arg name="vehicleY" value="0.0" />
-    <arg name="vehicleYaw" value="0.0" />
+    <arg name="vehicleX" value="$(arg vehicleX)" />
+    <arg name="vehicleY" value="$(arg vehicleY)" />
+    <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
     <arg name="ns" value="$(arg ns)" />
   </include>
 

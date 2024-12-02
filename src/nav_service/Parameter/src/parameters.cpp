@@ -4,7 +4,7 @@ void ParamControl::load_params()
 {
     // 从参数服务器中获取参数
     nh.getParam("/pathFollower/endGoalDis", param.endGoalDis);
-    nhPrivate.param("use_prior_path", param.use_prior_path, false);
+    nh.param("/usualParams/use_map", param.use_prior_path, false);
     // 读取文件
     nhPrivate.getParam("prior_path_file", param.prior_path_file);
     if (param.use_prior_path)
@@ -18,7 +18,7 @@ void ParamControl::update_params()
 {
     // 允许直接更新的参数
     nh.getParam("/pathFollower/endGoalDis", param.endGoalDis);
-    nhPrivate.getParam("use_prior_path", param.use_prior_path);
+    nh.getParam("/usualParams/use_map", param.use_prior_path);
 
     // 重新读取文件
     static int num = 0;

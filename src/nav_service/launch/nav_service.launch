@@ -1,6 +1,5 @@
 <launch>
     <node name="nav_service" pkg="nav_service" type="nav_service" output="screen" respawn="true">
         <param name="prior_path_file" value="$(find nav_service)/config/prior_path.txt" />
-        <rosparam command="load" file="$(find nav_service)/config/param.yaml" />
     </node>
 </launch>

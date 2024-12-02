@@ -37,7 +37,6 @@ public:
 
 private:
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
-    ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
     ros::NodeHandle nh;
 
     Params param;
