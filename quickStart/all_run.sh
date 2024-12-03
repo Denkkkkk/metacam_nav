@@ -63,6 +63,11 @@ else
         source /opt/ros/$ROS_DISTRO/setup.bash;
         source devel/setup.bash;
         roslaunch nav_service nav_service.launch; exec bash"
+
+        gnome-terminal --tab --title="map_to_odom"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+        source /opt/ros/$ROS_DISTRO/setup.bash;
+        source devel/setup.bash;
+        roslaunch map_to_odom map_to_odom.launch; exec bash"
     fi
 fi
 

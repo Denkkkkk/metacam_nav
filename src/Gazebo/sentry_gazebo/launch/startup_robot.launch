@@ -80,6 +80,11 @@
     </include>
   </group>
 
+  <!-- lio_interface-->
+  <include file="$(find lio_interface)/launch/lio_interface.launch">
+    <arg name="ns" value="$(arg ns)" />
+  </include>
+
   <!--启动重定位-->
   <!-- <include file="$(find relocalization)/launch/relocalization.launch" /> -->
 

@@ -45,12 +45,12 @@
   </include>
 
   <!-- odom-map -->
-  <include file="$(find map_to_odom)/launch/map_to_odom.launch">
+  <!-- <include file="$(find map_to_odom)/launch/map_to_odom.launch">
     <arg name="vehicleX" value="$(arg vehicleX)" />
     <arg name="vehicleY" value="$(arg vehicleY)" />
     <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
     <arg name="ns" value="$(arg ns)" />
-  </include>
+  </include> -->
 
   <!-- velodyne点云处理成/相应话题和里程/话题输出 -->
   <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">
@@ -79,6 +79,10 @@
       <arg name="odom_topic" value="/odom_interface" />
     </include>
   </group>
+
+  <include file="$(find lio_interface)/launch/lio_interface.launch">
+    <arg name="ns" value="$(arg ns)" />
+  </include>
 
   <!--启动重定位-->
   <!-- <include file="$(find relocalization)/launch/relocalization.launch" /> -->

@@ -2,7 +2,7 @@
    <arg name="vehicleX" default="0.0" />
    <arg name="vehicleY" default="0.0" />
    <arg name="vehicleYaw" default="0.0" />
-   <arg name="ns" default="Sentry" />
+   <arg name="ns" default="" />
 
    <node pkg="map_to_odom" type="map_to_odom" name="map_to_odom" output="screen" respawn="true">
       <param name="vehicleX" type="double" value="$(arg vehicleX)" />

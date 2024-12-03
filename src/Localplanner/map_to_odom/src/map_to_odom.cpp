@@ -40,7 +40,7 @@ map_to_odom::map_to_odom()
 
 void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
 {
-
+    actu_odom.setIdentity(); // 重置为单位矩阵，否则会发生累积变换
     get_odom = true;
     // 将里程计转成Eigen::Isometry3d
     double roll, pitch, yaw;
@@ -54,6 +54,9 @@ void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
     actu_odom.pretranslate(Eigen::Vector3d(msg->pose.pose.position.x,
                                            msg->pose.pose.position.y,
                                            msg->pose.pose.position.z));
+    // 打印actu_odom
+    // std::cout << "received Isometry3d actu_odom:" << std::endl;
+    // std::cout << actu_odom.matrix() << std::endl;
 }
 
 void map_to_odom::stopCallBack(const std_msgs::Bool::ConstPtr &stop)
@@ -105,6 +108,7 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     vehicle_to_odom_rotation = Eigen::AngleAxisd(yaw_vTo, Eigen::Vector3d::UnitZ()) *
                                Eigen::AngleAxisd(pitch_vTo, Eigen::Vector3d::UnitY()) *
                                Eigen::AngleAxisd(roll_vTo, Eigen::Vector3d::UnitX());
+    //!!! 请确保vehicle_to_odom是一个干净的矩阵，否则会发生累积变换
     vehicle_to_odom.rotate(vehicle_to_odom_rotation);
     vehicle_to_odom.pretranslate(Eigen::Vector3d(transform.getOrigin().getX(),
                                                  transform.getOrigin().getY(),
@@ -121,8 +125,12 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     vehicle_to_map.rotate(vehicle_to_map_rotation);
     vehicle_to_map.pretranslate(Eigen::Vector3d(vTm_msg->pose.position.x,
                                                 vTm_msg->pose.position.y,
-                                                transform.getOrigin().getZ())); // 保持z轴不变
-    vehicle_to_map = actu_odom * vehicle_to_map;                                // 对于只发布转换的点云，只修正vehicle到map的变换
+                                                vTm_msg->pose.position.z)); // 保持z轴不变
+    // 打印actu_odom
+    std::cout << "Isometry3d actu_odom:" << std::endl;
+    std::cout << actu_odom.matrix() << std::endl;
+
+    vehicle_to_map = actu_odom * vehicle_to_map; // 对于只发布转换的点云，只修正vehicle到map的变换
 
     // 计算odom到map的坐标变换
     Eigen::Isometry3d odom_to_map = vehicle_to_map * vehicle_to_odom.inverse();
