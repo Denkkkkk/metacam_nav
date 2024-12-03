@@ -59,4 +59,8 @@
         <arg name="ns" value="$(arg ns)" />
     </include>
 
+    <include file="$(find lio_interface)/launch/lio_interface.launch">
+        <arg name="ns" value="$(arg ns)" />
+    </include>
+
 </launch>
