@@ -130,7 +130,7 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     std::cout << "Isometry3d actu_odom:" << std::endl;
     std::cout << actu_odom.matrix() << std::endl;
 
-    vehicle_to_map = actu_odom * vehicle_to_map; // 对于只发布转换的点云，只修正vehicle到map的变换
+    vehicle_to_map = vehicle_to_map * actu_odom; // 对于只发布转换的点云，只修正vehicle到map的变换
 
     // 计算odom到map的坐标变换
     Eigen::Isometry3d odom_to_map = vehicle_to_map * vehicle_to_odom.inverse();

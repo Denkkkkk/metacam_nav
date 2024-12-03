@@ -225,7 +225,7 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
     vehicle_pose.translation() = Eigen::Vector3d(vehicleX, vehicleY, vehicleZ);
     Eigen::Quaterniond q(geoQuat.w, geoQuat.x, geoQuat.y, geoQuat.z);
     vehicle_pose.linear() = q.toRotationMatrix();
-    Eigen::Isometry3d vehicle_pose_map = match_result_ * vehicle_pose;
+    Eigen::Isometry3d vehicle_pose_map = vehicle_pose;
     pub_vehicle_pose_map.header.frame_id = "map";
     pub_vehicle_pose_map.header.stamp = ros::Time::now();
     pub_vehicle_pose_map.pose.position.x = vehicle_pose_map.translation().x();
