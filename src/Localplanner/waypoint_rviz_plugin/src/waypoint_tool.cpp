@@ -19,7 +19,7 @@ namespace rviz {
 
     void WaypointTool::updateTopic()
     {
-        sub_ = nh_.subscribe<nav_msgs::Odometry>("/Odometry", 5, &WaypointTool::odomHandler, this);
+        sub_ = nh_.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &WaypointTool::odomHandler, this);
         pub_ = nh_.advertise<geometry_msgs::PoseStamped>("/way_point", 5);
         // pub_joy_ = nh_.advertise<sensor_msgs::Joy>("/joy", 5);
     }

@@ -78,7 +78,7 @@ def create_rosbag(odom_file, pcd_folder, output_bag):
             odom.twist.twist.angular.z = 0.0
 
             # 写入位姿消息到 rosbag
-            bag.write("/Odometry", odom, ros_time)
+            bag.write("/odom_interface", odom, ros_time)
 
             # 加载对应的点云文件
             pcd_file = os.path.join(pcd_folder, "{:06d}.pcd".format(idx))

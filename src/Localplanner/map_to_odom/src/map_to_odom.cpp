@@ -26,7 +26,7 @@ map_to_odom::map_to_odom()
     pubGoalPoint = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5);
 
     subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 2, &map_to_odom::reLocalizationCallBack, this);
-    subOdom = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &map_to_odom::odomCallBack, this);
+    subOdom = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &map_to_odom::odomCallBack, this);
     subInitOdom = nh.subscribe<std_msgs::Bool>("/init_odom", 2, &map_to_odom::initOdomCallBack, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &map_to_odom::stopCallBack, this);
 

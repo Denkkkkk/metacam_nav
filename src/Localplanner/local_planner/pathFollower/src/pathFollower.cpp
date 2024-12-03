@@ -26,7 +26,7 @@ RoboCtrl::RoboCtrl()
         ns += "/";
     }
     robot_frame = ns + "vehicle";
-    subOdom = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &RoboCtrl::odomHandler, this);
+    subOdom = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &RoboCtrl::odomHandler, this);
     if (pctlPtr->get_params().use_move_base)
     {
         subGlobalPoint = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, &RoboCtrl::goalPointCallback, this);

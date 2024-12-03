@@ -13,7 +13,7 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     // 初始化订阅者
     laser_scan_subscriber_ = node_handle_.subscribe("/cloud_interface", 1, &Scan2MapLocation::Scan2SubmapCallback,
                                                     this, ros::TransportHints().tcpNoDelay());
-    odom_subscriber_ = node_handle_.subscribe("/Odometry", 20, &Scan2MapLocation::OdomCallback,
+    odom_subscriber_ = node_handle_.subscribe("/odom_interface", 20, &Scan2MapLocation::OdomCallback,
                                               this, ros::TransportHints().tcpNoDelay());
 
     scan_pointcloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_pointcloud", 10);

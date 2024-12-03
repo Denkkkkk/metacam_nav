@@ -28,7 +28,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     }
     robotFrame = ns + "vehicle";
     lctlPtr = new ParamControl();
-    
+
     load_pcd_map();
     // 全局目标点初始化到很远
     goal_point.pose.position.x = 100;
@@ -36,7 +36,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     joySpeed = maxSpeed;
 
     // 回调函数，提取里程计信息，更新车体的位姿信息
-    subOdometry = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, &LpNode::odometryHandler, this);
+    subOdometry = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &LpNode::odometryHandler, this);
     // 订阅地形点云/terrain_map，对地形点云的处理
     subTerrainCloud = nh.subscribe<sensor_msgs::PointCloud2>("/terrain_map", 5, &LpNode::terrainCloudHandler, this);
     // 回调获取目标点

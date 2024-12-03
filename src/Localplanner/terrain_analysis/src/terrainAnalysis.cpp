@@ -286,7 +286,7 @@ int main(int argc, char **argv)
     nhPrivate.getParam("terrainMapRadius", terrainMapRadius);
     // nhPrivate.param("planarVoxelSize", planarVoxelSize, 0.2);
 
-    ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, odometryHandler);
+    ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, odometryHandler);
 
     ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, laserCloudHandler);
 

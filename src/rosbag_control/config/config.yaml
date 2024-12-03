@@ -1,6 +1,6 @@
 rosbag:
   topics:
-    - /Odometry
+    - /odom_interface
     - /
   output_dir: "/tmp"  # 录制文件存放的目录
   filename: "my_bagfile.bag"  # 录制的文件名

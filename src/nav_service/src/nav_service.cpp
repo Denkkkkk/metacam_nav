@@ -182,7 +182,7 @@ int main(int argc, char **argv)
     ros::ServiceServer start_service = nh.advertiseService("/nav/start", startCallback);
     ros::ServiceServer stop_service = nh.advertiseService("/nav/stop", stopCallback);
     // 里程计订阅
-    ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/Odometry", 2, odomCallback);
+    ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 2, odomCallback);
     ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 2, reLocalizationCallBack);
     // 发布way_point
     ros::Publisher way_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 2);

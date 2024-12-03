@@ -2,7 +2,7 @@
     <!-- Arguments -->
     <arg name="ns" default="" />
     <remap from="cmd_vel" to="$(arg ns)/cmd_vel" />
-    <remap from="odom" to="/Odometry" />
+    <remap from="odom" to="/odom_interface" />
 
     <!-- move_base -->
     <node
