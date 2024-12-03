@@ -52,7 +52,7 @@ RoboCtrl::RoboCtrl()
     pubGoalPathDir = nh.advertise<geometry_msgs::PoseStamped>("/goal_path_dir", 5);
     pubGetGoal = nh.advertise<std_msgs::Bool>("/get_goal", 1);
     maxSpeed1 = pctlPtr->get_params().maxSpeed;
-    pub_rate = 30;
+    pub_rate = 20;
 }
 
 // 外部减速

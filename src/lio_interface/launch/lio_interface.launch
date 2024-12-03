@@ -1,0 +1,16 @@
+<launch>
+    <arg name="ns" default="" />
+    <arg name="robotFrame" default="vehicle" />
+
+    <node pkg="lio_interface" type="odom_interface" name="odom_interface"
+        output="screen" respawn="true">
+        <param name="ns" value="$(arg ns)" />
+    </node>
+
+    <node pkg="lio_interface" type="cloud_interface" name="cloud_interface"
+        output="screen" respawn="true">
+        <param name="ns" value="$(arg ns)" />
+        <param name="robotFrame" value="$(arg robotFrame)" />
+    </node>
+
+</launch>

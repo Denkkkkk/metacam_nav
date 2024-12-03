@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     tf::TransformBroadcaster tfBroadcaster; // tf坐标变换广播器
     tf::StampedTransform odomTrans;         // tf坐标变换
     ros::Duration(1).sleep();
-    ros::Rate rate(15);
+    ros::Rate rate(10);
     bool status = ros::ok();
     while (status)
     {
