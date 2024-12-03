@@ -196,7 +196,7 @@ int main(int argc, char **argv)
     nhPrivate.getParam("localTerrainMapRadius", localTerrainMapRadius);
 
     ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, odometryHandler);
-    ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_registered", 5, laserCloudHandler);
+    ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, laserCloudHandler);
     ros::Subscriber subClearing = nh.subscribe<std_msgs::Float32>("/cloud_clearing", 5, clearingHandler);
     // 主要就是这里,对那边地形点云图的进一步处理
     ros::Subscriber subTerrainCloudLocal = nh.subscribe<sensor_msgs::PointCloud2>("/terrain_map", 2, terrainCloudLocalHandler);

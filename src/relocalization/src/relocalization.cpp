@@ -11,7 +11,7 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     ROS_INFO_STREAM("\033[1;32m---->  Relocation started.\033[0m");
 
     // 初始化订阅者
-    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_registered", 1, &Scan2MapLocation::Scan2SubmapCallback,
+    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_interface", 1, &Scan2MapLocation::Scan2SubmapCallback,
                                                     this, ros::TransportHints().tcpNoDelay());
     odom_subscriber_ = node_handle_.subscribe("/Odometry", 20, &Scan2MapLocation::OdomCallback,
                                               this, ros::TransportHints().tcpNoDelay());
@@ -258,7 +258,8 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
             std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.5 << "m" << std::endl;
         }
 
-        if (odom_cloud_->points.size() > 4 && reloc_active==false) {
+        if (odom_cloud_->points.size() > 4 && reloc_active == false)
+        {
             reloc_active = true;
             //            need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;

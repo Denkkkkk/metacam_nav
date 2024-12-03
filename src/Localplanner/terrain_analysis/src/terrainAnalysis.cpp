@@ -36,7 +36,7 @@
     开放接口（用户自己选择发布）：
     1 --- /map_clearing  可以一键清空地形点云地图，没有发布者，用户自己开发时可使用。当且仅当重开程序或这个清空时，noDataInited置0
     必须提供：
-    1 --- /cloud_registered 由pointlio_interface或者loam_interface进行话题的重映射，lio模块必须提供这个原始扫描点云
+    1 --- /cloud_interface 由pointlio_interface或者loam_interface进行话题的重映射，lio模块必须提供这个原始扫描点云
 
     对外发布：
     1 --- /terrain_map, terrainCloudElev是最终分析出来的有效墙面遮挡(1.低于车体高度 2.高于地面高度 3.有效堵塞点云足够多)
@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 
     ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/Odometry", 5, odometryHandler);
 
-    ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_registered", 5, laserCloudHandler);
+    ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, laserCloudHandler);
 
     ros::Subscriber subClearing = nh.subscribe<std_msgs::Float32>("/map_clearing", 5, clearingHandler);
 
