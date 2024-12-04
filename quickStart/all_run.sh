@@ -54,8 +54,13 @@ else
     source /opt/ros/$ROS_DISTRO/setup.bash;
     source devel/setup.bash;
     roslaunch sentry_gazebo startup_robot_map.launch; exec bash"
-
+  
     sleep 2s
+
+    # gnome-terminal --tab --title="map_to_odom"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+    # source /opt/ros/$ROS_DISTRO/setup.bash;
+    # source devel/setup.bash;
+    # roslaunch map_to_odom map_to_odom.launch; exec bash"
 
     if [ ${para_s} -eq 1 ];
     then
@@ -63,11 +68,6 @@ else
         source /opt/ros/$ROS_DISTRO/setup.bash;
         source devel/setup.bash;
         roslaunch nav_service nav_service.launch; exec bash"
-
-        gnome-terminal --tab --title="map_to_odom"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-        source /opt/ros/$ROS_DISTRO/setup.bash;
-        source devel/setup.bash;
-        roslaunch map_to_odom map_to_odom.launch; exec bash"
     fi
 fi
 

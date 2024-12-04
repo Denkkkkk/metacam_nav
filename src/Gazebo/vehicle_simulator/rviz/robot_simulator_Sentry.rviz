@@ -23,7 +23,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: TerrainMap
+    SyncSource: MAPcloud
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -352,8 +352,6 @@ Visualization Manager:
           Value: false
         lidar_holder:
           Value: false
-        map:
-          Value: true
         odom:
           Value: true
         vehicle:
@@ -369,25 +367,24 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_footprint:
-              vehicle:
-                back_left_wheel:
+        odom:
+          base_footprint:
+            vehicle:
+              back_left_wheel:
+                {}
+              back_right_wheel:
+                {}
+              camera:
+                {}
+              front_left_wheel:
+                {}
+              front_right_wheel:
+                {}
+              lidar_holder:
+                {}
+              velodyne_base_link:
+                velodyne:
                   {}
-                back_right_wheel:
-                  {}
-                camera:
-                  {}
-                front_left_wheel:
-                  {}
-                front_right_wheel:
-                  {}
-                lidar_holder:
-                  {}
-                velodyne_base_link:
-                  velodyne:
-                    {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -531,7 +528,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.05000000074505806
+      Size (m): 0.10000000149011612
       Style: Spheres
       Topic: /PannerMap
       Unreliable: false
@@ -929,7 +926,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 25.86635971069336
+      Distance: 137.16099548339844
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -937,17 +934,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.018695354461669922
-        Y: 5.713170528411865
+        X: 73.74076843261719
+        Y: 21.3946533203125
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5497963428497314
+      Pitch: 1.5697963237762451
       Target Frame: vehicle
-      Yaw: 2.030367851257324
+      Yaw: 1.4053679704666138
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055

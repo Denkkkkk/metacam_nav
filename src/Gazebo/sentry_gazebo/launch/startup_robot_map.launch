@@ -11,7 +11,7 @@
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <!--模型车的起点放置位置-->
-  <arg name="vehicleX" default="-2.0" />
+  <arg name="vehicleX" default="0.0" />
   <arg name="vehicleY" default="0.0" />
   <arg name="vehicleZ" default="0.0" />
   <arg name="vehicleYaw" default="0.0" />
@@ -45,12 +45,12 @@
   </include>
 
   <!-- odom-map -->
-  <!-- <include file="$(find map_to_odom)/launch/map_to_odom.launch">
+  <include file="$(find map_to_odom)/launch/map_to_odom.launch">
     <arg name="vehicleX" value="$(arg vehicleX)" />
     <arg name="vehicleY" value="$(arg vehicleY)" />
     <arg name="vehicleYaw" default="$(arg vehicleYaw)" />
     <arg name="ns" value="$(arg ns)" />
-  </include> -->
+  </include>
 
   <!-- velodyne点云处理成/相应话题和里程/话题输出 -->
   <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">

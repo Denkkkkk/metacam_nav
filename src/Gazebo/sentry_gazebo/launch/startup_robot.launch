@@ -87,7 +87,4 @@
 
   <!--启动重定位-->
   <!-- <include file="$(find relocalization)/launch/relocalization.launch" /> -->
-
-  <!-- 启动服务通信 -->
-  <!-- <include file="$(find nav_service)/launch/nav_service.launch" /> -->
 </launch>
