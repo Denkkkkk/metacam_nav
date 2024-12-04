@@ -23,7 +23,6 @@ struct Params
     double minSpeed;
     double curvature;
     int slowBegin;
-    std::string cmdTopicdTopic;
     double maxAddAccel;
     double maxSlowAccel;
     double yawRateGain;

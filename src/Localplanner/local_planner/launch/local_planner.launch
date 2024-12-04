@@ -1,12 +1,12 @@
 <launch>
+  <!-- param_config -->
+  <include file="$(find param_config)/launch/param_config.launch" />
+
   <arg name="usual_pcd_path" default="$(find local_planner)/pcd/planning_map.pcd" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
   <arg name="robot" default="tita" />
-
-  <!-- load global params -->
-  <rosparam command="load" file="$(find local_planner)/config/usual_config/$(arg robot).yaml" />
 
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
     <rosparam command="load" file="$(find local_planner)/config/local_planner/$(arg robot).yaml" />
@@ -23,5 +23,4 @@
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->
   </node>
-
 </launch> 

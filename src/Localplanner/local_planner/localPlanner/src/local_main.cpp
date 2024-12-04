@@ -10,7 +10,7 @@
  */
 #include "LpNode.h"
 #include <chrono>
-int need_pub_Map = 10;
+int need_pub_Map = 100;
 
 int main(int argc, char **argv)
 {
@@ -39,10 +39,11 @@ int main(int argc, char **argv)
             LocalPanner.need_read_path = false;
         }
         // 可视化pcd地图
-        if (need_pub_Map > 0)
+        need_pub_Map--;
+        if (need_pub_Map == 0)
         {
             LocalPanner.pub_Map();
-            need_pub_Map -= 1;
+            need_pub_Map = 100;
         }
         /**
          * @brief 外部请求关闭地图相关机制
