@@ -10,7 +10,7 @@ localPlanner:
 
 
 pathFollower:
-  endGoalDis: 0.15  # 到达目标点范围内就停止
+  endGoalDis: 0.1  # 到达目标点范围内就停止
   useCloudSlowDown: true  # 使能根据周围障碍物点云密集情况进行减速
   slowdown_rate: 0.65     # 根据周围障碍物进行减速的比例
   minSpeed: 0.1           # 加减速死区阈值
