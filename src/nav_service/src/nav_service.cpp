@@ -120,6 +120,7 @@ bool startCallback(std_srvs::Trigger::Request &req,
 bool stopCallback(std_srvs::Trigger::Request &req,
                   std_srvs::Trigger::Response &res)
 {
+    reloc_succeed = false;
     if (!is_running)
     {
         res.success = false;
@@ -131,7 +132,6 @@ bool stopCallback(std_srvs::Trigger::Request &req,
         res.message = "request stop navigation successfully!";
         is_running = false;
     }
-
     if (res.success)
         ROS_INFO("%s", res.message.c_str());
     else
@@ -148,7 +148,7 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
 void navStatusPub(ros::Publisher &nav_status_pub)
 {
     NavStatus nav_status;
-    nav_status.version = "v1.3.5";
+    nav_status.version = "v1.4.8";
     nav_status.is_running = is_running;
     nav_status.target_index = nav_index;
     if (!nav_path.empty())
