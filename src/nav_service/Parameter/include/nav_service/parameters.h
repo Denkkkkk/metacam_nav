@@ -19,7 +19,7 @@ struct Params
     std::vector<Coordinate> prior_path;
     std::string prior_path_file;
     double endGoalDis = 0.5;
-    double endGoal_stopTime = 2.0;
+    double endGoal_stopTime = 5.0;
 };
 
 class ParamControl

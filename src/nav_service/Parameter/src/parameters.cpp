@@ -5,7 +5,7 @@ void ParamControl::load_params()
     // 从参数服务器中获取参数
     nh.param("/pathFollower/endGoalDis", param.endGoalDis, 0.2);
     nh.param("/usualParams/use_prior_path", param.use_prior_path, false);
-    nhPrivate.param("endGoal_stopTime", param.endGoal_stopTime, 2.0);
+    nhPrivate.param("endGoal_stopTime", param.endGoal_stopTime, 5.0);
     // 读取文件
     nhPrivate.getParam("prior_path_file", param.prior_path_file);
     if (param.use_prior_path)
