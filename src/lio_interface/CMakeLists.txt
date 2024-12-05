@@ -25,5 +25,14 @@ add_executable(cloud_interface src/cloud_interface.cpp)
 target_link_libraries(odom_interface ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${EIGEN3_LIBS})
 target_link_libraries(cloud_interface ${catkin_LIBRARIES})
 
+install(
+  TARGETS
+  odom_interface cloud_interface
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
-
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
