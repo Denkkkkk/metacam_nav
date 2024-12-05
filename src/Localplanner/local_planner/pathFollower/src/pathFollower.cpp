@@ -250,7 +250,7 @@ void RoboCtrl::pure_persuit()
      * @brief 二次保护的到点状态判断
      *
      */
-    if (!use_real_goal && virture_endGoalDis_now > pctlPtr->get_params().endGoalDis + 0.25)
+    if (!use_real_goal && virture_endGoalDis_now > pctlPtr->get_params().endGoalDis + 0.3)
     {
         use_real_goal = true;
         get_goal.data = false;
@@ -269,7 +269,7 @@ void RoboCtrl::pure_persuit()
         get_goal.data = false;
         pubGetGoal.publish(get_goal);
     }
-    else if (!use_real_goal && virture_endGoalDis_now <= pctlPtr->get_params().endGoalDis + 0.25)
+    else if (!use_real_goal && virture_endGoalDis_now <= pctlPtr->get_params().endGoalDis + 0.3)
     {
         get_goal.data = true;
         pubGetGoal.publish(get_goal);
