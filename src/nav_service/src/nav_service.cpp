@@ -218,22 +218,25 @@ int main(int argc, char **argv)
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
-            double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
-            if (!reloc_succeed)
+            if (nav_service_params.get_params().use_prior_path)
             {
-                std_msgs::Bool relo;
-                relo.data = true;
-                nav_relo_pub.publish(relo);
-                ROS_ERROR("Navigation need relocalization!");
-                // sleep 1s
-                ros::Duration(1).sleep();
-                continue;
-            }
-            else
-            {
-                if (get_relocal_duration < 1.0 && get_relocal_duration > 0)
+                double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
+                if (!reloc_succeed)
                 {
+                    std_msgs::Bool relo;
+                    relo.data = true;
+                    nav_relo_pub.publish(relo);
+                    ROS_ERROR("Navigation need relocalization!");
+                    // sleep 1s
+                    ros::Duration(1).sleep();
                     continue;
+                }
+                else
+                {
+                    if (get_relocal_duration < 1.0 && get_relocal_duration > 0)
+                    {
+                        continue;
+                    }
                 }
             }
             if (nav_path.empty())

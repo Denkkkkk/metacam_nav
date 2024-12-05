@@ -3,7 +3,7 @@ project(param_config)
 find_package(catkin REQUIRED)
 catkin_package()
 
-install(DIRECTORY config
+install(DIRECTORY config/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 )
 
