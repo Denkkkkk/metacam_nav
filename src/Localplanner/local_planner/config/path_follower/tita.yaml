@@ -8,7 +8,7 @@ dirDiffThre_keep: 0.05  # 角度差
 quick_turn_speed: 0.05  # 减速到这个速度就允许快速转向
 
 # get goal parameters
-close_direct_speed: 0.12    # 到目标点附近直冲的速度
+close_direct_speed: 0.15    # 到目标点附近直冲的速度
 use_closeGoal_direct: true  # 开启到目标点附近直接冲向目标点
 closeGoal_direct_dis: 0.6   # 到目标点附近直走的阈值&&达到getGoal_speed的距离
 goalSlowDisThre: 1.8        # 靠近全局目标点时减速
