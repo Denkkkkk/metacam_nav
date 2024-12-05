@@ -6,11 +6,12 @@ dirDiffThre_keep: 0.1  # 角度差
 quick_turn_speed: 0.05  # 减速到这个速度就允许快速转向
 
 # get goal parameters
-endGoalDis: 0.6  # 到达目标点范围内就停止
-getGoal_speed: 0.2  # 刚好追踪到目标点时的速度
-use_closeGoal_direct: false  # 开启到目标点附近直接冲向目标点
-closeGoal_direct_dis: 0.8  # 到目标点附近直走的阈值&&达到getGoal_speed的距离
-goalSlowDisThre: 1.6  # 靠近全局目标点时减速
+close_direct_speed: 0.15  # 到目标点附近直冲的速度
+use_closeGoal_direct: true  # 开启到目标点附近直接冲向目标点
+closeGoal_direct_dis: 0.5  # 到目标点附近直走的阈值&&达到getGoal_speed的距离
+goalSlowDisThre: 1.5  # 靠近全局目标点时减速
+getGoal_speed: 0.15  # 刚好追踪到目标点时的速度
+
 
 # Generally fixed parameters
 lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
@@ -28,6 +29,5 @@ goal_path_direct: true  # 是否全局路径直接追踪
 use_MIDPlanning_slow: true  # 是否使用转弯点减速
 MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
 MIDPlanning_minSpeed: 1.0
-close_direct_speed: 0.2  # 到目标点附近直冲的速度
 use_virtual_head: false
 use_move_base: false

@@ -171,7 +171,17 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
     {
         double goal_to_vhi = vehicleYaw - goal_dir;
         vehicleYawRate = -pctlPtr->get_params().yawRateGain * goal_to_vhi;
+        // 旋转速度过大保护
+        if (vehicleYawRate > pctlPtr->get_params().maxYawRate * PI / 180.0)
+            vehicleYawRate = pctlPtr->get_params().maxYawRate * PI / 180.0; // 最大最小值限制
+        else if (vehicleYawRate < -pctlPtr->get_params().maxYawRate * PI / 180.0)
+            vehicleYawRate = -pctlPtr->get_params().maxYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
+        if (fabs(vehicleYawRate) > fabs(goal_to_vhi) * 3)
+        {
+            vehicleYawRate = -goal_to_vhi * 3;
+        }
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
+
         if (fabs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
         {
             cmd_vel.linear.x = 0;
@@ -235,7 +245,7 @@ void RoboCtrl::pure_persuit()
      * @brief 二次保护的到点状态判断
      *
      */
-    if (!use_real_goal && virture_endGoalDis_now > pctlPtr->get_params().endGoalDis)
+    if (!use_real_goal && virture_endGoalDis_now > pctlPtr->get_params().endGoalDis + 0.25)
     {
         use_real_goal = true;
         get_goal.data = false;
@@ -254,7 +264,7 @@ void RoboCtrl::pure_persuit()
         get_goal.data = false;
         pubGetGoal.publish(get_goal);
     }
-    else if (!use_real_goal && virture_endGoalDis_now <= pctlPtr->get_params().endGoalDis)
+    else if (!use_real_goal && virture_endGoalDis_now <= pctlPtr->get_params().endGoalDis + 0.25)
     {
         get_goal.data = true;
         pubGetGoal.publish(get_goal);
@@ -449,9 +459,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->get_params().maxStopYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->get_params().maxStopYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate) > fabs(dirDiff) * 10)
+            if (fabs(vehicleYawRate) > fabs(dirDiff) * 5)
             {
-                vehicleYawRate = -dirDiff * 10;
+                vehicleYawRate = -dirDiff * 5;
             }
         }
         else
@@ -469,9 +479,9 @@ void RoboCtrl::pure_persuit()
             else if (vehicleYawRate < -pctlPtr->get_params().maxYawRate * PI / 180.0)
                 vehicleYawRate = -pctlPtr->get_params().maxYawRate * PI / 180.0; // 一秒最大转45度时，对应-0.7854
             // 增益过大
-            if (fabs(vehicleYawRate) > fabs(dirDiff) * 10)
+            if (fabs(vehicleYawRate) > fabs(dirDiff) * 5)
             {
-                vehicleYawRate = -dirDiff * 10;
+                vehicleYawRate = -dirDiff * 5;
             }
         }
         ROS_WARN("dirDiff: %f ;vehicleYawRate: %f", dirDiff, vehicleYawRate);

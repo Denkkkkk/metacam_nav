@@ -295,6 +295,7 @@ int main(int argc, char **argv)
             double dis = sqrt(pow(vehicle_x - way_point.pose.position.x, 2) + pow(vehicle_y - way_point.pose.position.y, 2));
             if (dis < nav_service_params.get_params().endGoalDis)
             {
+                ros::Duration(nav_service_params.get_params().endGoal_stopTime).sleep();
                 nav_index += 1;
                 if (nav_index == nav_path.size())
                 {
