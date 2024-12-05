@@ -446,7 +446,7 @@ void RoboCtrl::pure_persuit()
         }
         else if (fabs(vehicleSpeed) < pctlPtr->get_params().quick_turn_speed)
         {
-            if (abs(dirDiff) < 0.3)
+            if (abs(dirDiff) < 0.2)
             {
                 vehicleYawRate = -pctlPtr->get_params().stopYawRateGain * dirDiff / 3.0; // 偏差角较小时不用转这么快
             }
@@ -468,7 +468,7 @@ void RoboCtrl::pure_persuit()
         {
             if (abs(dirDiff) < 0.2)
             {
-                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 4.0; // 偏差角较小时不用转这么快
+                vehicleYawRate = -pctlPtr->get_params().yawRateGain * dirDiff / 2.0; // 偏差角较小时不用转这么快
             }
             else
             {
