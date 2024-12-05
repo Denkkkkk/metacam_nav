@@ -14,10 +14,8 @@ pathFollower:
   useCloudSlowDown: true  # 使能根据周围障碍物点云密集情况进行减速
   slowdown_rate: 0.65     # 根据周围障碍物进行减速的比例
   minSpeed: 0.1           # 加减速死区阈值
-  maxYawRate: 40.0        # 车头最大转动角速度
-  maxStopYawRate: 50.0    # 静止时车头最大转动角速度
   maxAddAccel: 3.0        # 最大加速速度
-  maxSlowAccel: 3.0       # 最大减速加速度
+  maxSlowAccel: 4.0       # 最大减速加速度
   use_getgoal_yaw: false  # 允许控制到目标点时的车头朝向
   getgoal_yaw: 0.0        # 到目标点时的车头相对世界坐标系的朝向
 
@@ -27,4 +25,4 @@ usualParams:
   use_prior_path: false  # 是否使用先验路径
 
 nav_service:
-  endGoal_stopTime: 3.0  # 到达目标点后停留时间
+  endGoal_stopTime: 10.0  # 到达目标点后停留时间
