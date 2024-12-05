@@ -23,8 +23,8 @@ pathFollower:
 
 usualParams:
   maxSpeed: 0.75        # 整车最大速度
-  use_map: false         # 是否使用先验地图
-  use_prior_path: false  # 是否使用先验路径
+  use_map: true         # 是否使用先验地图
+  use_prior_path: true  # 是否使用先验路径
 
 nav_service:
   endGoal_stopTime: 3.0  # 到达目标点后停留时间

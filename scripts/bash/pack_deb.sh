@@ -4,8 +4,8 @@ cp -r scripts/opt output/metacam_nav
 cp -r scripts/DEBIAN output/metacam_nav
 
 # dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_XT_1.3.5_arm64.deb
-dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_1.3.9_arm64.deb
-# dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_jinzhong_1.4.10_arm64.deb
+# dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_1.3.9_arm64.deb
+dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_jinzhong_1.4.10_arm64.deb
 # dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_skyland_1.4.9_arm64.deb
 # dpkg-deb -Zxz -z0 -b output/metacam_nav ../metacam_nav_deb/metacam_nav_1.0.1_arm64.deb
 
