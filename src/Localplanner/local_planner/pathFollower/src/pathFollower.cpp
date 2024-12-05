@@ -155,17 +155,9 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
     car_speed.data = vehicleSpeed;
     if (pctlPtr->get_params().use_virtual_head)
     {
-        if (fabs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
-        {
-            cmd_vel.linear.x = 0;
-            cmd_vel.linear.y = 0;
-        }
-        else
-        {
-            double goal_to_vhi = vehicleYaw - goal_dir;
-            cmd_vel.linear.x = vehicleSpeed * cos(goal_to_vhi);
-            cmd_vel.linear.y = -vehicleSpeed * sin(goal_to_vhi);
-        }
+        double goal_to_vhi = vehicleYaw - goal_dir;
+        cmd_vel.linear.x = vehicleSpeed * cos(goal_to_vhi);
+        cmd_vel.linear.y = -vehicleSpeed * sin(goal_to_vhi);
     }
     else
     {
@@ -181,19 +173,32 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
             vehicleYawRate = -goal_to_vhi * 3;
         }
         cmd_vel.angular.z = vehicleYawRate; // 旋转速度
+        cmd_vel.linear.x = vehicleSpeed;    // 前向速度
 
-        if (fabs(vehicleSpeed) < pctlPtr->get_params().maxSlowAccel / pub_rate)
+        static int stop_times = 0; // 在导航可控的情况下确保车辆停稳后才转遥控接管
+        if (safetyStop && abs(vehicleSpeed) < 0.01 && stop_times > 10)
         {
-            cmd_vel.linear.x = 0;
+            cmd_vel.linear.x = 0.0;
+            cmd_vel.angular.x = 0.0;
+            cmd_vel.angular.z = 0.0;
         }
         else
         {
-            cmd_vel.linear.x = vehicleSpeed; // 前向速度
+            if (stop_times <= 10 && abs(vehicleSpeed) < 0.001)
+            {
+                stop_times++;
+            }
+            else
+            {
+                stop_times = 0;
+            }
+            cmd_vel.angular.x = -1.0;
         }
     }
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
-    ROS_WARN("vehicleSpeed: %f, cmd_vel.angular.z:%f", vehicleSpeed, cmd_vel.angular.z);
+    ROS_WARN("vehicleSpeed: %f", vehicleSpeed);
+    ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
 }
 
 void RoboCtrl::slowStop()
