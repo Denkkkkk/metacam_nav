@@ -16,8 +16,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
 
     nhPrivate.getParam("goalX", goalX);
     nhPrivate.getParam("goalY", goalY);
-    nhPrivate.getParam("Xbias", Xbias);
-    nhPrivate.getParam("Ybias", Ybias);
     nhPrivate.getParam("usual_pcd_path", usual_pcd_path);
     nhPrivate.getParam("detourWei", detourWei);
     std::string ns;
@@ -285,8 +283,8 @@ void LpNode::local_planner()
         PannerAtuCloud1 = *PannerAtuCloud;
         for (int i = 0; i < PannerAtuCloudsize; i++)
         {
-            PannerAtuCloud1.points[i].x = PannerAtuCloud->points[i].x * cosVehicleYaw - PannerAtuCloud->points[i].y * sinVehicleYaw + vehicleX + Xbias;
-            PannerAtuCloud1.points[i].y = PannerAtuCloud->points[i].x * sinVehicleYaw + PannerAtuCloud->points[i].y * cosVehicleYaw + vehicleY + Ybias;
+            PannerAtuCloud1.points[i].x = PannerAtuCloud->points[i].x * cosVehicleYaw - PannerAtuCloud->points[i].y * sinVehicleYaw + vehicleX;
+            PannerAtuCloud1.points[i].y = PannerAtuCloud->points[i].x * sinVehicleYaw + PannerAtuCloud->points[i].y * cosVehicleYaw + vehicleY;
             PannerAtuCloud1.points[i].z += vehicleZ;
         }
         sensor_msgs::PointCloud2 PannerAtuCloud2;

@@ -40,6 +40,28 @@ void ParamControl::load_params()
     param_origin = param;
 }
 
+bool ParamControl::load_config(const std::string &config)
+{
+    
+    std::cout << "[YAML] Loading paths..." << std::endl;
+    std::cout << "[YAML] Loading " << ros::this_node::getName() << "parameters... " << std::endl;
+
+    // 从nav_config.yaml读取 local_planner 参数
+    YAML::Node conf = YAML::LoadFile(config);
+    double vehicleWidth = conf["localPlanner"]["vehicleWidth"].as<double>();
+    double vehicleLength = conf["localPlanner"]["vehicleLength"].as<double>();
+    double addPointRadius = conf["localPlanner"]["add_point_radius"].as<double>();
+    double minPathRange = conf["localPlanner"]["minPathRange"].as<double>();
+    double goalClearRange = conf["localPlanner"]["goalClearRange"].as<double>();
+    double slowDis = conf["localPlanner"]["slow_dis"].as<double>();
+    double obstacleHeightThre = conf["localPlanner"]["obstacleHeightThre"].as<double>();
+
+    // 从local_planner.yaml读取 local_planner 参数
+    
+
+    return true;
+}
+
 void ParamControl::update_params()
 {
     nhUsual.getParam("maxSpeed", param.maxSpeed);

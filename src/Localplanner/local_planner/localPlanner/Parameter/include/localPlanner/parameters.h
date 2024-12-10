@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <string>
+#include <yaml-cpp/yaml.h>
 using namespace std;
 
 struct Params
@@ -73,6 +74,9 @@ public:
     {
         param.dirThre = param_origin.dirThre + enlarge_dir;
     }
+
+private:
+    bool load_config(const std::string &config);
 
     Params param;
     Params param_origin;

@@ -52,8 +52,6 @@ private:
     ros::Publisher pubMarker;
     ros::Publisher pubVirHeadDir;
     ros::Publisher pubAddPoints;
-    int Xbias;
-    int Ybias;
     std::string usual_pcd_path;
     pcl::PointCloud<pcl::PointXYZI>::Ptr terrainMapRecord_pcl;
     sensor_msgs::PointCloud2 terrainMapRecord;

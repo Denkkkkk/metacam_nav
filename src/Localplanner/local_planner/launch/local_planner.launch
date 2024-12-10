@@ -8,17 +8,17 @@
   <arg name="ns" default="" />
   <arg name="robot" default="tita" />
 
+  <rosparam command="load" file="$(find local_planner)/config/$(arg robot).yaml" />
+
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
-    <rosparam command="load" file="$(find local_planner)/config/local_planner/$(arg robot).yaml" />
     <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
     <param name="ns" type="string" value="$(arg ns)" />
     <param name="usual_pcd_path" value="$(arg usual_pcd_path)" />
     <param name="goalX" type="double" value="$(arg vehicleX)" />
     <param name="goalY" type="double" value="$(arg vehicleY)" />
   </node>
-
+  
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">
-    <rosparam command="load" file="$(find local_planner)/config/path_follower/$(arg robot).yaml" />
     <param name="ns" type="string" value="$(arg ns)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->
     <param name="vehicleY" type="double" value="$(arg vehicleY)" /> <!--@-车子上电默认位置Y-->
