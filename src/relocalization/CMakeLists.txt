@@ -32,7 +32,7 @@ find_package(catkin REQUIRED COMPONENTS ${ROS_CXX_DEPENDENCIES} )
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenMP)
-
+find_package(yaml-cpp REQUIRED)
 if (OpenMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
