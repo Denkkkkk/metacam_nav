@@ -3,6 +3,7 @@ build_clion
 devel
 install
 output
+test
 
 cmake-build-debug
 .catkin_workspace
