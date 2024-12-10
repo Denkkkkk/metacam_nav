@@ -50,13 +50,13 @@ int main(int argc, char **argv)
          *
          */
         // 关闭地图已到时，重新打开地图
-        if (!LocalPanner.lctlPtr->param.useMap && !(abs(LocalPanner.close_map_begin - (-1)) < 0.01))
+        if (!LocalPanner.lctlPtr->get_params().use_map && !(abs(LocalPanner.close_map_begin - (-1)) < 0.01))
         {
             double close_map_end = ros::Time::now().toSec();
             double close_map_duration = close_map_end - LocalPanner.close_map_begin;
-            if (close_map_duration > LocalPanner.lctlPtr->param.close_map_time)
+            if (close_map_duration > LocalPanner.lctlPtr->get_params().close_map_time)
             {
-                LocalPanner.lctlPtr->param.useMap = true;
+                LocalPanner.lctlPtr->set_use_map(true);
             }
         }
         else // 外部请求关闭
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
             LocalPanner.local_planner();        // 正式进行路径规划
             if (!pathFound)
             {
-                if (LocalPanner.lctlPtr->param.use_fail_closemap)
+                if (LocalPanner.lctlPtr->get_params().use_fail_closemap)
                     LocalPanner.close_map();
                 LocalPanner.fail_local_planner(); // 找不到路径，发布一个原地的路径点
             }

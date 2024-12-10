@@ -77,8 +77,6 @@ private:
     void speedHandler(const std_msgs::Float32::ConstPtr &speed);
     // 额加的雷达避障信息
     void addCloudHandler(const sensor_msgs::PointCloud2ConstPtr &addPoints);
-    // 控制是否开启障碍物检测的状态
-    void checkObstacleHandler(const std_msgs::Bool::ConstPtr &checkObs);
     void virHeadDirHandler(const std_msgs::Float32::ConstPtr &msg);
     void closeMapHandler(const std_msgs::Bool::ConstPtr &msg);
     void globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg);

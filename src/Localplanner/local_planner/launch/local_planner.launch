@@ -9,6 +9,7 @@
   <arg name="robot" default="tita" />
 
   <rosparam command="load" file="$(find local_planner)/config/$(arg robot).yaml" />
+  <param name="robot" type="string" value="$(arg robot)" />
 
   <node pkg="local_planner" type="localPlanner" name="localPlanner" output="screen" respawn="true">
     <param name="pathFolder" type="string" value="$(find local_planner)/localPlanner/paths" />
@@ -17,7 +18,7 @@
     <param name="goalX" type="double" value="$(arg vehicleX)" />
     <param name="goalY" type="double" value="$(arg vehicleY)" />
   </node>
-  
+
   <node pkg="local_planner" type="pathFollower" name="pathFollower" output="screen" respawn="true">
     <param name="ns" type="string" value="$(arg ns)" />
     <param name="vehicleX" type="double" value="$(arg vehicleX)" /> <!--@-车子上电默认位置X-->

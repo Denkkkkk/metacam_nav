@@ -19,13 +19,13 @@ void LpNode::pub_allFreePath()
             angDiff = 360.0 - angDiff;
         }
         // 相对目标点之间的规划扇形范围
-        if ((angDiff > lctlPtr->param.dirThre) || !((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) || !checkRotObstacle))
+        if ((angDiff > lctlPtr->get_params().dirThre) || !((rotAng * 180.0 / PI > minObsAngCW && rotAng * 180.0 / PI < minObsAngCCW) || !checkRotObstacle))
         {
             continue;
         }
 
         // 无障碍物路径下的所有距离内采样点加入freePaths
-        if (clearPathList[i] <= lctlPtr->param.pointPerPathThre)
+        if (clearPathList[i] <= lctlPtr->get_params().pointPerPathThre)
         {
             int freePathLength = paths[i % pathNum]->points.size();
             for (int j = 0; j < freePathLength; j++)
@@ -38,7 +38,7 @@ void LpNode::pub_allFreePath()
 
                 float dis = sqrt(x * x + y * y);
                 // 点云往里收缩pathScale，可行路就可以往外扩张pathScale
-                if (dis <= pathRange / pathScale && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)))
+                if (dis <= pathRange / pathScale && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->get_params().pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->get_params().goalClearRange_global)))
                 {
                     // 转车头系
                     point.x = (cos(rotAng) * x - sin(rotAng) * y) / pathScale;
@@ -111,7 +111,7 @@ void LpNode::pubPath_fromStartPaths(int &selectedGroupID)
 
 void LpNode::pub_Map()
 {
-    if (lctlPtr->param.useMap)
+    if (lctlPtr->get_params().use_map)
     {
         pubMap.publish(terrainMapRecord);
     }

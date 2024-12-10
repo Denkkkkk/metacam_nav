@@ -4,8 +4,9 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 add_library(pathFollower_param src/parameters.cpp)
+
 target_include_directories(pathFollower_param PUBLIC ${catkin_INCLUDE_DIRS} include)
-target_link_libraries(pathFollower_param ${catkin_LIBRARIES})
+target_link_libraries(pathFollower_param ${catkin_LIBRARIES} yaml-cpp)
 
 install(
   TARGETS

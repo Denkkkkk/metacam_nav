@@ -7,7 +7,7 @@
  */
 void LpNode::closeMapHandler(const std_msgs::Bool::ConstPtr &msg)
 {
-    if (lctlPtr->param.useMap && msg->data)
+    if (lctlPtr->get_params().use_map && msg->data)
     {
         need_close_map = true;
     }
@@ -39,16 +39,6 @@ void LpNode::speedHandler(const std_msgs::Float32::ConstPtr &speed)
     {
         joySpeed = maxSpeed;
     }
-}
-
-/**
- * @brief 是否开启障碍物检测回调
- *
- * @param checkObs
- */
-void LpNode::checkObstacleHandler(const std_msgs::Bool::ConstPtr &checkObs)
-{
-    lctlPtr->param.checkObstacle = checkObs->data; // 将获取的布尔值数据赋值给名为 checkObstacle 的全局变量。这将用于控制障碍物检测的开启位
 }
 
 /**
@@ -85,7 +75,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     pcl::PointXYZI point;
     // terrainCloudCrop为经过地形裁剪之后的点云
     terrainCloudCrop->clear();
-    if (lctlPtr->param.useMap)
+    if (lctlPtr->get_params().use_map)
     {
         // 对全局地图排除较远的点
         for (int i = 0; i < terrainMapRecord_pcl->points.size(); i++)
@@ -96,7 +86,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
             // 计算点云到车体的距离
             float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) + (pointY - vehicleY) * (pointY - vehicleY));
 
-            if (dis < pathScale * lctlPtr->param.adjacentRange + 0.5)
+            if (dis < pathScale * lctlPtr->get_params().adjacentRange + 0.5)
             {
                 terrainCloudCrop->push_back(point);
             }
@@ -116,7 +106,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
         // 只保存满足下列条件的点云
         // ①距离车体小于adjacentRange的点云
         // ②使用对于低于阈值的点云进行路径评分useCost，只要障碍物点云距离地面点云的相对高度大于obstacleHeightThre（地形裁剪）
-        if ((dis < pathScale * lctlPtr->param.adjacentRange + 0.5) && (point.intensity > lctlPtr->param.obstacleHeightThre || lctlPtr->param.useCost))
+        if ((dis < pathScale * lctlPtr->get_params().adjacentRange + 0.5) && (point.intensity > lctlPtr->get_params().obstacleHeightThre || lctlPtr->get_params().useCost))
         {
             terrainCloudCrop->push_back(point);
         }
@@ -126,7 +116,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     terrainAddPoints.clear();
 
     // 遍历点云插值
-    if (lctlPtr->param.add_point_radius > 0.01)
+    if (lctlPtr->get_params().add_point_radius > 0.01)
     {
         // 先做一次降采样
         terrainCloudDwz->clear();
@@ -138,10 +128,10 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
             // 45度插值一次
             for (int j = 1; j < 8; j++)
             {
-                point.x = terrainCloudCrop->points[i].x + lctlPtr->param.add_point_radius * cos(j * 45 * M_PI / 180);
-                point.y = terrainCloudCrop->points[i].y + lctlPtr->param.add_point_radius * sin(j * 45 * M_PI / 180);
+                point.x = terrainCloudCrop->points[i].x + lctlPtr->get_params().add_point_radius * cos(j * 45 * M_PI / 180);
+                point.y = terrainCloudCrop->points[i].y + lctlPtr->get_params().add_point_radius * sin(j * 45 * M_PI / 180);
                 point.z = terrainCloudCrop->points[i].z;
-                point.intensity = lctlPtr->param.obstacleHeightThre + 0.1;
+                point.intensity = lctlPtr->get_params().obstacleHeightThre + 0.1;
                 terrainCloudDwz->push_back(point);
                 terrainAddPoints.push_back(point);
             }
@@ -183,7 +173,7 @@ void LpNode::addCloudHandler(const sensor_msgs::PointCloud2ConstPtr &addPoints)
         float pointY = point.y;
         // 计算点云到车体的距离
         float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) + (pointY - vehicleY) * (pointY - vehicleY));
-        if (dis < lctlPtr->param.adjacentRange && (point.intensity > lctlPtr->param.obstacleHeightThre || lctlPtr->param.useCost))
+        if (dis < lctlPtr->get_params().adjacentRange && (point.intensity > lctlPtr->get_params().obstacleHeightThre || lctlPtr->get_params().useCost))
         {
             addedObstaclesCrop->push_back(point);
         }

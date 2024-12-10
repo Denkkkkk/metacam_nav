@@ -43,8 +43,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     subSpeed = nh.subscribe<std_msgs::Float32>("/speed", 5, &LpNode::speedHandler, this);
     // 额加的雷达避障点云，可能来自2D雷达或其他传感器
     subAddCloud = nh.subscribe<sensor_msgs::PointCloud2>("/laser_point", 5, &LpNode::addCloudHandler, this);
-    // 控制是否根据用于的规划点云进行地形障碍检查
-    subCheckObstacle = nh.subscribe<std_msgs::Bool>("/check_obstacle", 5, &LpNode::checkObstacleHandler, this);
     // 关闭局部地图标志位
     subCloseMap = nh.subscribe<std_msgs::Bool>("/close_map", 2, &LpNode::closeMapHandler, this);
     subGlobal_point = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 2, &LpNode::globalPointHandler, this);
@@ -64,7 +62,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     pubFreePaths = nh.advertise<sensor_msgs::PointCloud2>("/free_paths", 2);
 #endif
     // 计算速度控制的K值
-    planRangeK = pow(4, maxSpeed) / (lctlPtr->param.adjacentRange - lctlPtr->param.minPathRange);
+    planRangeK = pow(4, maxSpeed) / (lctlPtr->get_params().adjacentRange - lctlPtr->get_params().minPathRange);
     ROS_WARN("planRangeK: %f", planRangeK);
     makerInit();
 }
@@ -129,23 +127,23 @@ void LpNode::pathRange_from_speed()
     // 将车体的路径范围（黄色）限制在minPathRange以上
     // pathRange和pathScale的共同点都是跟车体行驶速度有关的量
     // pathScale还和进一步筛选点云有关，通过把点云缩减pathscale倍来调整碰撞检测的范围，速度越快，考虑的点云应该也多
-    if (lctlPtr->param.pathRangeBySpeed)
+    if (lctlPtr->get_params().pathRangeBySpeed)
     {
-        pathRange = pow(4, joySpeed) / planRangeK + lctlPtr->param.minPathRange; // 指数曲线
-        if (pathRange < lctlPtr->param.minSpeedRange)
-            pathRange = lctlPtr->param.minSpeedRange;
+        pathRange = pow(4, joySpeed) / planRangeK + lctlPtr->get_params().minPathRange; // 指数曲线
+        if (pathRange < lctlPtr->get_params().minSpeedRange)
+            pathRange = lctlPtr->get_params().minSpeedRange;
     }
-    if (pathRange < lctlPtr->param.minPathRange)
-        pathRange = lctlPtr->param.minPathRange;
+    if (pathRange < lctlPtr->get_params().minPathRange)
+        pathRange = lctlPtr->get_params().minPathRange;
 
-    pathScale = lctlPtr->param.defPathScale; // local_planner外的暂存值，很关键，他只会是预设定的maxPathScale，因为loacal_planner结束是都会让pathScale回到这个值
+    pathScale = lctlPtr->get_params().defPathScale; // local_planner外的暂存值，很关键，他只会是预设定的maxPathScale，因为loacal_planner结束是都会让pathScale回到这个值
     // 如果开启了pathScaleBySpeed，那么path（黄色）随着速度的变化而变化,并且把pathScale的最小值限制在了minPathScale里
-    if (lctlPtr->param.pathScaleBySpeed)
+    if (lctlPtr->get_params().pathScaleBySpeed)
     {
-        pathScale = lctlPtr->param.defPathScale * (joySpeed / maxSpeed);
+        pathScale = lctlPtr->get_params().defPathScale * (joySpeed / maxSpeed);
     }
-    if (pathScale < lctlPtr->param.minPathScale)
-        pathScale = lctlPtr->param.minPathScale;
+    if (pathScale < lctlPtr->get_params().minPathScale)
+        pathScale = lctlPtr->get_params().minPathScale;
 }
 void LpNode::transform_goal()
 {
@@ -156,11 +154,11 @@ void LpNode::transform_goal()
     relativeGoalDis = sqrt(relativeGoalX * relativeGoalX + relativeGoalY * relativeGoalY);
     if (relativeGoalDis > 1.0)
     {
-        actual_goalClearRange = lctlPtr->param.goalClearRange / 10;
+        actual_goalClearRange = lctlPtr->get_params().goalClearRange / 10;
     }
     else
     {
-        actual_goalClearRange = lctlPtr->param.goalClearRange;
+        actual_goalClearRange = lctlPtr->get_params().goalClearRange;
     }
     // 目标点转移到车体坐标系
     float relativeGoalX_global = ((goal_point.pose.position.x - vehicleX) * cosVehicleYaw + (goal_point.pose.position.y - vehicleY) * sinVehicleYaw);
@@ -175,17 +173,17 @@ void LpNode::transform_goal()
 void LpNode::local_planner()
 {
     // 如果pathScale和pathRange都不是最小值
-    while ((pathScale != lctlPtr->param.minPathScale && lctlPtr->param.usePathScale) || pathRange >= lctlPtr->param.minPathRange)
+    while ((pathScale != lctlPtr->get_params().minPathScale && lctlPtr->get_params().usePathScale) || pathRange >= lctlPtr->get_params().minPathRange)
     {
         ROS_INFO("Planning...pathRange: %f", pathRange);
         // 向参数服务器设置参数pathRange
         nhPrivate.setParam("pathRange", pathRange);
         // 动态调整规划方向,更小的范围要先判断
-        if (pathRange == lctlPtr->param.minPathRange)
+        if (pathRange == lctlPtr->get_params().minPathRange)
         {
             lctlPtr->set_enlarge_dirThre(20);
         }
-        else if (pathRange <= lctlPtr->param.adjacentRange - 4 * lctlPtr->param.pathRangeStep)
+        else if (pathRange <= lctlPtr->get_params().adjacentRange - 4 * lctlPtr->get_params().pathRangeStep)
         {
             lctlPtr->set_enlarge_dirThre(10);
         }
@@ -207,8 +205,8 @@ void LpNode::local_planner()
         }
         minObsAngCW = -180.0;
         minObsAngCCW = 180.0;
-        diameter = sqrt(lctlPtr->param.vehicleLength / 2.0 * lctlPtr->param.vehicleLength / 2.0 + lctlPtr->param.vehicleWidth / 2.0 * lctlPtr->param.vehicleWidth / 2.0);
-        angOffset = atan2(lctlPtr->param.vehicleWidth, lctlPtr->param.vehicleLength) * 180.0 / PI;
+        diameter = sqrt(lctlPtr->get_params().vehicleLength / 2.0 * lctlPtr->get_params().vehicleLength / 2.0 + lctlPtr->get_params().vehicleWidth / 2.0 * lctlPtr->get_params().vehicleWidth / 2.0);
+        angOffset = atan2(lctlPtr->get_params().vehicleWidth, lctlPtr->get_params().vehicleLength) * 180.0 / PI;
         for (int i = 0; i < plannerCloudCropSize; i++)
         {
             float x = plannerCloudCrop->points[i].x * pathScale; // 先除了用来计算，后面发布规划路径点位和可行路径的时候会乘回来，使障碍物看得更远
@@ -229,7 +227,7 @@ void LpNode::local_planner()
             //  ①checkObstacle为true
             // *②只考虑规划路径范围内的点云，这是主要的，也可以说可以只看这个
             //  ③如果使用pathCropByGoal，超过目标点的点云就不用管了
-            if (dis < pathRange && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->param.pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->param.goalClearRange_global)) && lctlPtr->param.checkObstacle)
+            if (dis < pathRange && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->get_params().pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->get_params().goalClearRange_global)) && lctlPtr->get_params().checkObstacle)
             {
                 // 下文是对此段代码的解释
                 // rotAng当前检索方向和车体的角度
@@ -245,7 +243,7 @@ void LpNode::local_planner()
                         angDiff = 360.0 - angDiff;
                     }
                     // 下列这一段代码的目的就是限定车体的搜索范围
-                    if (angDiff > lctlPtr->param.dirThre) // 在搜索范围外，退出
+                    if (angDiff > lctlPtr->get_params().dirThre) // 在搜索范围外，退出
                     {
                         continue;
                     }
@@ -257,10 +255,10 @@ void LpNode::local_planner()
 
                     grid_Synchronize_obstacles_to_paths(rotDir, x2, y2, h); // 根据待规划的点云，根据点云高度遮挡减掉可行的路径
                     // 用于统计被堵的方向有多少和判断是否需要减速
-                    if (((cloudDir > 10.0 * rotDir - 180.0 && cloudDir < 10 + 10.0 * rotDir - 180.0) && h > lctlPtr->param.obstacleHeightThre) && !block_flag[rotDir])
+                    if (((cloudDir > 10.0 * rotDir - 180.0 && cloudDir < 10 + 10.0 * rotDir - 180.0) && h > lctlPtr->get_params().obstacleHeightThre) && !block_flag[rotDir])
                     {
                         block_flag[rotDir] = true;
-                        if (dis < lctlPtr->param.slow_dis)
+                        if (dis < lctlPtr->get_params().slow_dis)
                         {
                             need_slow = true;
                         }
@@ -272,7 +270,7 @@ void LpNode::local_planner()
             // 2 点云相对车体正前方或侧方距离大于半车长度
             // 3 开启地形分析下点云到地面的距离大于obstacleHeightThre，或不开启地形分析
             // 4 打开侧向障碍物分析
-            if (dis < diameter / pathScale && (fabs(x) > lctlPtr->param.vehicleRadius / pathScale || fabs(y) > lctlPtr->param.vehicleRadius / pathScale) && h > lctlPtr->param.obstacleHeightThre && checkRotObstacle)
+            if (dis < diameter / pathScale && (fabs(x) > lctlPtr->get_params().vehicleRadius / pathScale || fabs(y) > lctlPtr->get_params().vehicleRadius / pathScale) && h > lctlPtr->get_params().obstacleHeightThre && checkRotObstacle)
             {
                 local_diff_limitTurn(x, y); // 限制转弯角度
             }
@@ -319,7 +317,7 @@ void LpNode::local_planner()
                 angDiff = 360.0 - angDiff;
             }
 
-            if (angDiff > lctlPtr->param.dirThre)
+            if (angDiff > lctlPtr->get_params().dirThre)
             {
                 continue;
             }
@@ -337,7 +335,7 @@ void LpNode::local_planner()
 #endif
             pathFound = true;
             // 确认找到路之后，如果在最小范围内找到了最优路径，就把add_point_radius设置为0.22
-            if (pathRange <= lctlPtr->param.minPathRange + 2 * lctlPtr->param.pathRangeStep)
+            if (pathRange <= lctlPtr->get_params().minPathRange + 2 * lctlPtr->get_params().pathRangeStep)
             {
                 lctlPtr->set_add_point_radius(0.22);
                 ROS_INFO("set_add_point_radius: 0.22 .");
@@ -348,13 +346,13 @@ void LpNode::local_planner()
                 ROS_INFO("set_add_point_radius: default .");
             }
             // 找到了路，下次就可以扩大搜索范围
-            if (pathRange < lctlPtr->param.adjacentRange - lctlPtr->param.pathRangeStep)
+            if (pathRange < lctlPtr->get_params().adjacentRange - lctlPtr->get_params().pathRangeStep)
             {
-                pathRange += lctlPtr->param.pathRangeStep;
+                pathRange += lctlPtr->get_params().pathRangeStep;
             }
             else
             {
-                pathRange = lctlPtr->param.adjacentRange;
+                pathRange = lctlPtr->get_params().adjacentRange;
             }
             break;
         }
@@ -363,29 +361,29 @@ void LpNode::local_planner()
             pub_allFreePath();
             // 先让Range最小，一点点减少scale，膨胀周围点云
             // 注意，这里浮点数比较，一个float，一个double，精度不同导致一直不相等
-            if (fabs(pathRange - lctlPtr->param.minPathRange) < 0.01)
+            if (fabs(pathRange - lctlPtr->get_params().minPathRange) < 0.01)
             {
                 // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.22
                 lctlPtr->set_add_point_radius(0.22);
                 break;
             }
             // 先把规模调成0
-            if (pathScale >= lctlPtr->param.minPathScale + lctlPtr->param.pathScaleStep && lctlPtr->param.usePathScale)
+            if (pathScale >= lctlPtr->get_params().minPathScale + lctlPtr->get_params().pathScaleStep && lctlPtr->get_params().usePathScale)
             {
-                pathScale -= lctlPtr->param.pathScaleStep;
+                pathScale -= lctlPtr->get_params().pathScaleStep;
             }
-            else if (pathScale <= lctlPtr->param.minPathScale - lctlPtr->param.pathScaleStep && lctlPtr->param.usePathScale)
+            else if (pathScale <= lctlPtr->get_params().minPathScale - lctlPtr->get_params().pathScaleStep && lctlPtr->get_params().usePathScale)
             {
-                pathScale += lctlPtr->param.pathScaleStep;
+                pathScale += lctlPtr->get_params().pathScaleStep;
             }
             else
             {
-                pathScale = lctlPtr->param.minPathScale;
-                if (pathRange > lctlPtr->param.minPathRange)
+                pathScale = lctlPtr->get_params().minPathScale;
+                if (pathRange > lctlPtr->get_params().minPathRange)
                 {
-                    pathRange -= lctlPtr->param.pathRangeStep;
-                    if (pathRange < lctlPtr->param.minPathRange)
-                        pathRange = lctlPtr->param.minPathRange;
+                    pathRange -= lctlPtr->get_params().pathRangeStep;
+                    if (pathRange < lctlPtr->get_params().minPathRange)
+                        pathRange = lctlPtr->get_params().minPathRange;
                 }
             }
         }
@@ -512,7 +510,7 @@ void LpNode::grid_Synchronize_obstacles_to_paths(int rotDir, float x2, float y2,
         {
             // 使用地面分割的情况下当前激光点的高度大于obstacleHeightThre阈值,或者未使用地面分割时,则累加
             // 当一条路径上存在两个障碍点，即 pointPerPathThre=2，该路径才会认为被遮挡，所以只需要对未被遮挡的路径进行筛选
-            if (h > lctlPtr->param.obstacleHeightThre) // 这一个点云障碍物将影响整个网格上的路径
+            if (h > lctlPtr->get_params().obstacleHeightThre) // 这一个点云障碍物将影响整个网格上的路径
             {
                 // correspondences的空间161 * 451
                 clearPathList[pathNum * rotDir + correspondences[ind][j]]++; // 将这个网格下的所有路径都加一个障碍物点
@@ -522,7 +520,7 @@ void LpNode::grid_Synchronize_obstacles_to_paths(int rotDir, float x2, float y2,
                 // 在使用了地面分割且激光点分割后高度小于障碍物高度阈值obstacleHeightThre时
                 // 并且 当前高度大于原有路径惩罚值且大于地面高度阈值groundHeightThre
                 // 障碍物越高惩罚值越高
-                if (pathPenaltyList[pathNum * rotDir + correspondences[ind][j]] < h && h > lctlPtr->param.groundHeightThre)
+                if (pathPenaltyList[pathNum * rotDir + correspondences[ind][j]] < h && h > lctlPtr->get_params().groundHeightThre)
                 {
                     pathPenaltyList[pathNum * rotDir + correspondences[ind][j]] = h; // 如果这个障碍物点比前一个障碍物点还高，取最高
                 }
@@ -533,14 +531,14 @@ void LpNode::grid_Synchronize_obstacles_to_paths(int rotDir, float x2, float y2,
 
 void LpNode::count_PathPerGroupScore(int pathId, int rotDir)
 {
-    if (clearPathList[pathId] <= lctlPtr->param.pointPerPathThre) // 检测到低于多个不可避免障碍物点云才进来规划，多个应该是防止噪声点云，不做地形分析下if必不满足
+    if (clearPathList[pathId] <= lctlPtr->get_params().pointPerPathThre) // 检测到低于多个不可避免障碍物点云才进来规划，多个应该是防止噪声点云，不做地形分析下if必不满足
     {
         // 计算惩罚项的得分，惩罚项是根据地面阈值和障碍物阈值之间的点云高度计算得到的
         // 所以pathPenaltyList越高，惩罚得分penaltyScore也就越低
         // useCost置false后pathPenaltyList全是0
-        float penaltyScore = 1.0 - pathPenaltyList[pathId] / lctlPtr->param.costHeightThre; // 减去高度，高度越高得分越低
-        if (penaltyScore < lctlPtr->param.costScore)
-            penaltyScore = lctlPtr->param.costScore;
+        float penaltyScore = 1.0 - pathPenaltyList[pathId] / lctlPtr->get_params().costHeightThre; // 减去高度，高度越高得分越低
+        if (penaltyScore < lctlPtr->get_params().costScore)
+            penaltyScore = lctlPtr->get_params().costScore;
 
         // 目标点和当前规划路径的夹角
         float dirDiff = fabs(joyDir - endDirPathList[pathId % pathNum] - (10.0 * rotDir - 180.0));
@@ -564,11 +562,11 @@ void LpNode::count_PathPerGroupScore(int pathId, int rotDir)
         if (relativeGoalDis > 1.2)
         {
             // 计算惩罚得分，dirDiff目标点和当前路径夹角越小越高分，rotDirW初始方向不在正左右方越高，penaltyScore点云高度越低越高
-            score = (1 - sqrt(sqrt((1 / lctlPtr->param.dirWeight) * dirDiff))) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
+            score = (1 - sqrt(sqrt((1 / lctlPtr->get_params().dirWeight) * dirDiff))) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
         }
         else
         {
-            score = pow((1 - sqrt(sqrt((1 / lctlPtr->param.dirWeight) * dirDiff))), 4) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
+            score = pow((1 - sqrt(sqrt((1 / lctlPtr->get_params().dirWeight) * dirDiff))), 4) * abs(rotDirW * rotDirW * rotDirW) * penaltyScore;
         }
         // float score = (1 - sqrt(sqrt((1 / dirWeight) * dirDiff))) * penaltyScore;
         // 下面代码的作用简述是 ：
@@ -666,10 +664,10 @@ void LpNode::select_from_dir(float &maxScore, int &selectedGroupID)
 
 void LpNode::close_map()
 {
-    if (lctlPtr->param.useMap)
+    if (lctlPtr->get_params().use_map)
     {
         ROS_INFO("Close local map!");
-        lctlPtr->param.useMap = false;
+        lctlPtr->set_use_map(false);
         close_map_begin = ros::Time::now().toSec();
     }
 }

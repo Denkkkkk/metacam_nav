@@ -1,7 +1,10 @@
 #pragma once
 #include <iostream>
+#include <ros/package.h>
 #include <ros/ros.h>
 #include <string>
+#include <yaml-cpp/yaml.h>
+using namespace std;
 
 struct Params
 {
@@ -54,18 +57,25 @@ public:
     }
     void load_params();
     void update_params();
+    inline void reset_params()
+    {
+        param = param_origin;
+    }
     inline Params get_params() const // 设置外部只读
     {
         return param;
     }
 
 private:
-    ros::NodeHandle nhPrivate = ros::NodeHandle("~");
-    ros::NodeHandle nhPrivate_actual = ros::NodeHandle("pathFollower_actual");
-    ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
-    ros::NodeHandle nhlocalPlanner = ros::NodeHandle("localPlanner");
-    ros::NodeHandle nh;
-
+    bool load_config(const std::string &local_config, const std::string &usual_config);
+    void print_params();
     Params param;
     Params param_origin;
+    ros::NodeHandle nhPrivate = ros::NodeHandle("~");
+    ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
+    ros::NodeHandle nh;
+
+    string local_config;
+    string usual_config;
+    string robot;
 };

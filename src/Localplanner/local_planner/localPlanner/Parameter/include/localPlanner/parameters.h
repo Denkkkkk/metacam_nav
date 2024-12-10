@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <ros/package.h>
 #include <ros/ros.h>
 #include <string>
 #include <yaml-cpp/yaml.h>
@@ -12,7 +13,7 @@ struct Params
     double maxSpeed;
     double vehicleRadius;
     bool checkObstacle;
-    bool useMap;
+    bool use_map;
     double close_map_time;
     bool use_fail_closemap;
     double adjacentRange;
@@ -30,7 +31,7 @@ struct Params
     double costScore;          // 最小高度惩罚得分
     int pointPerPathThre;      // 同一块体素位置需要至少多少个障碍物点云才被舍弃
     double dirWeight;          // 只允许路径终点在这个转弯角度内的路径通过
-    double dirThre;            // 规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑
+    int dirThre;               // 规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑
     bool pathCropByGoal;       // 是否根据目标点剪裁路径
     double goalClearRange;
     // pathScale相关控制
@@ -38,11 +39,10 @@ struct Params
     double defPathScale;
     double minPathScale;
     double pathScaleStep;
-    bool use_pcd_close;
     double goalClearRange_global;
-    float add_point_radius;
-    float vehicleLength;
-    float vehicleWidth;
+    double add_point_radius;
+    double vehicleLength;
+    double vehicleWidth;
 };
 
 class ParamControl
@@ -57,6 +57,10 @@ public:
     inline void reset_params()
     {
         param = param_origin;
+    }
+    inline Params get_params() const // 设置外部只读
+    {
+        return param;
     }
     inline void set_add_point_radius(double radius)
     {
@@ -74,13 +78,22 @@ public:
     {
         param.dirThre = param_origin.dirThre + enlarge_dir;
     }
+    inline void set_use_map(bool flag)
+    {
+        param.use_map = flag;
+    }
 
 private:
-    bool load_config(const std::string &config);
+    void print_params();
 
+    bool load_config(const std::string &local_config, const std::string &usual_config);
     Params param;
     Params param_origin;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::NodeHandle nhUsual = ros::NodeHandle("usualParams");
     ros::NodeHandle nh;
+
+    string local_config;
+    string usual_config;
+    string robot;
 };

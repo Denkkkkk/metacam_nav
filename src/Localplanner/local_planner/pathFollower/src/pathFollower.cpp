@@ -607,9 +607,13 @@ int main(int argc, char **argv)
     bool status = ros::ok();
     while (status)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         ros::spinOnce();
         roboctrl.pctlPtr->update_params();
         roboctrl.pure_persuit();
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        ROS_INFO("run one pathFollower time: %f ms", duration.count() / 1000.0);
         status = ros::ok();
         rate.sleep();
     }
