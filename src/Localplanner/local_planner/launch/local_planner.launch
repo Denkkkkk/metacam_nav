@@ -2,7 +2,7 @@
   <!-- param_config -->
   <include file="$(find param_config)/launch/param_config.launch" />
 
-  <arg name="usual_pcd_path" default="$(find local_planner)/pcd/mtr_jinzhong.pcd" />
+  <arg name="usual_pcd_path" default="$(find local_planner)/pcd/skyland.pcd" />
   <arg name="vehicleX" default="0" />
   <arg name="vehicleY" default="0" />
   <arg name="ns" default="" />
