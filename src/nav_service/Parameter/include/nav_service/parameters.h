@@ -1,10 +1,11 @@
 #pragma once
 #include <fstream>
 #include <iostream>
-#include <nav_service/parameters.h>
+#include <ros/package.h>
 #include <ros/ros.h>
 #include <sstream>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 // prior_path的路点表示
 struct Coordinate
@@ -37,10 +38,17 @@ public:
     }
 
 private:
+    void print_params();
+    bool load_config(const std::string &usual_config);
+
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
     ros::NodeHandle nh;
 
     Params param;
     Params param_origin;
     std::vector<Coordinate> readCoordinates(const std::string &filename);
+
+    std::string local_config;
+    std::string usual_config;
+    std::string robot;
 };

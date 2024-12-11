@@ -1,6 +1,7 @@
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  roslib
 )
 
 add_library(localPlanner_param src/parameters.cpp)

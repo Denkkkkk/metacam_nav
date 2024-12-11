@@ -2,34 +2,73 @@
 
 void ParamControl::load_params()
 {
-    // 从参数服务器中获取参数
-    nh.param("/pathFollower/endGoalDis", param.endGoalDis, 0.2);
-    nh.param("/usualParams/use_prior_path", param.use_prior_path, false);
-    nhPrivate.param("endGoal_stopTime", param.endGoal_stopTime, 5.0);
-    // 读取文件
-    nhPrivate.getParam("prior_path_file", param.prior_path_file);
+    // 加载路径
+    nh.getParam("robot", robot);
+    usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
+
+    std::string path_file_name;
+    try
+    {
+        YAML::Node usual_conf = YAML::LoadFile(usual_config);
+        path_file_name = usual_conf["nav_service"]["path_file_name"].as<std::string>();
+    }
+    catch (YAML::BadFile &e)
+    {
+        std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
+    }
+    param.prior_path_file = ros::package::getPath("nav_service") + "/config/" + path_file_name + ".yaml";
+
+    load_config(usual_config);
+
+    param_origin = param;
+}
+
+bool ParamControl::load_config(const std::string &usual_config)
+{
     if (param.use_prior_path)
     {
         param.prior_path = readCoordinates(param.prior_path_file);
     }
-    param_origin = param;
+    // 从nav_config.yaml读取 local_planner 参数
+    // 读取参数
+    std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
+    try
+    {
+        YAML::Node usual_conf = YAML::LoadFile(usual_config);
+        param.endGoalDis = usual_conf["pathFollower"]["endGoalDis"].as<double>();
+        param.use_prior_path = usual_conf["usualParams"]["use_prior_path"].as<bool>();
+
+        param.endGoal_stopTime = usual_conf["nav_service"]["endGoal_stopTime"].as<double>();
+    }
+    catch (YAML::BadFile &e)
+    {
+        std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
+    }
+    return true;
 }
 
 void ParamControl::update_params()
 {
-    // 允许直接更新的参数
-    nh.getParam("/pathFollower/endGoalDis", param.endGoalDis);
-    nh.getParam("/usualParams/use_prior_path", param.use_prior_path);
-    nh.getParam("endGoal_stopTime", param.endGoal_stopTime);
 
-    // 重新读取文件
-    static int num = 0;
-    if (param.use_prior_path && num < 0)
+    // 创建静态计数器
+    static int count = 1;
+    // 每隔10次更新一次参数
+    if (count % 10 == 0)
     {
-        param.prior_path = readCoordinates(param.prior_path_file);
-        num = 10;
+        load_config(usual_config);
     }
-    num--;
+    count++;
+
+    print_params();
+}
+
+void ParamControl::print_params()
+{
+    std::cout << "[YAML] " << ros::this_node::getName() << " parameters:" << std::endl;
+    std::cout << "[YAML] " << "endGoalDis: " << param.endGoalDis << std::endl;
+    std::cout << "[YAML] " << "endGoal_stopTime: " << param.endGoal_stopTime << std::endl;
+    std::cout << "[YAML] " << "use_prior_path: " << param.use_prior_path << std::endl;
+    std::cout << std::endl;
 }
 
 std::vector<Coordinate> ParamControl::readCoordinates(const std::string &filename)

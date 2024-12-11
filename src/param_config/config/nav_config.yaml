@@ -25,4 +25,5 @@ usualParams:
   use_prior_path: false  # 是否使用先验路径
 
 nav_service:
-  endGoal_stopTime: 8.0  # 到达目标点后停留时间
+  endGoal_stopTime: 8.0        # 到达目标点后停留时间
+  prior_path_file: "prior_path" # 先验路径文件名

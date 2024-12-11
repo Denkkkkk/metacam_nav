@@ -1,7 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.0.2)
 project(nav_service)
 
-set(CMAKE_CXX_SIMULATE 17)
 add_subdirectory(Parameter)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
@@ -22,10 +21,18 @@ catkin_package(
 
 include_directories(
         include
+        /usr/local/include # Location when using 'make system_install'
+        /usr/include # More usual location (e.g. when installing using a package)
         ${catkin_INCLUDE_DIRS}
 )
+link_directories(
+  /usr/local/lib # Location when using 'make system_install'
+  /usr/lib # More usual location (e.g. when installing using a package)
+)
+
 
 add_executable(nav_service src/nav_service.cpp)
+add_dependencies(nav_service ${catkin_EXPORTED_TARGETS})
 target_link_libraries(nav_service ${catkin_LIBRARIES} nav_service_param)
 
 install(
