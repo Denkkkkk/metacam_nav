@@ -1,0 +1,44 @@
+<launch>
+    <arg name="lateral_dis" default="1.0" />
+    <arg name="lateral_goal_dis" default="3.0" />
+    <arg name="reach_goal_dis" default="0.5" />         <!--判断到点后，不再进行恢复模式-->
+    <arg name="default_point_time" default="5.0" />
+    <arg name="lateral_time" default="0.8" />
+    <arg name="update_begin_dis" default="0.3" />
+    <arg name="update_begin_dis_goalPoint" default="0.5" />
+    <arg name="update_begin_dis_vehicleDis" default="1.2" />
+    <arg name="use_guide" default="true" />
+    <arg name="guide_dis" default="1.6" />
+
+    <arg name="use_midplan" default="true" />
+    <arg name="need_midplan_dis" default="2.0" />
+    <arg name="lenth_forward" default="0.45" />
+    <arg name="lenth_back" default="1.8" />
+    <arg name="curvature_threshold" default="40.0" />
+    <arg name="get_midPlanner_dis" default="0.5" />     <!-- 同时使用中间点和引导点规划时，被中间点接管的到点阈值-->
+    <arg name="mid_point_back" default="0.7" />         <!--转弯点往后发布 -->
+    <arg name="no_midPlanner_forward" default="0.4" />  <!-- 不计算中间点的近距离-->
+    <arg name="goal_point_only" default="false" />
+
+    <node pkg="waypoint_control" type="waypoint_control" name="waypoint_control" output="screen">
+        <param name="lateral_dis" value="$(arg lateral_dis)" />
+        <param name="lateral_goal_dis" value="$(arg lateral_goal_dis)" />
+        <param name="lateral_time" value="$(arg lateral_time)" />
+        <param name="update_begin_dis" value="$(arg update_begin_dis)" />
+        <param name="use_guide" value="$(arg use_guide)" />
+        <param name="guide_dis" value="$(arg guide_dis)" />
+        <param name="use_midplan" value="$(arg use_midplan)" />
+        <param name="need_midplan_dis" value="$(arg need_midplan_dis)" />
+        <param name="lenth_forward" value="$(arg lenth_forward)" />
+        <param name="lenth_back" value="$(arg lenth_back)" />
+        <param name="curvature_threshold" value="$(arg curvature_threshold)" />
+        <param name="default_point_time" value="$(arg default_point_time)" />
+        <param name="reach_goal_dis" value="$(arg reach_goal_dis)" />
+        <param name="goal_point_only" value="$(arg goal_point_only)" />
+        <param name="mid_point_back" value="$(arg mid_point_back)" />
+        <param name="get_midPlanner_dis" value="$(arg get_midPlanner_dis)" />
+        <param name="no_midPlanner_forward" value="$(arg no_midPlanner_forward)" />
+        <param name="update_begin_dis_goalPoint" value="$(arg update_begin_dis_goalPoint)" />
+        <param name="update_begin_dis_vehicleDis" value="$(arg update_begin_dis_vehicleDis)" />
+    </node>
+</launch>
