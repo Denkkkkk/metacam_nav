@@ -43,7 +43,7 @@ pathFollower:
   close_direct_speed: 0.15    # 到目标点附近直冲的速度
   closeGoal_direct_dis: 0.6   # 到目标点附近直走的阈值&&达到getGoal_speed的距离
   goalSlowDisThre: 1.8        # 靠近全局目标点时减速
-  getGoal_speed: 0.05         # 刚好追踪到目标点时的速度
+  getGoal_speed: 0.12         # 刚好追踪到目标点时的速度
   # Generally fixed parameters
   lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
   useLoaclSlow: true  # 启用局部路径跟踪减速
