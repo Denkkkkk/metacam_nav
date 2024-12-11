@@ -64,9 +64,9 @@ void ParamControl::update_params()
 void ParamControl::print_params()
 {
     std::cout << "[YAML] " << ros::this_node::getName() << " parameters:" << std::endl;
-    std::cout << "[YAML] " << "endGoalDis: " << param.endGoalDis << std::endl;
+    // std::cout << "[YAML] " << "endGoalDis: " << param.endGoalDis << std::endl;
     std::cout << "[YAML] " << "endGoal_stopTime: " << param.endGoal_stopTime << std::endl;
-    std::cout << "[YAML] " << "use_prior_path: " << param.use_prior_path << std::endl;
+    std::cout << "[YAML] " << "use_prior_path: " << (param.use_prior_path ? "true" : "false") << std::endl;
     std::cout << std::endl;
 }
 
