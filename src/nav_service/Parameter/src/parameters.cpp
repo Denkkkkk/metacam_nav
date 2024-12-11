@@ -15,7 +15,7 @@ void ParamControl::load_params()
     {
         std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
     }
-    param.prior_path_file = ros::package::getPath("nav_service") + "/config/" + path_file_name + ".yaml";
+    param.prior_path_file = ros::package::getPath("param_config") + "/config/prior_path/" + path_file_name;
 
     load_config(usual_config);
 

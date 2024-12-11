@@ -24,6 +24,7 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
         // 从 usual_conf 中提取各项参数
         param.endGoalDis = usual_conf["pathFollower"]["endGoalDis"].as<double>();
+        param.use_closeGoal_direct = usual_conf["pathFollower"]["use_closeGoal_direct"].as<bool>();
         param.useCloudSlowDown = usual_conf["pathFollower"]["useCloudSlowDown"].as<bool>();
         param.slowdown_rate = usual_conf["pathFollower"]["slowdown_rate"].as<double>();
         param.minSpeed = usual_conf["pathFollower"]["minSpeed"].as<double>();
@@ -53,7 +54,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.quick_turn_speed = local_conf["pathFollower"]["quick_turn_speed"].as<double>();
         // Get goal parameters
         param.close_direct_speed = local_conf["pathFollower"]["close_direct_speed"].as<double>();
-        param.use_closeGoal_direct = local_conf["pathFollower"]["use_closeGoal_direct"].as<bool>();
         param.closeGoal_direct_dis = local_conf["pathFollower"]["closeGoal_direct_dis"].as<double>();
         param.goalSlowDisThre = local_conf["pathFollower"]["goalSlowDisThre"].as<double>();
         param.getGoal_speed = local_conf["pathFollower"]["getGoal_speed"].as<double>();
