@@ -21,15 +21,13 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_conversions
   pcl_ros
 )
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/home/bob/code/reloc_ws/src/relocalization/cmake")
-message("CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+message("CMAKE_MODULE_PATH---------------------------------------: ${CMAKE_MODULE_PATH}")
 option(BUILD_CUDA "Build GPU ver" OFF)
-
-find_package(catkin REQUIRED COMPONENTS ${ROS_CXX_DEPENDENCIES} )
 
 
 # 寻找PCL的库
-find_package(PCL REQUIRED)
+# find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenMP)
 find_package(yaml-cpp REQUIRED)
