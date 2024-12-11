@@ -50,5 +50,4 @@ private:
 
     std::string local_config;
     std::string usual_config;
-    std::string robot;
 };

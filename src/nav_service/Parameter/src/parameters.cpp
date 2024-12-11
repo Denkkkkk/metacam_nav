@@ -3,7 +3,6 @@
 void ParamControl::load_params()
 {
     // 加载路径
-    nh.getParam("robot", robot);
     usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
 
     std::string path_file_name;
