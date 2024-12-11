@@ -62,17 +62,10 @@ public:
     {
         return param;
     }
-    inline void set_add_point_radius(double radius)
+    inline void set_add_point_radius(double rate)
     {
 
-        if (abs(radius + 1) < 0.01)
-        {
-            param.add_point_radius = param_origin.add_point_radius;
-        }
-        else
-        {
-            param.add_point_radius = radius;
-        }
+        param.add_point_radius = rate * param_origin.add_point_radius;
     }
     inline void set_enlarge_dirThre(double enlarge_dir)
     {
