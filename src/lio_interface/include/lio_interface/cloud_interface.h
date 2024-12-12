@@ -43,8 +43,6 @@ class CloudInterface
     bool get_odom = false;
     std_msgs::Float32 speed;
     double blind_range;
-    bool need_down_hill;
-    double time_begin;
 
     void scanHandler(const sensor_msgs::PointCloud2::ConstPtr &scanIn);
     void odomHandler(const nav_msgs::Odometry::ConstPtr &odom);
