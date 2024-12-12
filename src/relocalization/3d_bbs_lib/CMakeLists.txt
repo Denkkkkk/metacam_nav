@@ -39,10 +39,11 @@ else()
   message(STATUS "Use EIGEN3_INCLUDE_DIR")
 endif()
 
-include_directories(
+cuda_include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/bbs3d/include
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/bbs3d/include>
   $<INSTALL_INTERFACE:include>
+  /usr/local/cuda-12.1/include
 )
 
 add_library(cpu_bbs3d
@@ -63,6 +64,9 @@ if(BUILD_CUDA)
     bbs3d/src/gpu_bbs3d/stream_manager/check_error.cu
     bbs3d/src/gpu_bbs3d/voxelmaps_io.cu
   )
+
+target_include_directories(gpu_bbs3d PUBLIC ${CUDA_INCLUDE_DIRS})
+target_link_libraries(gpu_bbs3d ${CUDA_LIBRARIES})
 
   install(TARGETS gpu_bbs3d DESTINATION lib)
 endif()
