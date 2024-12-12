@@ -10,6 +10,7 @@ option(BUILD_SIMULATOR "build simulator or not" OFF)
 option(CMAKE_BUILD_TYPE "build type" "Release")
 
 find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 set(CATKIN_TOPLEVEL TRUE)
 

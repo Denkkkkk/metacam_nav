@@ -11,6 +11,7 @@ sudo chmod +x all_kill.sh all_run.sh run.sh
 sudo apt install --upgrade ros-noetic-octomap*
 sudo apt-get install libsdl1.2-dev
 sudo apt-get install libsdl-image1.2-dev
+rosdep -y install mpc_local_planner
 
 cd ..
 dir=$(pwd);

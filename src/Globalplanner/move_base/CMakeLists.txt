@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(move_base)
-
 find_package(catkin REQUIRED
     COMPONENTS
         actionlib
