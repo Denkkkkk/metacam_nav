@@ -28,7 +28,7 @@ option(BUILD_CUDA "Build GPU ver" OFF)
 
 # 寻找PCL的库
 # find_package(PCL REQUIRED)
-find_package(Eigen3 REQUIRED)
+#find_package(Eigen3 REQUIRED)
 find_package(OpenMP)
 find_package(yaml-cpp REQUIRED)
 if (OpenMP_FOUND)
@@ -51,12 +51,12 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   include
-  ${EIGEN3_INCLUDE_DIR}
+#  ${EIGEN3_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
   3d_bbs_lib/bbs3d/include
 )
 
-include_directories("/usr/include/eigen3")
+#include_directories("/usr/include/eigen3")
 
 
 add_subdirectory(3d_bbs_lib)
@@ -71,7 +71,7 @@ add_executable(relocalization src/relocalization.cpp)
 target_link_libraries(relocalization 
 ${catkin_LIBRARIES}
 ${COMMON_LIBRARIES}
-cpu_bbs3d
+gpu_bbs3d
 )
 
 #############

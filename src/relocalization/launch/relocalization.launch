@@ -1,5 +1,4 @@
 <launch>
-
     <arg name="pcd_path"
         default="$(find relocalization)/pcd/prior_map.pcd" />
     <arg name="config_path"
