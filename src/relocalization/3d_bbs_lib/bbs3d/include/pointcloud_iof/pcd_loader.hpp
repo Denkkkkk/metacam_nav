@@ -82,7 +82,6 @@ bool load_src_points_with_filename(
     if (extension != ".pcd" && extension != ".PCD") {
       continue;
     }
-//    std::cout << file.path().string() << ", " << file.path().stem().string() << std::endl;
     pcd_files.emplace_back(file.path().string(), file.path().stem().string());
   }
 

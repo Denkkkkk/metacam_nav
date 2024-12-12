@@ -66,10 +66,10 @@ std::vector<DiscreteTransformation<float>> BBS3D::calc_scores(
     sizeof(DiscreteTransformation<float>) * transset_size,
     cudaMemcpyHostToDevice,
     stream);
-  std::cout << "flag2" << std::endl;
+
   const size_t block_size = 32;
   const size_t num_blocks = (transset_size + (block_size - 1)) / block_size;
-  std::cout << "num_blocks: " << num_blocks << std::endl;
+
   calc_scores_kernel<<<num_blocks, block_size, 0, stream>>>(
     voxelmaps_ptr_->d_multi_buckets_ptrs_.data(),
     voxelmaps_ptr_->d_voxelmaps_info_.data(),
@@ -78,30 +78,16 @@ std::vector<DiscreteTransformation<float>> BBS3D::calc_scores(
     transset_size - 1,
     d_src_points_.data(),
     src_points_.size());
-  std::cout << "flag3" << std::endl;
+
   std::vector<DiscreteTransformation<float>> h_output(transset_size);
-  cudaError_t kernel_err = cudaGetLastError();
-  if (kernel_err != cudaSuccess) {
-    std::cerr << "CUDA Kernel launch error: " << cudaGetErrorString(kernel_err) << std::endl;
-    return h_output;  // 或者退出
-  }
-  std::cout << "CUDA Kernel launched successfully!" << std::endl;
-  std::cout << "flag4" << std::endl;
-  cudaError_t sync_err = cudaStreamSynchronize(stream);
-  if (sync_err != cudaSuccess) {
-    std::cerr << "CUDA Stream synchronize error: " << cudaGetErrorString(sync_err) << std::endl;
-    return h_output;  // 退出或采取其他措施
-  }
-  std::cout << "CUDA stream synchronized successfully before memcpy!" << std::endl;
   check_error << cudaMemcpyAsync(
     h_output.data(),
     thrust::raw_pointer_cast(d_transset.data()),
     sizeof(DiscreteTransformation<float>) * transset_size,
     cudaMemcpyDeviceToHost,
     stream);
-  std::cout << "flag5" << std::endl;
+
   check_error << cudaStreamSynchronize(stream);
-  std::cout << "flag6" << std::endl;
   return h_output;
 }
 }  // namespace gpu

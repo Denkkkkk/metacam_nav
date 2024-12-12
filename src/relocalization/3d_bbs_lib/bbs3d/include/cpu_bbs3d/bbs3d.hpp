@@ -63,8 +63,6 @@ public:
 
   Eigen::Matrix4d get_global_pose() const { return global_pose_; }
 
-  void set_global_pose(const Eigen::Matrix4d& global_pose) { global_pose_ = global_pose; }
-
   int get_best_score() const { return best_score_; }
 
   double get_elapsed_time() const { return elapsed_time_; }
