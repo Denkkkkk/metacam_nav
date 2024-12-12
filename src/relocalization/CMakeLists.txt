@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(relocalization)
 
+add_subdirectory(3d_bbs_lib)
 # #set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_BUILD_TYPE Release)
 
@@ -22,9 +23,6 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
 )
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-message("CMAKE_MODULE_PATH---------------------------------------: ${CMAKE_MODULE_PATH}")
-option(BUILD_CUDA "Build GPU ver" OFF)
-
 
 # 寻找PCL的库
 # find_package(PCL REQUIRED)
@@ -53,13 +51,13 @@ include_directories(
   include
 #  ${EIGEN3_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
-  3d_bbs_lib/bbs3d/include
+  # 3d_bbs_lib/bbs3d/include
 )
 
 #include_directories("/usr/include/eigen3")
 
 
-add_subdirectory(3d_bbs_lib)
+
 set(COMMON_LIBRARIES
         ${PCL_LIBRARIES}
         yaml-cpp

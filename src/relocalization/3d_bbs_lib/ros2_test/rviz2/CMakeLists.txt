@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(ros2_test_rviz2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
-option(BUILD_CUDA "Build GPU ver" ON)
 
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)

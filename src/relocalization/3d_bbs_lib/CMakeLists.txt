@@ -19,13 +19,6 @@ if (OPENMP_FOUND)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-## find CUDA
-option(BUILD_CUDA "Build GPU ver" ON)
-if (BUILD_CUDA)
-  find_package(CUDA REQUIRED)
-  include_directories(${CUDA_INCLUDE_DIRS})
-  link_directories(${CUDA_LIBRARY_DIRS})
-endif()
 set(EIGEN3_FOUND FALSE)
 unset(EIGEN3_INCLUDE_DIR CACHE)
 # Common include directories
@@ -39,21 +32,10 @@ else()
   message(STATUS "Use EIGEN3_INCLUDE_DIR")
 endif()
 
-cuda_include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/bbs3d/include
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/bbs3d/include>
-  $<INSTALL_INTERFACE:include>
-  /usr/local/cuda-12.1/include
-)
-
-add_library(cpu_bbs3d
-  SHARED
-  bbs3d/src/cpu_bbs3d/bbs3d.cpp
-  bbs3d/src/cpu_bbs3d/voxelmaps.cpp
-  bbs3d/src/cpu_bbs3d/voxelmaps_io.cpp
-)
-
-install(TARGETS cpu_bbs3d DESTINATION lib)
+## find CUDA
+if (BUILD_CUDA)
+  find_package(CUDA REQUIRED)
+endif()
 
 if(BUILD_CUDA)
   cuda_add_library(gpu_bbs3d
@@ -64,11 +46,17 @@ if(BUILD_CUDA)
     bbs3d/src/gpu_bbs3d/stream_manager/check_error.cu
     bbs3d/src/gpu_bbs3d/voxelmaps_io.cu
   )
-
-target_include_directories(gpu_bbs3d PUBLIC ${CUDA_INCLUDE_DIRS})
-target_link_libraries(gpu_bbs3d ${CUDA_LIBRARIES})
+  target_include_directories(gpu_bbs3d PUBLIC ${CUDA_INCLUDE_DIRS} bbs3d/include)
+  target_link_libraries(gpu_bbs3d ${CUDA_LIBRARIES})
 
   install(TARGETS gpu_bbs3d DESTINATION lib)
-endif()
+else()
+  add_library(cpu_bbs3d
+  SHARED
+  bbs3d/src/cpu_bbs3d/bbs3d.cpp
+  bbs3d/src/cpu_bbs3d/voxelmaps.cpp
+  bbs3d/src/cpu_bbs3d/voxelmaps_io.cpp)
 
-install(DIRECTORY bbs3d/include/ DESTINATION include)
+  target_include_directories(cpu_bbs3d PUBLIC  bbs3d/include)
+  install(TARGETS cpu_bbs3d DESTINATION lib)
+endif()
