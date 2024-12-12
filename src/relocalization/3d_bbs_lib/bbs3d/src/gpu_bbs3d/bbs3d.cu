@@ -14,7 +14,6 @@ BBS3D::BBS3D()
   has_localized_(false),
   voxelmaps_folder_name_("voxelmaps_coords") {
   check_error << cudaStreamCreate(&stream);
-
   inv_v_rate_ = 1.0f / v_rate_;
   min_rpy_ << -0.02f, -0.02f, 0.0f;
   max_rpy_ << 0.02f, 0.02f, 2 * M_PI;
@@ -158,7 +157,6 @@ void BBS3D::localize() {
   const int score_threshold = std::floor(src_points_.size() * score_threshold_percentage_);
   int best_score = score_threshold;
   DiscreteTransformation<float> best_trans(best_score);
-
   // Preapre initial transset
   const int max_level = voxelmaps_ptr_->get_max_level();
   std::vector<AngularInfo> ang_info_vec(max_level + 1);
@@ -170,14 +168,10 @@ void BBS3D::localize() {
     sizeof(AngularInfo) * ang_info_vec.size(),
     cudaMemcpyHostToDevice,
     stream);
-
   const auto init_transset = create_init_transset(ang_info_vec[max_level]);
-
   // Calc initial transset scores
   const auto init_transset_output = calc_scores(init_transset, d_ang_info_vec);
-
   std::priority_queue<DiscreteTransformation<float>> trans_queue(init_transset_output.begin(), init_transset_output.end());
-
   std::vector<DiscreteTransformation<float>> branch_stock;
   branch_stock.reserve(branch_copy_size_);
   while (!trans_queue.empty()) {
