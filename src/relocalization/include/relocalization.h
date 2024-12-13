@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <vector>
 #include <yaml-cpp/yaml.h>
-// #include <cpu_bbs3d/bbs3d.hpp>
+#include <cpu_bbs3d/bbs3d.hpp>
 #include <gpu_bbs3d/bbs3d.cuh>
 
 // ros

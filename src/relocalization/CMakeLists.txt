@@ -70,6 +70,7 @@ target_link_libraries(relocalization
 ${catkin_LIBRARIES}
 ${COMMON_LIBRARIES}
 cpu_bbs3d
+gpu_bbs3d
 )
 
 #############

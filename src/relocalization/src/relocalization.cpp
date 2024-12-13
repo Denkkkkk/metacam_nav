@@ -179,8 +179,8 @@ void Scan2MapLocation::Init3DBBS()
     }
 
     // num_threads
-//    int num_threads = 4;
-//    bbs3d_ptr->set_num_threads(num_threads);
+    int num_threads = 4;
+    bbs3d_ptr->set_num_threads(num_threads);
     std::cout << "[Setting] 3DBBS location started." << std::endl;
     // 发布地图点云
     sensor_msgs::PointCloud2 map_pointcloud;
@@ -251,14 +251,14 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_cloud_->height = odom_cloud_->points.size();
         odom_cloud_->is_dense = false;
         odom_filter.setInputCloud(odom_cloud_);
-        odom_filter.setLeafSize(0.5, 0.5, 0.5);
+        odom_filter.setLeafSize(0.2, 0.2, 0.2);
         odom_filter.filter(*odom_cloud_);
         if (!reloc_active)
         {
-            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.5 << "m" << std::endl;
+            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.2 << "m" << std::endl;
         }
 
-        if (odom_cloud_->points.size() > 4 && reloc_active == false)
+        if (odom_cloud_->points.size() > 2 && reloc_active == false)
         {
             reloc_active = true;
             //            need_reloc.data = false;
