@@ -11,9 +11,9 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     ROS_INFO_STREAM("\033[1;32m---->  Relocation started.\033[0m");
 
     // 初始化订阅者
-    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_interface", 1, &Scan2MapLocation::Scan2SubmapCallback,
+    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_registered", 1, &Scan2MapLocation::Scan2SubmapCallback,
                                                     this, ros::TransportHints().tcpNoDelay());
-    odom_subscriber_ = node_handle_.subscribe("/odom_interface", 20, &Scan2MapLocation::OdomCallback,
+    odom_subscriber_ = node_handle_.subscribe("/Odometry", 20, &Scan2MapLocation::OdomCallback,
                                               this, ros::TransportHints().tcpNoDelay());
 
     scan_pointcloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_pointcloud", 10);
@@ -161,7 +161,7 @@ void Scan2MapLocation::Init3DBBS()
     std::cout << "[Voxel map] Creating hierarchical voxel map..." << std::endl;
 
     auto initi_t1 = std::chrono::high_resolution_clock::now();
-    bbs3d_ptr = std::make_unique<gpu::BBS3D>();
+    bbs3d_ptr = std::make_unique<cpu::BBS3D>();
     bbs3d_ptr->set_tar_points(tar_points, min_level_res, max_level);
     bbs3d_ptr->set_trans_search_range(tar_points);
     auto init_t2 = std::chrono::high_resolution_clock::now();
@@ -170,7 +170,7 @@ void Scan2MapLocation::Init3DBBS()
     // sleep for 1 second
     ros::Duration(1).sleep();
 
-    bbs3d_ptr->set_angular_search_range(min_rpy.cast<float>(), max_rpy.cast<float>());
+    bbs3d_ptr->set_angular_search_range(min_rpy, max_rpy);
     bbs3d_ptr->set_score_threshold_percentage(static_cast<float>(score_threshold_percentage));
     if (timeout_msec > 0)
     {
@@ -316,7 +316,7 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
             auto init_t2 = std::chrono::high_resolution_clock::now();
             double init_time = std::chrono::duration_cast<std::chrono::nanoseconds>(init_t2 - initi_t1).count() / 1e6;
             std::cout << "[Downsample] Execution time: " << init_time << "[msec] " << std::endl;
-            std::vector<Eigen::Vector3f> src_points;
+            std::vector<Eigen::Vector3d> src_points;
             pciof::pcl_to_eigen(submap_coarse, src_points);
             bbs3d_ptr->set_src_points(src_points);
             bbs3d_ptr->localize();

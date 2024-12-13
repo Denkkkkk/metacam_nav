@@ -69,7 +69,7 @@ add_executable(relocalization src/relocalization.cpp)
 target_link_libraries(relocalization 
 ${catkin_LIBRARIES}
 ${COMMON_LIBRARIES}
-gpu_bbs3d
+cpu_bbs3d
 )
 
 #############

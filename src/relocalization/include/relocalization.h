@@ -152,7 +152,7 @@ private:
 
     // 初始化fgr算法对象
     PointCloudT::Ptr cloud_map_;
-    std::vector<Eigen::Vector3f> tar_points;
+    std::vector<Eigen::Vector3d> tar_points;
     PointCloudT::Ptr cloud_scan_;
     PointCloudT::Ptr submap;
     PointCloudT::Ptr submap_coarse;
@@ -161,7 +161,7 @@ private:
     pcl::VoxelGrid<pcl::PointXYZ> fine_filter;
 
     // 3D-BBS parameters
-    std::unique_ptr<gpu::BBS3D> bbs3d_ptr;
+    std::unique_ptr<cpu::BBS3D> bbs3d_ptr;
     std::unique_ptr<pcl::GeneralizedIterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>> gicp_ptr;
     double min_level_res;
     int max_level;
