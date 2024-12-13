@@ -17,6 +17,7 @@ struct Coordinate
 struct Params
 {
     bool use_prior_path;
+    bool use_relocalization;
     std::vector<Coordinate> prior_path;
     std::string prior_path_file;
     double endGoalDis = 0.5;

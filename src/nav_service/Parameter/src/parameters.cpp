@@ -36,7 +36,7 @@ bool ParamControl::load_config(const std::string &usual_config)
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
         param.endGoalDis = usual_conf["pathFollower"]["endGoalDis"].as<double>();
         param.use_prior_path = usual_conf["usualParams"]["use_prior_path"].as<bool>();
-
+        param.use_relocalization = usual_conf["usualParams"]["use_relocalization"].as<bool>();
         param.endGoal_stopTime = usual_conf["nav_service"]["endGoal_stopTime"].as<double>();
     }
     catch (YAML::BadFile &e)
@@ -67,6 +67,7 @@ void ParamControl::print_params()
     // std::cout << "[YAML] " << "endGoalDis: " << param.endGoalDis << std::endl;
     std::cout << "[YAML] " << "endGoal_stopTime: " << param.endGoal_stopTime << std::endl;
     std::cout << "[YAML] " << "use_prior_path: " << (param.use_prior_path ? "true" : "false") << std::endl;
+    std::cout << "[YAML] " << "use_relocalization: " << (param.use_relocalization ? "true" : "false") << std::endl;
     std::cout << std::endl;
 }
 

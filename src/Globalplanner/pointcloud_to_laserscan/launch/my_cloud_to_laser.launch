@@ -17,8 +17,8 @@
 
         <rosparam>
             transform_tolerance: 0.5
-            min_height: -0.75
-            max_height: 0.75
+            min_height: -1.0
+            max_height: 1.0
 
             angle_min: -3.1415926 # -M_PI/2_1.5708
             angle_max: 3.1415926 # M_PI/2

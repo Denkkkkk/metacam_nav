@@ -218,7 +218,7 @@ int main(int argc, char **argv)
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
-            if (nav_service_params.get_params().use_prior_path)
+            if (nav_service_params.get_params().use_relocalization)
             {
                 double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
                 if (!reloc_succeed)
@@ -227,13 +227,13 @@ int main(int argc, char **argv)
                     relo.data = true;
                     nav_relo_pub.publish(relo);
                     ROS_ERROR("Navigation need relocalization!");
-                    // sleep 1s
-                    ros::Duration(1).sleep();
+                    // sleep 1.5s
+                    ros::Duration(1.5).sleep();
                     continue;
                 }
                 else
                 {
-                    if (get_relocal_duration < 1.0 && get_relocal_duration > 0)
+                    if (get_relocal_duration < 1.5 && get_relocal_duration > 0)
                     {
                         continue;
                     }
