@@ -9,6 +9,7 @@ option(BUILD_UNITREE "build unitree_legged_sdk or not" OFF)
 option(BUILD_SIMULATOR "build simulator or not" OFF)
 option(CMAKE_BUILD_TYPE "build type" "Release")
 option(BUILD_CUDA "Build GPU ver" ON)
+set(CATKIN_ENABLE_TESTING OFF)
 
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)

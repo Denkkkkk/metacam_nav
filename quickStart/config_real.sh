@@ -9,6 +9,10 @@ source ~/.bashrc
 sudo apt install --upgrade ros-$ROS_DISTRO-octomap*
 sudo apt-get install libsdl1.2-dev
 sudo apt-get install libsdl-image1.2-dev
-sudo apt install ros-$ROS_DISTRO-voxel-grid
-sudo apt install ros-$ROS_DISTRO-costmap_converter
-sudo apt install ros-$ROS_DISTRO-move-base-msgs
+sudo apt install -y ros-$ROS_DISTRO-voxel-grid
+sudo apt install -y ros-$ROS_DISTRO-costmap-converter
+sudo apt install -y ros-$ROS_DISTRO-move-base-msgs
+sudo apt install -y ros-$ROS_DISTRO-tf2-sensor-msgs
+sudo apt install -y ros-$ROS_DISTRO-mbf-costmap-core
+sudo apt install -y ros-$ROS_DISTRO-mbf-msgs
+sudo apt install -y ros-$ROS_DISTRO-teb-local-planner

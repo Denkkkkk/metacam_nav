@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(map_server)
 
-set(CATKIN_ENABLE_TESTING OFF)
-
 find_package(catkin REQUIRED
         COMPONENTS
             roscpp
