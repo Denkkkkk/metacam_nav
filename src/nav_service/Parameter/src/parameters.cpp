@@ -44,6 +44,7 @@ bool ParamControl::load_config(const std::string &usual_config)
         std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
     }
     return true;
+    param_origin = param;
 }
 
 void ParamControl::update_params()

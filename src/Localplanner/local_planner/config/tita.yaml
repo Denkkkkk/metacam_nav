@@ -8,7 +8,7 @@ localPlanner:
   close_map_time: 2.5  # 关闭局部地图的超时时间
   use_fail_closemap: true  # 开启规划失败就关闭点云地图
   adjacentRange: 3.1  # 第一次裁剪规划点云的范围
-  pathRangeStep: 0.35  # 上面这个系数的缩小步长
+  pathRangeStep: 0.3  # 上面这个系数的缩小步长
   minSpeedRange: 1.2
   pathRangeBySpeed: false  # 根据速度调整规划范围
   # 障碍物高度相关控制
@@ -28,7 +28,6 @@ localPlanner:
   minPathScale: 1.0
   pathScaleStep: 0.2
   pathScaleBySpeed: false
-
 
 pathFollower:
   # sports parameters

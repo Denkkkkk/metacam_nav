@@ -140,6 +140,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
         }
     }
     pubCmd_vel.publish(cmd_vel);
+    car_speed.data = vehicleSpeed;
     pubSpeed.publish(car_speed);
     ROS_WARN("vehicleSpeed: %f", vehicleSpeed);
     ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
@@ -613,7 +614,14 @@ int main(int argc, char **argv)
         roboctrl.pure_persuit();
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        ROS_INFO("run one pathFollower time: %f ms", duration.count() / 1000.0);
+        // 静态变量降低打印频率
+        static int print_count = 0;
+        if (print_count % 10 == 0)
+        {
+            ROS_INFO("run one pathFollower time: %f ms", duration.count() / 1000.0);
+            print_count = 0;
+        }
+        print_count++;
         status = ros::ok();
         rate.sleep();
     }

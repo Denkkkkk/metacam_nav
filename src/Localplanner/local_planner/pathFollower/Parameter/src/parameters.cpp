@@ -79,7 +79,7 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     {
         std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
     }
-
+    param_origin = param;
     return true;
 }
 

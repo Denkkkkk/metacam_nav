@@ -49,11 +49,19 @@ then # 启动实车环境
     source devel/setup.bash;
     roslaunch nav_real_start nav_real_start.launch;exec bash"
 # 启动仿真环境
-else 
-    gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-    source /opt/ros/$ROS_DISTRO/setup.bash;
-    source devel/setup.bash;
-    roslaunch sentry_gazebo startup_robot_map.launch; exec bash"
+else
+    if [ ${para_m} -eq 1 ];
+    then 
+      gnome-terminal --tab --title="先验图仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+      source /opt/ros/$ROS_DISTRO/setup.bash;
+      source devel/setup.bash;
+      roslaunch sentry_gazebo startup_robot_map.launch; exec bash"
+    else
+      gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+      source /opt/ros/$ROS_DISTRO/setup.bash;
+      source devel/setup.bash;
+      roslaunch sentry_gazebo startup_robot.launch; exec bash"
+    fi
   
     sleep 2s
 

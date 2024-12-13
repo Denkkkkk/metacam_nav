@@ -337,7 +337,7 @@ void LpNode::local_planner()
             // 确认找到路之后，如果在最小范围内找到了最优路径，就把add_point_radius设置为0.22
             if (pathRange <= lctlPtr->get_params().minPathRange + 2 * lctlPtr->get_params().pathRangeStep)
             {
-                lctlPtr->set_add_point_radius(0.8);
+                lctlPtr->set_add_point_radius(0.75);
                 ROS_INFO("set_add_point_radius rate: 0.8 .");
             }
             else
@@ -364,7 +364,7 @@ void LpNode::local_planner()
             if (fabs(pathRange - lctlPtr->get_params().minPathRange) < 0.01)
             {
                 // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.8倍
-                lctlPtr->set_add_point_radius(0.8);
+                lctlPtr->set_add_point_radius(0.75);
                 break;
             }
             // 先把规模调成0

@@ -2,7 +2,7 @@
 localPlanner:
   vehicleWidth: 0.62        # 车宽
   vehicleLength: 0.6        # 车长
-  add_point_radius: 0.25    # 障碍物最大膨胀半径
+  add_point_radius: 0.0    # 障碍物最大膨胀半径
   minPathRange: 0.62        # 最小规划范围
   goalClearRange: 0.45      # 快到目的地时减小障碍物检测的范围
   slow_dis: 0.9             # 近障减速距离
