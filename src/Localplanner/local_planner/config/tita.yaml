@@ -42,19 +42,19 @@ pathFollower:
   # get goal parameters
   close_direct_speed: 0.18     # 到目标点附近直冲的速度
   closeGoal_direct_dis: 0.55   # 到目标点附近直走的阈值&&达到getGoal_speed的距离
-  goalSlowDisThre: 1.6         # 靠近全局目标点时减速
-  getGoal_speed: 0.15          # 刚好追踪到目标点时的速度
+  goalSlowDisThre: 1.5         # 靠近全局目标点时减速
+  getGoal_speed: 0.18          # 刚好追踪到目标点时的速度
   # Generally fixed parameters
-  lookAheadDis: 0.5  # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
-  useLoaclSlow: true  # 启用局部路径跟踪减速
-  endPathDis: 0.05  # 跟踪到局部路径的末尾多少距离内就不再跟踪
+  lookAheadDis: 0.5     # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
+  useLoaclSlow: true    # 启用局部路径跟踪减速
+  endPathDis: 0.05      # 跟踪到局部路径的末尾多少距离内就不再跟踪
   pathSlowDisThre: 0.4  # 局部路径跟踪开始减速的距离阈值, 局部路径最长就1m
-  getPath_speed: 0.1  # 追踪到局部路径末端时的速度
+  getPath_speed: 0.1    # 追踪到局部路径末端时的速度
   path_zero_bias: 0.01  # 追踪路径减速的零点偏移
-  goal_zero_bias: 0.0  # 到点减速的零点偏移
+  goal_zero_bias: 0.0   # 到点减速的零点偏移
   cloudSlow_minSpeed: 0.2  # 根据周围障碍物减速的最小速度
-  curvature: 9  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
-  slowBegin: 2  # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
+  curvature: 9          # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
+  slowBegin: 2          # 根据周围障碍物减速曲线的曲率，越小前面下降得越快，5到15左右就好
   goal_path_direct: true  # 是否全局路径直接追踪
   use_MIDPlanning_slow: true  # 是否使用转弯点减速
   MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
