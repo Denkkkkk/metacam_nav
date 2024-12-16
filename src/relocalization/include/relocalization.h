@@ -7,8 +7,11 @@
 #include <typeinfo>
 #include <vector>
 #include <yaml-cpp/yaml.h>
-#include <cpu_bbs3d/bbs3d.hpp>
-#include <gpu_bbs3d/bbs3d.cuh>
+#ifdef  BUILD_CUDA
+    #include <gpu_bbs3d/bbs3d.cuh>
+#else
+    #include <cpu_bbs3d/bbs3d.hpp>
+#endif
 
 // ros
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
@@ -161,7 +164,11 @@ private:
     pcl::VoxelGrid<pcl::PointXYZ> fine_filter;
 
     // 3D-BBS parameters
+#ifdef  BUILD_CUDA
+    std::unique_ptr<gpu::BBS3D> bbs3d_ptr;
+#else
     std::unique_ptr<cpu::BBS3D> bbs3d_ptr;
+#endif
     std::unique_ptr<pcl::GeneralizedIterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>> gicp_ptr;
     double min_level_res;
     int max_level;

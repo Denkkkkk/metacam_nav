@@ -161,7 +161,11 @@ void Scan2MapLocation::Init3DBBS()
     std::cout << "[Voxel map] Creating hierarchical voxel map..." << std::endl;
 
     auto initi_t1 = std::chrono::high_resolution_clock::now();
-    bbs3d_ptr = std::make_unique<cpu::BBS3D>();
+    #ifdef  BUILD_CUDA
+        bbs3d_ptr = std::make_unique<gpu::BBS3D>();
+    #else
+        bbs3d_ptr = std::make_unique<cpu::BBS3D>();
+    #endif
     bbs3d_ptr->set_tar_points(tar_points, min_level_res, max_level);
     bbs3d_ptr->set_trans_search_range(tar_points);
     auto init_t2 = std::chrono::high_resolution_clock::now();

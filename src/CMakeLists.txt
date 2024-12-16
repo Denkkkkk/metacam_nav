@@ -8,7 +8,7 @@ option(BUILD_DIABLO_SERIAL "build diablo_serial or not" OFF)
 option(BUILD_UNITREE "build unitree_legged_sdk or not" OFF)
 option(BUILD_SIMULATOR "build simulator or not" OFF)
 option(CMAKE_BUILD_TYPE "build type" "Release")
-option(BUILD_CUDA "Build GPU ver" ON)
+option(BUILD_CUDA "Build GPU ver" OFF)
 set(CATKIN_ENABLE_TESTING OFF)
 
 find_package(PCL REQUIRED)
@@ -37,7 +37,6 @@ if(_res EQUAL 0)
   # include all.cmake without add_subdirectory to let it operate in same scope
   include(${catkin_EXTRAS_DIR}/all.cmake NO_POLICY_SCOPE)
   add_subdirectory("${_out}")
-
 else()
   # use either CMAKE_PREFIX_PATH explicitly passed to CMake as a command line argument
   # or CMAKE_PREFIX_PATH from the environment

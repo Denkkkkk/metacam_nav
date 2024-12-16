@@ -66,13 +66,20 @@ set(COMMON_LIBRARIES
 # relocalization
 add_executable(relocalization src/relocalization.cpp)
 
-target_link_libraries(relocalization 
-${catkin_LIBRARIES}
-${COMMON_LIBRARIES}
-cpu_bbs3d
-gpu_bbs3d
-)
-
+if(BUILD_CUDA)
+  add_definitions(-DBUILD_CUDA)
+  target_link_libraries(relocalization 
+  ${catkin_LIBRARIES}
+  ${COMMON_LIBRARIES}
+  gpu_bbs3d
+  )
+else()
+  target_link_libraries(relocalization 
+  ${catkin_LIBRARIES}
+  ${COMMON_LIBRARIES}
+  cpu_bbs3d
+  )
+endif()
 #############
 ## Install ##
 #############
