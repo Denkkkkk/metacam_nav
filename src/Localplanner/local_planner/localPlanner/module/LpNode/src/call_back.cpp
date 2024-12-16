@@ -106,7 +106,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
         // 只保存满足下列条件的点云
         // ①距离车体小于adjacentRange的点云
         // ②使用对于低于阈值的点云进行路径评分useCost，只要障碍物点云距离地面点云的相对高度大于obstacleHeightThre（地形裁剪）
-        if ((dis < pathScale * lctlPtr->get_params().adjacentRange + 0.5) && (point.intensity > lctlPtr->get_params().obstacleHeightThre || lctlPtr->get_params().useCost))
+        if ((dis < pathScale * lctlPtr->get_params().adjacentRange + 0.3) && (point.intensity > lctlPtr->get_params().obstacleHeightThre || lctlPtr->get_params().useCost))
         {
             terrainCloudCrop->push_back(point);
         }
@@ -116,28 +116,35 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     terrainAddPoints.clear();
 
     // 遍历点云插值
-    if (lctlPtr->get_params().add_point_radius > 0.01)
+    // 先做一次降采样
+    terrainCloudDwz->clear();
+    terrainDwzFilter.setInputCloud(terrainCloudCrop);
+    terrainDwzFilter.filter(*terrainCloudDwz);
+    *terrainCloudCrop = *terrainCloudDwz;
+    for (int i = 0; i < terrainCloudCrop->points.size(); i++)
     {
-        // 先做一次降采样
-        terrainCloudDwz->clear();
-        terrainDwzFilter.setInputCloud(terrainCloudCrop);
-        terrainDwzFilter.filter(*terrainCloudDwz);
-        *terrainCloudCrop = *terrainCloudDwz;
-        for (int i = 0; i < terrainCloudCrop->points.size(); i++)
+        // 计算点云到车体的距离
+        float dis = sqrt((terrainCloudCrop->points[i].x - vehicleX) * (terrainCloudCrop->points[i].x - vehicleX) + (terrainCloudCrop->points[i].y - vehicleY) * (terrainCloudCrop->points[i].y - vehicleY));
+        if(lctlPtr->get_params().add_point_radius > 0.01 || dis >= 1.5)
         {
+            double add_point_radius_auc = lctlPtr->get_params().add_point_radius;
+            if(dis >= 1.5)
+            {
+                add_point_radius_auc = lctlPtr->get_params().add_point_radius + dis * lctlPtr->get_params().add_point_radius_far;
+            }
             // 45度插值一次
             for (int j = 1; j < 8; j++)
             {
-                point.x = terrainCloudCrop->points[i].x + lctlPtr->get_params().add_point_radius * cos(j * 45 * M_PI / 180);
-                point.y = terrainCloudCrop->points[i].y + lctlPtr->get_params().add_point_radius * sin(j * 45 * M_PI / 180);
+                point.x = terrainCloudCrop->points[i].x + add_point_radius_auc * cos(j * 45 * M_PI / 180);
+                point.y = terrainCloudCrop->points[i].y + add_point_radius_auc * sin(j * 45 * M_PI / 180);
                 point.z = terrainCloudCrop->points[i].z;
                 point.intensity = lctlPtr->get_params().obstacleHeightThre + 0.1;
                 terrainCloudDwz->push_back(point);
                 terrainAddPoints.push_back(point);
             }
         }
-        *terrainCloudCrop = *terrainCloudDwz;
     }
+    *terrainCloudCrop = *terrainCloudDwz;
     // 发布插值点云
     sensor_msgs::PointCloud2 terrainAddPoints2;
     pcl::toROSMsg(terrainAddPoints, terrainAddPoints2);

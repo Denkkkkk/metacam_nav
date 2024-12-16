@@ -44,6 +44,7 @@ void ParamControl::param_rate_init()
 
     param_rate.dirThre = 1.0;          // 规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑
     param_rate.pointPerPathThre = 1.0; // 同一块体素位置需要至少多少个障碍物点云才被舍弃
+    param_rate.add_point_radius_far = 1.0;
 }
 
 bool ParamControl::load_config(const std::string &local_config, const std::string &usual_config)
@@ -96,6 +97,7 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.defPathScale = local_conf["localPlanner"]["defPathScale"].as<double>() * param_rate.defPathScale;
         param.minPathScale = local_conf["localPlanner"]["minPathScale"].as<double>() * param_rate.minPathScale;
         param.pathScaleStep = local_conf["localPlanner"]["pathScaleStep"].as<double>() * param_rate.pathScaleStep;
+        param.add_point_radius_far = local_conf["localPlanner"]["add_point_radius_far"].as<double>() * param_rate.add_point_radius_far;
 
         param.pathScaleBySpeed = local_conf["localPlanner"]["pathScaleBySpeed"].as<bool>();
         param.usePathScale = local_conf["localPlanner"]["usePathScale"].as<bool>();
@@ -116,40 +118,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
 
 void ParamControl::update_params()
 {
-    // nhUsual.getParam("maxSpeed", param.maxSpeed);
-    // nhUsual.getParam("use_map", param.use_map);
-    // nhPrivate.getParam("terrainVoxelSize", param.terrainVoxelSize);
-    // nhPrivate.getParam("checkRotObstacle", param.checkRotObstacle);
-    // nhPrivate.getParam("vehicleRadius", param.vehicleRadius);
-    // nhPrivate.getParam("checkObstacle", param.checkObstacle);
-    // nhPrivate.getParam("adjacentRange", param.adjacentRange);
-    // nhPrivate.getParam("obstacleHeightThre", param.obstacleHeightThre);
-    // nhPrivate.getParam("groundHeightThre", param.groundHeightThre);
-    // nhPrivate.getParam("costHeightThre", param.costHeightThre);
-    // nhPrivate.getParam("costScore", param.costScore);
-    // nhPrivate.getParam("useCost", param.useCost);
-    // nhPrivate.getParam("pointPerPathThre", param.pointPerPathThre);
-    // nhPrivate.getParam("dirWeight", param.dirWeight);
-    // nhPrivate.getParam("dirThre", param.dirThre);
-    // nhPrivate.getParam("minPathScale", param.minPathScale);
-    // nhPrivate.getParam("pathScaleStep", param.pathScaleStep);
-    // nhPrivate.getParam("pathScaleBySpeed", param.pathScaleBySpeed);
-    // nhPrivate.getParam("minPathRange", param.minPathRange);
-    // nhPrivate.getParam("pathRangeStep", param.pathRangeStep);
-    // nhPrivate.getParam("pathRangeBySpeed", param.pathRangeBySpeed);
-    // nhPrivate.getParam("pathCropByGoal", param.pathCropByGoal);
-    // nhPrivate.getParam("goalClearRange", param.goalClearRange);
-    // nhPrivate.getParam("slow_dis", param.slow_dis);
-    // nhPrivate.getParam("defPathScale", param.defPathScale);
-    // nhPrivate.getParam("usePathScale", param.usePathScale);
-    // nhPrivate.getParam("minSpeedRange", param.minSpeedRange);
-    // nhPrivate.getParam("close_map_time", param.close_map_time);
-    // nhPrivate.getParam("use_fail_closemap", param.use_fail_closemap);
-    // nhPrivate.getParam("goalClearRange_global", param.goalClearRange_global);
-    // nhPrivate.getParam("add_point_radius", param.add_point_radius);
-    // nhPrivate.getParam("vehicleLength", param.vehicleLength);
-    // nhPrivate.getParam("vehicleWidth", param.vehicleWidth);
-
     // 创建静态计数器
     static int count = 1;
     // 每隔10次更新一次参数

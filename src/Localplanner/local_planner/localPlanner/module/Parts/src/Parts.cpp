@@ -3,7 +3,7 @@
 #define PLOTPATHSET 1 // 开启可行路径可视化
 const double PI = 3.1416;
 string pathFolder;
-double terrainVoxelSize = 0.2;
+double terrainVoxelSize = 0.05;
 bool checkRotObstacle = false;
 const int laserCloudStackNum = 1;
 int laserCloudCount = 0;

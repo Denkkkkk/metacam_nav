@@ -32,6 +32,7 @@ struct Params
     double add_point_radius;
     double vehicleLength;
     double vehicleWidth;
+    double add_point_radius_far;
 
     int dirThre;             // 规划路径组别的根据车头或目标点筛选，全向运动置为150，给一点后退避障的空间，离目标反向走的不考虑
     int pointPerPathThre;    // 同一块体素位置需要至少多少个障碍物点云才被舍弃

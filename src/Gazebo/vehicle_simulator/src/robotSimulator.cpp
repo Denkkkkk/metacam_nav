@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "robotSimulator");
     ros::NodeHandle nh;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
-    ros::Duration(1).sleep(); // 等待map坐标系初始化完成
+    ros::Duration(2).sleep(); // 等待map坐标系初始化完成
     nhPrivate.param<std::string>("ns", ns, "");
     if (ns != "")
     {

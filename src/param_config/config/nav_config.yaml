@@ -5,7 +5,7 @@ localPlanner:
   add_point_radius: 0.0    # 障碍物最大膨胀半径
   minPathRange: 0.62        # 最小规划范围
   goalClearRange: 0.45      # 快到目的地时减小障碍物检测的范围
-  slow_dis: 0.9             # 近障减速距离
+  slow_dis: 0.95             # 近障减速距离
   obstacleHeightThre: 0.09  # 地形分析中，intensity的筛选阈值
 
 

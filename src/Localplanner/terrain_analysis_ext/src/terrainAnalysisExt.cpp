@@ -208,7 +208,7 @@ int main(int argc, char **argv)
     downSizeFilter.setLeafSize(scanVoxelSize, scanVoxelSize, scanVoxelSize);
     std::vector<int> pointIdxNKNSearch;
     std::vector<float> pointNKNSquaredDistance;
-    ros::Rate rate(100);
+    ros::Rate rate(20);
     bool status = ros::ok();
     while (status)
     {
