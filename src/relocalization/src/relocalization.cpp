@@ -11,9 +11,9 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     ROS_INFO_STREAM("\033[1;32m---->  Relocation started.\033[0m");
 
     // 初始化订阅者
-    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_registered", 1, &Scan2MapLocation::Scan2SubmapCallback,
+    laser_scan_subscriber_ = node_handle_.subscribe("/cloud_interface", 1, &Scan2MapLocation::Scan2SubmapCallback,
                                                     this, ros::TransportHints().tcpNoDelay());
-    odom_subscriber_ = node_handle_.subscribe("/Odometry", 20, &Scan2MapLocation::OdomCallback,
+    odom_subscriber_ = node_handle_.subscribe("/odom_interface", 20, &Scan2MapLocation::OdomCallback,
                                               this, ros::TransportHints().tcpNoDelay());
 
     scan_pointcloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_pointcloud", 10);
@@ -251,14 +251,14 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         odom_cloud_->height = odom_cloud_->points.size();
         odom_cloud_->is_dense = false;
         odom_filter.setInputCloud(odom_cloud_);
-        odom_filter.setLeafSize(0.2, 0.2, 0.2);
+        odom_filter.setLeafSize(0.3, 0.3, 0.3);
         odom_filter.filter(*odom_cloud_);
         if (!reloc_active)
         {
-            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.2 << "m" << std::endl;
+            std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.3 << "m" << std::endl;
         }
 
-        if (odom_cloud_->points.size() > 2 && reloc_active == false)
+        if (odom_cloud_->points.size() > 3 && reloc_active == false)
         {
             reloc_active = true;
             //            need_reloc.data = false;
@@ -355,7 +355,7 @@ void Scan2MapLocation::Scan2SubmapCallback(const sensor_msgs::PointCloud2::Const
             submap_coarse->clear();
             submap_fine->clear();
             // 发布定位结果
-
+            std::cout << "odom_interface_to_map: " << match_result_.matrix() << std::endl;
             pub_match_result.header.frame_id = "map";
             pub_match_result.header.stamp = ros::Time::now();
             pub_match_result.pose.position.x = match_result_.matrix()(0, 3);
