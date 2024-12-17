@@ -32,7 +32,7 @@ localPlanner:
 
 pathFollower:
   # sports parameters
-  yawRateGain: 2.0        # 一般情况下的车头转动增益
+  yawRateGain: 1.8        # 一般情况下的车头转动增益
   stopYawRateGain: 3.0    # 静止下的车头转动增益
   maxYawRate: 35.0        # 车头最大转动角速度
   maxStopYawRate: 45.0    # 静止时车头最大转动角速度
