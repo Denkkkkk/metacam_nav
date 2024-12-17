@@ -34,6 +34,14 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.getgoal_yaw = usual_conf["pathFollower"]["getgoal_yaw"].as<double>();
 
         param.maxSpeed = usual_conf["usualParams"]["maxSpeed"].as<double>();
+
+        param.obstacleHeightThre = usual_conf["localPlanner"]["obstacleHeightThre"].as<double>();
+        param.localPlanner_slow_dis = usual_conf["localPlanner"]["slow_dis"].as<double>();
+        // 获取最小长宽
+        double lenth = usual_conf["localPlanner"]["vehicleLength"].as<double>();
+        double width = usual_conf["localPlanner"]["vehicleWidth"].as<double>();
+        param.vehicle_min_range = lenth < width ? lenth : width;
+        
     }
     catch (YAML::BadFile &e)
     {
@@ -85,45 +93,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
 
 void ParamControl::update_params()
 {
-    // 允许直接更新的参数
-    // nhUsual.getParam("maxSpeed", param.maxSpeed);
-    // nhPrivate.getParam("lookAheadDis", param.lookAheadDis);
-    // nhPrivate.getParam("pathSlowDisThre", param.pathSlowDisThre);
-    // nhPrivate.getParam("endGoalDis", param.endGoalDis);
-    // nhPrivate.getParam("endPathDis", param.endPathDis);
-    // nhPrivate.getParam("useCloudSlowDown", param.useCloudSlowDown);
-    // nhPrivate.getParam("cloudSlow_minSpeed", param.cloudSlow_minSpeed);
-    // nhPrivate.getParam("minSpeed", param.minSpeed);
-    // nhPrivate.getParam("curvature", param.curvature);
-    // nhPrivate.getParam("slowBegin", param.slowBegin);
-    // nhPrivate.getParam("maxAddAccel", param.maxAddAccel);
-    // nhPrivate.getParam("maxSlowAccel", param.maxSlowAccel);
-    // nhPrivate.getParam("stopYawRateGain", param.stopYawRateGain);
-    // nhPrivate.getParam("yawRateGain", param.yawRateGain);
-    // nhPrivate.getParam("maxYawRate", param.maxYawRate);
-    // nhPrivate.getParam("maxStopYawRate", param.maxStopYawRate);
-    // nhPrivate.getParam("goal_path_direct", param.goal_path_direct);
-    // nhPrivate.getParam("useLoaclSlow", param.useLoaclSlow);
-    // nhPrivate.getParam("goalSlowDisThre", param.goalSlowDisThre);
-    // nhPrivate.getParam("getGoal_speed", param.getGoal_speed);
-    // nhPrivate.getParam("use_MIDPlanning_slow", param.use_MIDPlanning_slow);
-    // nhPrivate.getParam("MIDPlanning_slow_rate", param.MIDPlanning_slow_rate);
-    // nhPrivate.getParam("dirDiffThre_slow", param.dirDiffThre_slow);
-    // nhPrivate.getParam("dirDiffThre_keep", param.dirDiffThre_keep);
-    // nhPrivate.getParam("getPath_speed", param.getPath_speed);
-    // nhPrivate.getParam("path_zero_bias", param.path_zero_bias);
-    // nhPrivate.getParam("goal_zero_bias", param.goal_zero_bias);
-    // nhPrivate.getParam("MIDPlanning_minSpeed", param.MIDPlanning_minSpeed);
-    // nhPrivate.getParam("use_closeGoal_direct", param.use_closeGoal_direct);
-    // nhPrivate.getParam("closeGoal_direct_dis", param.closeGoal_direct_dis);
-    // nhPrivate.getParam("quick_turn_speed", param.quick_turn_speed);
-    // nhPrivate.getParam("close_direct_speed", param.close_direct_speed);
-    // nhPrivate.getParam("use_virtual_head", param.use_virtual_head);
-    // nhPrivate.getParam("use_move_base", param.use_move_base);
-    // nhPrivate.getParam("use_getgoal_yaw", param.use_getgoal_yaw);
-    // nhPrivate.getParam("getgoal_yaw", param.getgoal_yaw);
-    // nhPrivate.getParam("slowdown_rate", param.slowdown_rate);
-
     // 创建静态计数器
     static int count = 1;
     // 每隔10次更新一次参数
@@ -178,4 +147,5 @@ void ParamControl::print_params()
     std::cout << "getgoal_yaw: " << param.getgoal_yaw << std::endl;
     std::cout << "slowdown_rate: " << param.slowdown_rate << std::endl;
     std::cout << "localPlanner_pathRange: " << param.localPlanner_pathRange << std::endl;
+    std::cout << "obstacleHeightThre: " << param.obstacleHeightThre << std::endl;
 }

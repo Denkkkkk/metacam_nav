@@ -40,10 +40,10 @@ pathFollower:
   dirDiffThre_keep: 0.05  # 角度差
   quick_turn_speed: 0.05  # 减速到这个速度就允许快速转向
   # get goal parameters
-  close_direct_speed: 0.18     # 到目标点附近直冲的速度
+  close_direct_speed: 0.2      # 到目标点附近直冲的速度
   closeGoal_direct_dis: 0.55   # 到目标点附近直走的阈值&&达到getGoal_speed的距离
-  goalSlowDisThre: 1.5         # 靠近全局目标点时减速
-  getGoal_speed: 0.18          # 刚好追踪到目标点时的速度
+  goalSlowDisThre: 1.4         # 靠近全局目标点时减速
+  getGoal_speed: 0.2           # 刚好追踪到目标点时的速度
   # Generally fixed parameters
   lookAheadDis: 0.5     # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
   useLoaclSlow: true    # 启用局部路径跟踪减速

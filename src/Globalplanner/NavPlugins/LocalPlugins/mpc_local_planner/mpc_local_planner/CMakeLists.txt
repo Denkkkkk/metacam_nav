@@ -4,7 +4,6 @@ project(mpc_local_planner)
 # Set to Release in order to speed up the program significantly
 #set(CMAKE_BUILD_TYPE Release) #None, Debug, Release, RelWithDebInfo, MinSizeRel
 set(BUILD_TEST OFF)
-set(BUILD_mpc_local_planner ON)
 if(NOT BUILD_mpc_local_planner)
   return()
 endif()

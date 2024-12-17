@@ -98,6 +98,7 @@ namespace pointcloud_to_laserscan {
         bool use_intensity_;
         double min_intensity_, max_intensity_;
         double min_intensity_origin_;
+        std::string usual_config;
     };
 
 } // namespace pointcloud_to_laserscan

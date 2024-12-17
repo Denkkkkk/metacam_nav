@@ -153,10 +153,10 @@ catkin_package(
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-install(DIRECTORY
-  launch cfg maps stage
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+# install(DIRECTORY
+#   launch cfg maps stage
+#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+# )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

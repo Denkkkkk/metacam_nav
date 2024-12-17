@@ -1,29 +1,24 @@
 <launch>
   <!-- 选择性开启-->
-  <arg name="use_global_planner" default="false" />
+  <arg name="use_global_planner" default="true" />
   <arg name="use_rviz" default="true" />
   <arg name="use_2dlaser" default="false" />
   <arg name="use_map" default="true" />
 
   <!-- 仿真系统参数 -->
-  <arg name="ns" default="TITA" />
+  <arg name="ns" default="" />
   <arg name="paused" default="false" />
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <!--模型车的起点放置位置-->
-  <!-- <arg name="vehicleX" default="7.5" />
-  <arg name="vehicleY" default="6.0" />
-  <arg name="vehicleZ" default="0.0" />
-  <arg name="vehicleYaw" default="1.57" /> -->
   <arg name="vehicleX" default="0.0" />
   <arg name="vehicleY" default="0.0" />
   <arg name="vehicleZ" default="0.0" />
   <arg name="vehicleYaw" default="0.0" />
   <!-- Autonomous Exploration Development Environment参数 -->
-  <arg name="world_name" default="RMUC2024" />
-  <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
+  <arg name="world_name" default="RMUC2024_a" />
+  <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" />
   <arg name="min_intensity_global" default="0.25" />
-  <arg name="down_hill_judge_time" default="0.4" />
 
   <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
@@ -71,7 +66,7 @@
   <!-- 启动全局规划 -->
   <group if="$(arg use_global_planner)">
     <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-      <arg name="min_intensity" value="$(arg min_intensity_global)" />
+      <arg name="ns" value="$(arg ns)" />
     </include>
     <!-- Map server -->
     <group if="$(arg use_map)">

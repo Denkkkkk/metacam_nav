@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 project(mpc_local_planner_msgs)
 
+if(NOT BUILD_mpc_local_planner)
+  return()
+endif()
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 

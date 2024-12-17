@@ -46,6 +46,9 @@ struct Params
     double getgoal_yaw;
     double slowdown_rate;
     double localPlanner_pathRange;
+    double obstacleHeightThre;
+    double localPlanner_slow_dis;
+    double vehicle_min_range;
 };
 
 class ParamControl

@@ -57,10 +57,18 @@ else
       source devel/setup.bash;
       roslaunch sentry_gazebo startup_robot_map.launch; exec bash"
     else
-      gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-      source /opt/ros/$ROS_DISTRO/setup.bash;
-      source devel/setup.bash;
-      roslaunch sentry_gazebo startup_robot.launch; exec bash"
+        if [ ${para_k} -eq 1 ];
+        then
+          gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+          source /opt/ros/$ROS_DISTRO/setup.bash;
+          source devel/setup.bash;
+          roslaunch sentry_gazebo startup_robot_a.launch; exec bash"
+        else
+          gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+          source /opt/ros/$ROS_DISTRO/setup.bash;
+          source devel/setup.bash;
+          roslaunch sentry_gazebo startup_robot.launch; exec bash"
+        fi
     fi
   
     sleep 2s
@@ -76,6 +84,14 @@ else
         source /opt/ros/$ROS_DISTRO/setup.bash;
         source devel/setup.bash;
         roslaunch nav_service nav_service.launch; exec bash"
+    fi
+
+    if [ ${para_k} -eq 1 ];
+    then
+        gnome-terminal --tab --title="局部规划控制系统"  -- bash -c "
+        source /opt/ros/noetic/setup.bash;
+        source devel/setup.bash;
+        roslaunch waypoint_control waypoint_control.launch; exec bash"
     fi
 fi
 

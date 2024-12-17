@@ -29,6 +29,7 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/JointState.h>
 
 enum ControlMode
@@ -65,6 +66,7 @@ private:
     void imuCallback(const sensor_msgs::Imu::ConstPtr &imu);
     void slowCallback(const std_msgs::Float32::ConstPtr &slowDown);
     void slowDown();
+    void terrainCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &terrainCloud2);
 
     ros::NodeHandle nh;
     ros::NodeHandle nhPrivate = ros::NodeHandle("~");
@@ -79,6 +81,7 @@ private:
     ros::Subscriber subPathStatus;
     ros::Subscriber subGoalPath;
     ros::Subscriber subControlMode;
+    ros::Subscriber subTerrainCloud;
     ros::Publisher pubSpeed;
     ros::Publisher pubCmd_vel;
     ros::Publisher pubGoalPathDir;
@@ -135,12 +138,14 @@ private:
     double transTime_slow_begin;
     std_msgs::Float32 car_speed;
     geometry_msgs::Twist cmd_vel;
-    int slowDown1;
-    double slowDown1_update_time;
+    double local_slowDown;
+    double local_slowDown_update_time;
     int mid_slow_delay = 15;
     std::string ns;
     std::string robot_frame;
     double odom_update_time = 0;
     bool use_two_forward = false;
     bool safetyStop = false;
+    float terrainCloud_minDis = 100;
+    bool near_cloud_stop = false;
 };

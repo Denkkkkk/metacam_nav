@@ -46,12 +46,30 @@
 #include <sensor_msgs/point_cloud2_iterator.h>
 #include <string>
 #include <tf2_sensor_msgs/tf2_sensor_msgs.h>
+#include <yaml-cpp/yaml.h>
+#include <ros/package.h>
 
 namespace pointcloud_to_laserscan {
     void PointCloudToLaserScanNodelet::update_params()
     {
-        nh_.param<double>("localPlanner/obstacleHeightThre", min_intensity_, 0.1);
-        // printf("min_intensity_:%f\n", min_intensity_);
+        // 创建静态计数器
+        static int count = 1;
+        // 每隔10次更新一次参数
+        if (count % 10 == 0)
+        {
+            std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
+            try
+            {
+                YAML::Node usual_conf = YAML::LoadFile(usual_config);
+                min_intensity_ = usual_conf["localPlanner"]["obstacleHeightThre"].as<double>();
+            }
+            catch (YAML::BadFile &e)
+            {
+                std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
+            }
+            count = 0;
+        }
+        count++;
     }
 
     PointCloudToLaserScanNodelet::PointCloudToLaserScanNodelet()
@@ -62,6 +80,7 @@ namespace pointcloud_to_laserscan {
     {
         boost::mutex::scoped_lock lock(connect_mutex_);
         private_nh_ = getPrivateNodeHandle();
+        usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
 
         private_nh_.param<bool>("use_intensity", use_intensity_, true);
         nh_.param<double>("localPlanner/obstacleHeightThre", min_intensity_, 0.1);

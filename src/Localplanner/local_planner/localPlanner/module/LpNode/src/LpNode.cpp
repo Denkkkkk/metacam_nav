@@ -196,13 +196,6 @@ void LpNode::local_planner()
         plannerCloudCropSize = plannerCloudCrop->points.size();
         PannerAtuCloud->clear();    // 实际用于规划的点云
         int PannerAtuCloudsize = 0; // 实际用于规划的点云的数量
-        bool need_slow = false;     // 是否需要减速
-        slowDown.data = 0;          // 减速指令
-        bool block_flag[36];        // 用于存储36个方向的是否被堵的标志位
-        for (int i = 0; i < 36; i++)
-        {
-            block_flag[i] = false;
-        }
         minObsAngCW = -180.0;
         minObsAngCCW = 180.0;
         diameter = sqrt(lctlPtr->get_params().vehicleLength / 2.0 * lctlPtr->get_params().vehicleLength / 2.0 + lctlPtr->get_params().vehicleWidth / 2.0 * lctlPtr->get_params().vehicleWidth / 2.0);
@@ -254,15 +247,6 @@ void LpNode::local_planner()
                     float y2 = -sin(rotAng) * x + cos(rotAng) * y;
 
                     grid_Synchronize_obstacles_to_paths(rotDir, x2, y2, h); // 根据待规划的点云，根据点云高度遮挡减掉可行的路径
-                    // 用于统计被堵的方向有多少和判断是否需要减速
-                    if (((cloudDir > 10.0 * rotDir - 180.0 && cloudDir < 10 + 10.0 * rotDir - 180.0) && h > lctlPtr->get_params().obstacleHeightThre) && !block_flag[rotDir])
-                    {
-                        block_flag[rotDir] = true;
-                        if (dis < lctlPtr->get_params().slow_dis)
-                        {
-                            need_slow = true;
-                        }
-                    }
                 }
             }
             // 满足以下所有条件限制转弯，一般都不开启
@@ -290,22 +274,19 @@ void LpNode::local_planner()
         PannerAtuCloud2.header.stamp = ros::Time().fromSec(odomTime);
         PannerAtuCloud2.header.frame_id = "map";
         pubPannerAtuCloud.publish(PannerAtuCloud2);
-
-        if (need_slow)
-        {
-            // 发布被堵方向数量
-            for (int i = 0; i < 36; i++)
-            {
-                if (block_flag[i])
-                    slowDown.data++;
+        
+        // 发布PannerAtuCloud中最近的障碍物的距离
+        float min_distance = 6666; // 初始化为一个大值
+        for (const auto& point : PannerAtuCloud->points) {
+            float distance = sqrt(point.x * point.x + point.y * point.y);
+            if (distance < min_distance && point.intensity > lctlPtr->get_params().obstacleHeightThre) {
+            min_distance = distance;
             }
-            pubSlowDown.publish(slowDown);
         }
-        else
-        {
-            slowDown.data = 0;
-            pubSlowDown.publish(slowDown);
-        }
+        std_msgs::Float32 min_distance_msg;
+        min_distance_msg.data = min_distance;
+        pubSlowDown.publish(min_distance_msg);
+
         // 正式开始路径规划寻找最大分数的路径组
         for (int i = 0; i < 36 * pathNum; i++)
         {

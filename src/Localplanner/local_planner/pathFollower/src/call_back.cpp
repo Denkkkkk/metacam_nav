@@ -212,6 +212,33 @@ void RoboCtrl::controlModeCallback(const std_msgs::Int8::ConstPtr &msg)
  */
 void RoboCtrl::slowDownHandler(const std_msgs::Float32::ConstPtr &slowDown)
 {
-    slowDown1 = slowDown->data;
-    slowDown1_update_time = ros::Time::now().toSec();
+    local_slowDown = slowDown->data;
+    local_slowDown_update_time = ros::Time::now().toSec();
+}
+
+void RoboCtrl::terrainCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &terrainCloud2)
+{
+    pcl::PointCloud<pcl::PointXYZI> terrainCloud;
+    // 将本帧的点云转化为ROS格式
+    pcl::fromROSMsg(*terrainCloud2, terrainCloud);
+    pcl::PointXYZI point;
+    terrainCloud_minDis = std::numeric_limits<float>::max(); // 初始化为类型最大值
+
+    // 排除掉->太远，（太低或代价评价）
+    for (int i = 0; i < terrainCloud.points.size(); i++)
+    {
+        point = terrainCloud.points[i];
+        float pointX = point.x;
+        float pointY = point.y;
+        // 计算点云到车体的距离
+        float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) + (pointY - vehicleY) * (pointY - vehicleY));
+        // 使用对于低于阈值的点云进行路径评分useCost，只要障碍物点云距离地面点云的相对高度大于obstacleHeightThre（地形裁剪）
+        if (point.intensity > pctlPtr->get_params().obstacleHeightThre)
+        {
+            if (dis < terrainCloud_minDis)
+            {
+                terrainCloud_minDis = dis;
+            }
+        }
+    }
 }

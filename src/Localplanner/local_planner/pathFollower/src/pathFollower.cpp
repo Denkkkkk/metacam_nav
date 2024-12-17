@@ -2,7 +2,7 @@
  * @file pathFollower.cpp
  * @author 李东权
  * @brief 路径跟随和速度控制
- * @version 2.0
+ * @version 2.0 
  * @date 2023-11-26
  *
  * @copyright Copyright (c) 2024
@@ -27,6 +27,8 @@ RoboCtrl::RoboCtrl()
     }
     robot_frame = ns + "vehicle";
     subOdom = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &RoboCtrl::odomHandler, this);
+    subTerrainCloud = nh.subscribe<sensor_msgs::PointCloud2>("/terrain_map", 5, &RoboCtrl::terrainCloudCallback, this);
+    // 是否使用move_base全局规划
     if (pctlPtr->get_params().use_move_base)
     {
         subGlobalPoint = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, &RoboCtrl::goalPointCallback, this);
@@ -58,22 +60,32 @@ RoboCtrl::RoboCtrl()
 // 外部减速
 void RoboCtrl::slowDown()
 {
-    double slowDown1_update_duaration = ros::Time::now().toSec() - slowDown1_update_time;
-    if (slowDown1_update_duaration > 2.0)
+    double local_slowDown_update_duaration = ros::Time::now().toSec() - local_slowDown_update_time;
+    if (local_slowDown_update_duaration > 2.0)
     {
-        slowDown1 = 0;
+        local_slowDown = 1000;
     }
-
-    if (pctlPtr->get_params().localPlanner_pathRange <= 1.0) // 规划范围较小优先发起减速
+    // 打印局部规划器最近的点云距离
+    // ROS_WARN("localplanner_cloud_minDis: %f", local_slowDown);
+    // 打印terrainCloud_minDis
+    ROS_WARN("terrainCloud_minDis: %f", terrainCloud_minDis);
+    near_cloud_stop = false;
+    if (terrainCloud_minDis < pctlPtr->get_params().vehicle_min_range) // 急停
+    {
+        near_cloud_stop = true;
+        maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
+    }
+    else if (pctlPtr->get_params().localPlanner_pathRange <= 1.0) // 规划范围较小优先发起减速
     {
         maxSpeed1 = pctlPtr->get_params().maxSpeed * 0.4;
     }
-    else if (slowDown1 >= pctlPtr->get_params().slowBegin) // 周围点云情况减速
+    else if (terrainCloud_minDis < pctlPtr->get_params().localPlanner_slow_dis)
     {
         maxSpeed1 = pctlPtr->get_params().maxSpeed * pctlPtr->get_params().slowdown_rate;
-        if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
-            maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
     }
+
+    if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
+        maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
 }
 
 /**
@@ -342,27 +354,31 @@ void RoboCtrl::pure_persuit()
      * @brief 到点或异常，优先判断并输出状态
      *
      */
-    if (no_odom_flag || pathSize < 2 || get_goal.data || !pathInit || safetyStop)
+    if (no_odom_flag || pathSize < 2 || get_goal.data || !pathInit || safetyStop || near_cloud_stop)
     {
         vehicleYawRate = 0;
         slowStop();
         if (get_goal.data)
         {
-            ROS_WARN("GetGoal!");
+            ROS_ERROR("GetGoal STOP!");
         }
         if (no_odom_flag)
         {
-            ROS_WARN("NoOdom_get!");
+            ROS_ERROR("NoOdom_get STOP!");
         }
         if (safetyStop)
         {
             // 外部请求强制停车
             pathInit = false;
-            ROS_WARN("SafetyStop!");
+            ROS_ERROR("SafetyStop STOP!");
         }
-        if (pathSize < 2 || pathInit)
+        if (pathSize < 2 || !pathInit)
         {
-            ROS_WARN("NoPath_get!");
+            ROS_ERROR("NoPath_get STOP!");
+        }
+        if (near_cloud_stop)
+        {
+            ROS_ERROR("NearCloudStop STOP!");
         }
         return;
     }
