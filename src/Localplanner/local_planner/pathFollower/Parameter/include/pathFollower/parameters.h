@@ -48,7 +48,7 @@ struct Params
     double localPlanner_pathRange;
     double obstacleHeightThre;
     double localPlanner_slow_dis;
-    double vehicle_min_range;
+    double vehicle_stop_range;
 };
 
 class ParamControl

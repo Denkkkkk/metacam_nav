@@ -32,15 +32,12 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.maxSlowAccel = usual_conf["pathFollower"]["maxSlowAccel"].as<double>();
         param.use_getgoal_yaw = usual_conf["pathFollower"]["use_getgoal_yaw"].as<bool>();
         param.getgoal_yaw = usual_conf["pathFollower"]["getgoal_yaw"].as<double>();
+        param.vehicle_stop_range = usual_conf["pathFollower"]["vehicle_stop_range"].as<double>();
 
         param.maxSpeed = usual_conf["usualParams"]["maxSpeed"].as<double>();
 
         param.obstacleHeightThre = usual_conf["localPlanner"]["obstacleHeightThre"].as<double>();
         param.localPlanner_slow_dis = usual_conf["localPlanner"]["slow_dis"].as<double>();
-        // 获取最小长宽
-        double lenth = usual_conf["localPlanner"]["vehicleLength"].as<double>();
-        double width = usual_conf["localPlanner"]["vehicleWidth"].as<double>();
-        param.vehicle_min_range = lenth < width ? lenth : width;
         
     }
     catch (YAML::BadFile &e)
