@@ -40,7 +40,7 @@ struct Params
     bool pathRangeBySpeed;
     bool checkRotObstacle;
     bool checkObstacle;
-    bool use_map;
+    bool use_pcd_map;
     bool use_fail_closemap;
     bool usePathScale;
     bool pathCropByGoal; // 是否根据目标点剪裁路径
@@ -75,9 +75,9 @@ public:
         param.dirThre = param_origin.dirThre + enlarge_dir;
         param_rate.dirThre = double(param.dirThre)/double(param_origin.dirThre);
     }
-    inline void set_use_map(bool flag)
+    inline void set_use_pcd_map(bool flag)
     {
-        param.use_map = flag;
+        param.use_pcd_map = flag;
     }
 
 private:

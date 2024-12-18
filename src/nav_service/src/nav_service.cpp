@@ -184,8 +184,8 @@ int main(int argc, char **argv)
     // 里程计订阅
     ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 2, odomCallback);
     ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 5, reLocalizationCallBack);
-    // 发布way_point
-    ros::Publisher way_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 2);
+    // 发布goal_point
+    ros::Publisher goal_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5);
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
     // 发布导航状态
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 
     ros::Rate loop_rate(10);
     ParamControl nav_service_params;
-    geometry_msgs::PoseStamped way_point;
+    geometry_msgs::PoseStamped goal_point;
     // 初始化nav_model
     nav_model.mode = 0;
     nav_model.points = {};
@@ -274,28 +274,28 @@ int main(int argc, char **argv)
                 stop_pub.publish(stop);
                 const auto &point = nav_path.at(nav_index);
                 // way_point赋值
-                way_point.header.frame_id = "map";
-                way_point.header.stamp = ros::Time::now();
-                way_point.pose.position.x = point.x;
-                way_point.pose.position.y = point.y;
+                goal_point.header.frame_id = "map";
+                goal_point.header.stamp = ros::Time::now();
+                goal_point.pose.position.x = point.x;
+                goal_point.pose.position.y = point.y;
                 if (nav_service_params.get_params().use_prior_path)
                 {
-                    way_point.pose.position.z = 0;
+                    goal_point.pose.position.z = 0;
                     // 一行代码转换yaw角为四元数
-                    way_point.pose.orientation = tf::createQuaternionMsgFromYaw(point.yaw);
+                    goal_point.pose.orientation = tf::createQuaternionMsgFromYaw(point.yaw);
                 }
                 else
                 {
-                    way_point.pose.position.z = -1;
-                    way_point.pose.orientation.x = 0;
-                    way_point.pose.orientation.y = 0;
-                    way_point.pose.orientation.z = 0;
-                    way_point.pose.orientation.w = 1;
+                    goal_point.pose.position.z = -1;
+                    goal_point.pose.orientation.x = 0;
+                    goal_point.pose.orientation.y = 0;
+                    goal_point.pose.orientation.z = 0;
+                    goal_point.pose.orientation.w = 1;
                 }
-                way_point_pub.publish(way_point);
+                goal_point_pub.publish(goal_point);
             }
             // 判断到点状态
-            double dis = sqrt(pow(vehicle_x - way_point.pose.position.x, 2) + pow(vehicle_y - way_point.pose.position.y, 2));
+            double dis = sqrt(pow(vehicle_x - goal_point.pose.position.x, 2) + pow(vehicle_y - goal_point.pose.position.y, 2));
             if (dis < nav_service_params.get_params().endGoalDis)
             {
                 ros::Duration(nav_service_params.get_params().endGoal_stopTime).sleep();
@@ -305,13 +305,13 @@ int main(int argc, char **argv)
                     nav_model.parameters[0] -= 1;
                     nav_index = 0;
                 }
-                ROS_INFO("get point: x: %f, y: %f, z: %f", way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
+                ROS_INFO("get point: x: %f, y: %f, z: %f", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
             }
             else
             {
-                way_point_pub.publish(way_point); // 未到点不断发布
+                goal_point_pub.publish(goal_point); // 未到点不断发布
                 ROS_INFO("points_num: %ld, left_count: %.0f", nav_path.size(), nav_model.parameters[0]);
-                ROS_INFO("Going to Navigation Point: x: %f, y: %f, z: %f", way_point.pose.position.x, way_point.pose.position.y, way_point.pose.position.z);
+                ROS_INFO("Going to Navigation Point: x: %f, y: %f, z: %f", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
             }
         }
         else

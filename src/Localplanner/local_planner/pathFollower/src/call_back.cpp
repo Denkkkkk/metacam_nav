@@ -165,7 +165,6 @@ void RoboCtrl::stopHandler(const std_msgs::Bool::ConstPtr &stop)
 void RoboCtrl::goalPointCallback(const geometry_msgs::PoseStamped::ConstPtr &point)
 {
     goal_point_origin = *point;
-    // use_real_goal = true;
 };
 
 /**

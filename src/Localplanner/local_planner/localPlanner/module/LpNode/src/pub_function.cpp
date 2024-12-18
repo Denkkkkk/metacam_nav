@@ -111,7 +111,7 @@ void LpNode::pubPath_fromStartPaths(int &selectedGroupID)
 
 void LpNode::pub_Map()
 {
-    if (lctlPtr->get_params().use_map)
+    if (lctlPtr->get_params().use_pcd_map)
     {
         pubMap.publish(terrainMapRecord);
     }

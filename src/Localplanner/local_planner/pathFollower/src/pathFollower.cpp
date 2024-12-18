@@ -29,7 +29,7 @@ RoboCtrl::RoboCtrl()
     subOdom = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, &RoboCtrl::odomHandler, this);
     subTerrainCloud = nh.subscribe<sensor_msgs::PointCloud2>("/terrain_map", 5, &RoboCtrl::terrainCloudCallback, this);
     // 是否使用move_base全局规划
-    if (pctlPtr->get_params().use_move_base)
+    if (pctlPtr->get_params().use_map)
     {
         subGlobalPoint = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5, &RoboCtrl::goalPointCallback, this);
         subPathStatus = nh.subscribe("/move_base/GlobalPlanner/goal_plan_status", 1, &RoboCtrl::pathStatusCallback, this);
@@ -243,7 +243,7 @@ void RoboCtrl::pure_persuit()
 
     maxSpeed1 = pctlPtr->get_params().maxSpeed; // 恢复最大速度
     // 全局目标点到最新车体位置的距离
-    if (pctlPtr->get_params().use_move_base)
+    if (pctlPtr->get_params().use_map)
     {
         goal_point = goal_point_origin;
     }
@@ -293,7 +293,7 @@ void RoboCtrl::pure_persuit()
      *
      */
     nav_msgs::Path splined_path;
-    if (pctlPtr->get_params().use_move_base && path_status.data && pctlPtr->get_params().goal_path_direct && (control_mode == MIDPlanning || control_mode == GUIDEPlanning))
+    if (pctlPtr->get_params().use_map && path_status.data && pctlPtr->get_params().goal_path_direct && (control_mode == MIDPlanning || control_mode == GUIDEPlanning))
     {
         splined_path = goal_path;
     }
@@ -309,7 +309,7 @@ void RoboCtrl::pure_persuit()
      * @brief 转弯点减速
      *
      */
-    if (pctlPtr->get_params().use_move_base)
+    if (pctlPtr->get_params().use_map)
     {
         if (control_mode == MIDPlanning && pctlPtr->get_params().use_MIDPlanning_slow)
         {
@@ -602,7 +602,7 @@ void RoboCtrl::pure_persuit()
         }
         pubVehicleSpeed(vehicleSpeed);
 
-        if (pctlPtr->get_params().use_move_base && pctlPtr->get_params().goal_path_direct && path_status.data)
+        if (pctlPtr->get_params().use_map && pctlPtr->get_params().goal_path_direct && path_status.data)
         {
             goal_path_dir.pose.position.x = 0;
             goal_path_dir.pose.position.y = 0;

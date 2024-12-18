@@ -657,10 +657,10 @@ void LpNode::select_from_dir(float &maxScore, int &selectedGroupID)
 
 void LpNode::close_map()
 {
-    if (lctlPtr->get_params().use_map)
+    if (lctlPtr->get_params().use_pcd_map)
     {
         ROS_INFO("Close local map!");
-        lctlPtr->set_use_map(false);
+        lctlPtr->set_use_pcd_map(false);
         close_map_begin = ros::Time::now().toSec();
     }
 }

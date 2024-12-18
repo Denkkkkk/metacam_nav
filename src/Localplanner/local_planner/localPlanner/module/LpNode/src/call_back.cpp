@@ -7,7 +7,7 @@
  */
 void LpNode::closeMapHandler(const std_msgs::Bool::ConstPtr &msg)
 {
-    if (lctlPtr->get_params().use_map && msg->data)
+    if (lctlPtr->get_params().use_pcd_map && msg->data)
     {
         need_close_map = true;
     }
@@ -75,7 +75,7 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     pcl::PointXYZI point;
     // terrainCloudCrop为经过地形裁剪之后的点云
     terrainCloudCrop->clear();
-    if (lctlPtr->get_params().use_map)
+    if (lctlPtr->get_params().use_pcd_map)
     {
         // 对全局地图排除较远的点
         for (int i = 0; i < terrainMapRecord_pcl->points.size(); i++)

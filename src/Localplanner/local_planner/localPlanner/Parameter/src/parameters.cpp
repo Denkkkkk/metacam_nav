@@ -63,8 +63,7 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.goalClearRange = usual_conf["localPlanner"]["goalClearRange"].as<double>() * param_rate.goalClearRange;
         param.slow_dis = usual_conf["localPlanner"]["slow_dis"].as<double>();
         param.obstacleHeightThre = usual_conf["localPlanner"]["obstacleHeightThre"].as<double>() * param_rate.obstacleHeightThre;
-
-        param.use_map = usual_conf["usualParams"]["use_map"].as<bool>();
+        
         param.maxSpeed = usual_conf["usualParams"]["maxSpeed"].as<double>() * param_rate.maxSpeed;
     }
     catch (YAML::BadFile &e)
@@ -107,6 +106,8 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.checkRotObstacle = local_conf["localPlanner"]["checkRotObstacle"].as<bool>();
         param.use_fail_closemap = local_conf["localPlanner"]["use_fail_closemap"].as<bool>();
         param.pathCropByGoal = local_conf["localPlanner"]["pathCropByGoal"].as<bool>();
+        param.use_pcd_map = local_conf["localPlanner"]["use_pcd_map"].as<bool>();
+
     }
     catch (YAML::Exception &e)
     {
@@ -139,7 +140,7 @@ void ParamControl::print_params()
     cout << "maxSpeed: " << param.maxSpeed << endl;
     cout << "vehicleRadius: " << param.vehicleRadius << endl;
     cout << "checkObstacle: " << (param.checkObstacle ? "true" : "false") << endl;
-    cout << "use_map: " << (param.use_map ? "true" : "false") << endl;
+    cout << "use_pcd_map: " << (param.use_pcd_map ? "true" : "false") << endl;
     cout << "close_map_time: " << param.close_map_time << endl;
     cout << "use_fail_closemap: " << (param.use_fail_closemap ? "true" : "false") << endl;
     cout << "adjacentRange: " << param.adjacentRange << endl;

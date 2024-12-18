@@ -25,7 +25,6 @@ struct Params
     double cloudSlow_minSpeed;
     double minSpeed;
     double curvature;
-    int slowBegin;
     double maxAddAccel;
     double maxSlowAccel;
     double yawRateGain;
@@ -41,7 +40,7 @@ struct Params
     double quick_turn_speed;
     double close_direct_speed;
     bool use_virtual_head;
-    bool use_move_base;
+    bool use_map;
     bool use_getgoal_yaw;
     double getgoal_yaw;
     double slowdown_rate;

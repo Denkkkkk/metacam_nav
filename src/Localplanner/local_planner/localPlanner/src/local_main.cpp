@@ -52,13 +52,13 @@ int main(int argc, char **argv)
          *
          */
         // 关闭地图已到时，重新打开地图
-        if (!LocalPanner.lctlPtr->get_params().use_map && !(abs(LocalPanner.close_map_begin - (-1)) < 0.01))
+        if (!LocalPanner.lctlPtr->get_params().use_pcd_map && !(abs(LocalPanner.close_map_begin - (-1)) < 0.01))
         {
             double close_map_end = ros::Time::now().toSec();
             double close_map_duration = close_map_end - LocalPanner.close_map_begin;
             if (close_map_duration > LocalPanner.lctlPtr->get_params().close_map_time)
             {
-                LocalPanner.lctlPtr->set_use_map(true);
+                LocalPanner.lctlPtr->set_use_pcd_map(true);
             }
         }
         else // 外部请求关闭

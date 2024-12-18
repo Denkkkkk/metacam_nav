@@ -35,6 +35,7 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.vehicle_stop_range = usual_conf["pathFollower"]["vehicle_stop_range"].as<double>();
 
         param.maxSpeed = usual_conf["usualParams"]["maxSpeed"].as<double>();
+        param.use_map = usual_conf["usualParams"]["use_map"].as<bool>();
 
         param.obstacleHeightThre = usual_conf["localPlanner"]["obstacleHeightThre"].as<double>();
         param.localPlanner_slow_dis = usual_conf["localPlanner"]["slow_dis"].as<double>();
@@ -72,13 +73,12 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
         param.goal_zero_bias = local_conf["pathFollower"]["goal_zero_bias"].as<double>();
         param.cloudSlow_minSpeed = local_conf["pathFollower"]["cloudSlow_minSpeed"].as<double>();
         param.curvature = local_conf["pathFollower"]["curvature"].as<double>();
-        param.slowBegin = local_conf["pathFollower"]["slowBegin"].as<double>();
         param.goal_path_direct = local_conf["pathFollower"]["goal_path_direct"].as<bool>();
         param.use_MIDPlanning_slow = local_conf["pathFollower"]["use_MIDPlanning_slow"].as<bool>();
         param.MIDPlanning_slow_rate = local_conf["pathFollower"]["MIDPlanning_slow_rate"].as<double>();
         param.MIDPlanning_minSpeed = local_conf["pathFollower"]["MIDPlanning_minSpeed"].as<double>();
         param.use_virtual_head = local_conf["pathFollower"]["use_virtual_head"].as<bool>();
-        param.use_move_base = local_conf["pathFollower"]["use_move_base"].as<bool>();
+
     }
     catch (YAML::BadFile &e)
     {
@@ -123,7 +123,6 @@ void ParamControl::print_params()
     std::cout << "cloudSlow_minSpeed: " << param.cloudSlow_minSpeed << std::endl;
     std::cout << "minSpeed: " << param.minSpeed << std::endl;
     std::cout << "curvature: " << param.curvature << std::endl;
-    std::cout << "slowBegin: " << param.slowBegin << std::endl;
     std::cout << "maxAddAccel: " << param.maxAddAccel << std::endl;
     std::cout << "maxSlowAccel: " << param.maxSlowAccel << std::endl;
     std::cout << "yawRateGain: " << param.yawRateGain << std::endl;
@@ -139,7 +138,7 @@ void ParamControl::print_params()
     std::cout << "quick_turn_speed: " << param.quick_turn_speed << std::endl;
     std::cout << "close_direct_speed: " << param.close_direct_speed << std::endl;
     std::cout << "use_virtual_head: " << (param.use_virtual_head ? "true" : "false") << std::endl;
-    std::cout << "use_move_base: " << (param.use_move_base ? "true" : "false") << std::endl;
+    std::cout << "use_map: " << (param.use_map ? "true" : "false") << std::endl;
     std::cout << "use_getgoal_yaw: " << (param.use_getgoal_yaw ? "true" : "false") << std::endl;
     std::cout << "getgoal_yaw: " << param.getgoal_yaw << std::endl;
     std::cout << "slowdown_rate: " << param.slowdown_rate << std::endl;

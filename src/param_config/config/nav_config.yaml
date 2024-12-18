@@ -14,7 +14,7 @@ pathFollower:
   useCloudSlowDown: true       # 使能根据周围障碍物点云密集情况进行减速
   vehicle_stop_range: 0.45     # 车辆强制停止的障碍物范围,防止客户伸脚进来暴力测试
   slowdown_rate: 0.60          # 根据周围障碍物进行减速的比例
-  minSpeed: 0.1                # 加减速死区阈值
+  minSpeed: 0.16                # 加减速死区阈值
   maxAddAccel: 3.0             # 最大加速加速度
   maxSlowAccel: 4.0            # 最大减速加速度
   use_getgoal_yaw: false       # 允许控制到目标点时的车头朝向
