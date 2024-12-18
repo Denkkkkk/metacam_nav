@@ -2,7 +2,7 @@
     <arg name="lateral_dis" default="1.0" />
     <arg name="lateral_goal_dis" default="3.0" />
     <arg name="reach_goal_dis" default="1.0" />         <!--判断到点后，不再进行恢复模式-->
-    <arg name="default_point_time" default="50.0" />
+    <arg name="default_point_time" default="5.0" />
     <arg name="lateral_time" default="0.8" />
     <arg name="update_begin_dis" default="0.3" />
     <arg name="update_begin_dis_goalPoint" default="0.5" />

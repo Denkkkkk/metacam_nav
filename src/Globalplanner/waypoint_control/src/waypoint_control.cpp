@@ -15,7 +15,7 @@ waypoint_control::waypoint_control()
     subGoalPoint = nh.subscribe("/move_base_simple/goal", 5, &waypoint_control::goalPointCallback, this);
     subGoalPath = nh.subscribe("/move_base/GlobalPlanner/plan", 5, &waypoint_control::goalPathCallback, this);
     subPathStatus = nh.subscribe("/move_base/GlobalPlanner/goal_plan_status", 1, &waypoint_control::pathStatusCallback, this);
-    subOdometry = nh.subscribe("/state_estimation", 5, &waypoint_control::odometryCallback, this);
+    subOdometry = nh.subscribe("/odom_interface", 5, &waypoint_control::odometryCallback, this);
 
     clearCostmap_client = nh.serviceClient<std_srvs::Empty>("/move_base/clear_costmaps");
     pubWayPoint = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 5);
