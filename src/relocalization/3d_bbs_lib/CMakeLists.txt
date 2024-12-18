@@ -48,15 +48,26 @@ if(BUILD_CUDA)
   )
   target_include_directories(gpu_bbs3d PUBLIC ${CUDA_INCLUDE_DIRS} bbs3d/include)
   target_link_libraries(gpu_bbs3d ${CUDA_LIBRARIES})
-
-  install(TARGETS gpu_bbs3d DESTINATION lib)
+  install(
+    TARGETS
+    gpu_bbs3d
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
 else()
   add_library(cpu_bbs3d
   SHARED
   bbs3d/src/cpu_bbs3d/bbs3d.cpp
   bbs3d/src/cpu_bbs3d/voxelmaps.cpp
   bbs3d/src/cpu_bbs3d/voxelmaps_io.cpp)
-
   target_include_directories(cpu_bbs3d PUBLIC  bbs3d/include)
-  install(TARGETS cpu_bbs3d DESTINATION lib)
+  install(
+    TARGETS
+    cpu_bbs3d
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
 endif()
+

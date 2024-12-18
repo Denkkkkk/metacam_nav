@@ -1,6 +1,6 @@
 global_costmap:
    global_frame: map
-   robot_base_frame: TITA/vehicle
+   robot_base_frame: vehicle
    static_map: true
    obstacle_map: true
    rolling_window: false

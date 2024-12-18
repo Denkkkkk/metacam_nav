@@ -74,7 +74,7 @@
         args="$(arg map_file)" />
     </group>
     <!-- move_base -->
-    <include file="$(find move_base)/launch/move_base_goalOnly.launch">
+    <include file="$(find move_base)/launch/move_base_goal.launch">
       <arg name="odom_topic" value="/odom_interface" />
     </include>
   </group>

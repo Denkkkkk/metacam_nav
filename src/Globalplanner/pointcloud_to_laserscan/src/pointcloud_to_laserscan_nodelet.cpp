@@ -57,7 +57,7 @@ namespace pointcloud_to_laserscan {
         // 每隔10次更新一次参数
         if (count % 10 == 0)
         {
-            std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
+            // std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
             try
             {
                 YAML::Node usual_conf = YAML::LoadFile(usual_config);
@@ -88,6 +88,10 @@ namespace pointcloud_to_laserscan {
         private_nh_.param<double>("max_intensity", max_intensity_, 1.0);
 
         private_nh_.param<std::string>("target_frame", target_frame_, "");
+        if (!target_frame_.empty() && target_frame_[0] == '/') {
+        // 删除第一个字符
+        target_frame_.erase(0, 1);
+        }
         private_nh_.param<double>("transform_tolerance", tolerance_, 0.01);
         private_nh_.param<double>("min_height", min_height_, std::numeric_limits<double>::min());
         private_nh_.param<double>("max_height", max_height_, std::numeric_limits<double>::max());

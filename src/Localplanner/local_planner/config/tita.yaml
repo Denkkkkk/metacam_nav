@@ -60,4 +60,4 @@ pathFollower:
   MIDPlanning_slow_rate: 0.7  # 转弯点减速比例
   MIDPlanning_minSpeed: 1.0
   use_virtual_head: false
-  use_move_base: false
+  use_move_base: true  

@@ -126,8 +126,8 @@ void Scan2MapLocation::InitParams()
 {
     private_node_.param<bool>("save_pcd", save_pcd_, true);
 
-    private_node_.param<std::string>("odom_frame", odom_frame_, "Sentry/odom");
-    private_node_.param<std::string>("base_frame", base_frame_, "Sentry/vehicle");
+    private_node_.param<std::string>("odom_frame", odom_frame_, "odom");
+    private_node_.param<std::string>("base_frame", base_frame_, "vehicle");
     private_node_.param<std::string>("map_frame", map_frame_, "map");
     private_node_.param<std::string>("lidar_frame", lidar_frame_, "mid360");
 

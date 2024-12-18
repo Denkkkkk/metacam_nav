@@ -33,7 +33,6 @@ class CloudInterface
     ros::Publisher pubspeed;
     ros::Publisher pubScan;
     ros::Subscriber subOdometry;
-    std::string robotFrame;
     float vehicleRoll = 0, vehiclePitch = 0, vehicleYaw = 0;
     float vehicleX = 0, vehicleY = 0, vehicleZ = 0;
     std::string ns;

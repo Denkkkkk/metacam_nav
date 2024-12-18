@@ -8,7 +8,7 @@ recovery_behavior_enabled: false
 conservative_reset_dist: 3.0
 
 planner_patience: 5.0 #在空间清理操作执行前,留给规划器多长时间来找出一条有效规划.
-planner_frequency: 12.0 #全局规划操作的执行频率
+planner_frequency: 10.0 #全局规划操作的执行频率
 
 oscillation_timeout: 10.0  #执行修复机制前,允许振荡的时长
 oscillation_distance: 0.2  #来回运动在多大距离以上不会被认为是振荡.

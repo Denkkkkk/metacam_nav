@@ -32,7 +32,7 @@ include_directories(
 # target_link_libraries(laserscan_to_pointcloud_node laserscan_to_pointcloud ${catkin_LIBRARIES})
 
 add_library(pointcloud_to_laserscan src/pointcloud_to_laserscan_nodelet.cpp)
-target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES})
+target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES} yaml-cpp)
 
 add_executable(pointcloud_to_laserscan_node src/pointcloud_to_laserscan_node.cpp)
 target_link_libraries(pointcloud_to_laserscan_node pointcloud_to_laserscan ${catkin_LIBRARIES} yaml-cpp)

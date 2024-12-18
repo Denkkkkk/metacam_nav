@@ -18,7 +18,7 @@
     <arg name="get_midPlanner_dis" default="0.5" />     <!-- 同时使用中间点和引导点规划时，被中间点接管的到点阈值-->
     <arg name="mid_point_back" default="0.7" />         <!--转弯点往后发布 -->
     <arg name="no_midPlanner_forward" default="0.4" />  <!-- 不计算中间点的近距离-->
-    <arg name="goal_point_only" default="true" />
+    <arg name="goal_point_only" default="false" />
 
     <node pkg="waypoint_control" type="waypoint_control" name="waypoint_control" output="screen">
         <param name="lateral_dis" value="$(arg lateral_dis)" />

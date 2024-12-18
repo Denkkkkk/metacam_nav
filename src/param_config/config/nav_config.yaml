@@ -2,17 +2,17 @@
 localPlanner:
   vehicleWidth: 0.62        # 车宽
   vehicleLength: 0.6        # 车长
-  add_point_radius: 0.05     # 障碍物最大膨胀半径
+  add_point_radius: 0.1     # 障碍物最大膨胀半径
   minPathRange: 0.62        # 最小规划范围
   goalClearRange: 0.45      # 快到目的地时减小障碍物检测的范围
   slow_dis: 0.95            # 近障减速距离
-  obstacleHeightThre: 0.1  # 地形分析中，intensity的筛选阈值
+  obstacleHeightThre: 0.1   # 地形分析中，intensity的筛选阈值
 
 pathFollower:
   endGoalDis: 0.4              # 到达目标点范围内就停止
   use_closeGoal_direct: false  # 开启到目标点附近的精确到点模式（在靠近目标0.6m时会关闭避障）
   useCloudSlowDown: true       # 使能根据周围障碍物点云密集情况进行减速
-  vehicle_stop_range: 0.5      # 车辆强制停止的障碍物范围,防止客户伸脚进来暴力测试
+  vehicle_stop_range: 0.45     # 车辆强制停止的障碍物范围,防止客户伸脚进来暴力测试
   slowdown_rate: 0.60          # 根据周围障碍物进行减速的比例
   minSpeed: 0.1                # 加减速死区阈值
   maxAddAccel: 3.0             # 最大加速加速度

@@ -12,7 +12,6 @@
 
 CloudInterface::CloudInterface()
 {
-    nhPrivate.param<std::string>("robotFrame", robotFrame, "/vehicle");
     nhPrivate.param<std::string>("ns", ns, "");
     cloud_in_topic = ns + "/cloud_registered";
     cloud_out_topic = ns + "/cloud_interface";

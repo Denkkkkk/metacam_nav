@@ -6,7 +6,6 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find relocalization)/launch/rviz/default.rviz"/>
     <node name="relocalization" pkg="relocalization" type="relocalization" output="screen"
         respawn="true">
-        <rosparam file="$(find relocalization)/param/icp_params.yaml" command="load" />
         <param name="pcd_path" value="$(arg pcd_path)" />
         <param name="config_path" value="$(arg config_path)" />
     </node>
