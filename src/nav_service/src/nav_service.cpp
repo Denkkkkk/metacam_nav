@@ -183,14 +183,14 @@ int main(int argc, char **argv)
     ros::ServiceServer stop_service = nh.advertiseService("/nav/stop", stopCallback);
     // 里程计订阅
     ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 2, odomCallback);
-    ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 2, reLocalizationCallBack);
+    ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 5, reLocalizationCallBack);
     // 发布way_point
     ros::Publisher way_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/way_point", 2);
     // 发布停止
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
     // 发布导航状态
     ros::Publisher nav_status_pub = nh.advertise<std_msgs::String>("/nav/status", 2);
-    ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("need_reloc", 2);
+    ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("need_reloc", 1);
 
     ros::Rate loop_rate(10);
     ParamControl nav_service_params;
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
         loop_rate.sleep();
         ros::spinOnce();
         nav_service_params.update_params();
-        if (nav_service_params.get_params().use_prior_path)
+        if (nav_service_params.get_params().use_prior_path && nav_model.points.empty())
         {
             nav_path = nav_service_params.get_params().prior_path;
         }
@@ -218,7 +218,7 @@ int main(int argc, char **argv)
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
-            if (nav_service_params.get_params().use_relocalization)
+            if (nav_service_params.get_params().use_relocalization && nav_model.points.empty())
             {
                 double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
                 if (!reloc_succeed)
@@ -227,8 +227,8 @@ int main(int argc, char **argv)
                     relo.data = true;
                     nav_relo_pub.publish(relo);
                     ROS_ERROR("Navigation need relocalization!");
-                    // sleep 1.5s
-                    ros::Duration(1.5).sleep();
+                    // sleep 1.0s
+                    ros::Duration(1.0).sleep();
                     continue;
                 }
                 else

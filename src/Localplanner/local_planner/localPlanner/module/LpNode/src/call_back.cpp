@@ -162,32 +162,6 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     *plannerCloud = *terrainCloudDwz;
 }
 
-/**
- * @brief 补充点云(2d雷达)回调
- *
- * @param laserCloud2
- */
-void LpNode::addCloudHandler(const sensor_msgs::PointCloud2ConstPtr &addPoints)
-{
-    addedObstacles->clear();
-    addedObstaclesCrop->clear();
-    pcl::fromROSMsg(*addPoints, *addedObstacles);
-    pcl::PointXYZI point;
-    for (long unsigned int i = 0; i < addedObstacles->points.size(); i++)
-    {
-        point = addedObstacles->points[i];
-        float pointX = point.x;
-        float pointY = point.y;
-        // 计算点云到车体的距离
-        float dis = sqrt((pointX - vehicleX) * (pointX - vehicleX) + (pointY - vehicleY) * (pointY - vehicleY));
-        if (dis < lctlPtr->get_params().adjacentRange && (point.intensity > lctlPtr->get_params().obstacleHeightThre || lctlPtr->get_params().useCost))
-        {
-            addedObstaclesCrop->push_back(point);
-        }
-    }
-    get_addedObstacles = true;
-}
-
 void LpNode::globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
     goal_point = *msg;

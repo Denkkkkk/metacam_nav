@@ -93,7 +93,7 @@ void ParamControl::update_params()
     // 创建静态计数器
     static int count = 1;
     // 每隔10次更新一次参数
-    nh.getParam("localPlanner/pathRange", param.localPlanner_pathRange);
+    nh.param("localPlanner/pathRange", param.localPlanner_pathRange, 3.0);
     if (count % 10 == 0)
     {
         load_config(local_config, usual_config);

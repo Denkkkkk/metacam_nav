@@ -41,8 +41,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     subGoal = nh.subscribe<geometry_msgs::PoseStamped>("/way_point", 5, &LpNode::goalHandler, this);
     // 控制joySpeed
     subSpeed = nh.subscribe<std_msgs::Float32>("/speed", 5, &LpNode::speedHandler, this);
-    // 额加的雷达避障点云，可能来自2D雷达或其他传感器
-    subAddCloud = nh.subscribe<sensor_msgs::PointCloud2>("/laser_point", 5, &LpNode::addCloudHandler, this);
     // 关闭局部地图标志位
     subCloseMap = nh.subscribe<std_msgs::Bool>("/close_map", 2, &LpNode::closeMapHandler, this);
     subGlobal_point = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 2, &LpNode::globalPointHandler, this);
@@ -52,7 +50,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     pubPannerAtuCloud = nh.advertise<sensor_msgs::PointCloud2>("/PannerAtuCloud", 5); // 实际参与规划的点云
     pubMap = nh.advertise<sensor_msgs::PointCloud2>("/PannerMap", 5);                 // 实际参与规划的点云
     pubSlowDown = nh.advertise<std_msgs::Float32>("/slow_down", 1);
-    pubMarker = nh.advertise<visualization_msgs::Marker>("/Goal_noClear_marker", 1);
     pubVirHeadDir = nh.advertise<geometry_msgs::PoseStamped>("/virture_head", 5);
     pubGlobalPath = nh.advertise<nav_msgs::Path>("/path_global", 2);
     pubAddPoints = nh.advertise<sensor_msgs::PointCloud2>("/add_points", 5);
@@ -183,7 +180,7 @@ void LpNode::local_planner()
         {
             lctlPtr->set_enlarge_dirThre(15);
         }
-        else if (pathRange <= 1.0)
+        else if (pathRange <= 1.2)
         {
             lctlPtr->set_enlarge_dirThre(5);
         }
@@ -274,13 +271,15 @@ void LpNode::local_planner()
         PannerAtuCloud2.header.stamp = ros::Time().fromSec(odomTime);
         PannerAtuCloud2.header.frame_id = "map";
         pubPannerAtuCloud.publish(PannerAtuCloud2);
-        
+
         // 发布PannerAtuCloud中最近的障碍物的距离
         float min_distance = 6666; // 初始化为一个大值
-        for (const auto& point : PannerAtuCloud->points) {
+        for (const auto &point : PannerAtuCloud->points)
+        {
             float distance = sqrt(point.x * point.x + point.y * point.y);
-            if (distance < min_distance && point.intensity > lctlPtr->get_params().obstacleHeightThre) {
-            min_distance = distance;
+            if (distance < min_distance && point.intensity > lctlPtr->get_params().obstacleHeightThre)
+            {
+                min_distance = distance;
             }
         }
         std_msgs::Float32 min_distance_msg;
@@ -315,11 +314,16 @@ void LpNode::local_planner()
             pub_allFreePath(); // 以车头方向为参考系，发布所有的无障碍物路径
 #endif
             pathFound = true;
-            // 确认找到路之后，如果在最小范围内找到了最优路径，就把add_point_radius设置为0.22
-            if (pathRange <= lctlPtr->get_params().minPathRange + 2 * lctlPtr->get_params().pathRangeStep)
+            // 确认找到路之后，如果在最小范围内找到了最优路径，就把add_point_radius设置为0.75倍
+            if (pathRange <= lctlPtr->get_params().minPathRange + 3 * lctlPtr->get_params().pathRangeStep)
             {
                 lctlPtr->set_add_point_radius(0.75);
                 ROS_INFO("set_add_point_radius rate: 0.8 .");
+            }
+            else if (pathRange <= lctlPtr->get_params().minPathRange + lctlPtr->get_params().pathRangeStep)
+            {
+                lctlPtr->set_add_point_radius(0.5);
+                ROS_INFO("set_add_point_radius rate: 0.5 .");
             }
             else
             {
@@ -345,7 +349,7 @@ void LpNode::local_planner()
             if (fabs(pathRange - lctlPtr->get_params().minPathRange) < 0.01)
             {
                 // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.8倍
-                lctlPtr->set_add_point_radius(0.75);
+                lctlPtr->set_add_point_radius(0.5);
                 break;
             }
             // 先把规模调成0
@@ -362,7 +366,14 @@ void LpNode::local_planner()
                 pathScale = lctlPtr->get_params().minPathScale;
                 if (pathRange > lctlPtr->get_params().minPathRange)
                 {
-                    pathRange -= lctlPtr->get_params().pathRangeStep;
+                    if (pathRange > 2.0) // 开始的规划范围快速衰减
+                    {
+                        pathRange -= 2 * lctlPtr->get_params().pathRangeStep;
+                    }
+                    else
+                    {
+                        pathRange -= lctlPtr->get_params().pathRangeStep;
+                    }
                     if (pathRange < lctlPtr->get_params().minPathRange)
                         pathRange = lctlPtr->get_params().minPathRange;
                 }

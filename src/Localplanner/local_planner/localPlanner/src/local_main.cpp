@@ -17,12 +17,14 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "localPlanner");
     LpNode LocalPanner;          // 实例化局部规划器
     LocalPanner.read_pathfile(); // 初始化容器，并读取保存各个path数据文件
-    ros::Rate rate(10);
+    ros::Rate rate(12);
     bool status = ros::ok();
 
     while (status)
     {
         auto start = std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         /**
          * @brief 外部参数更新，选择地图后再完成回调
          *
@@ -78,7 +80,10 @@ int main(int argc, char **argv)
             LocalPanner.transform_allCloud();   // 转换所有点云到车头x方向的车体坐标系，并按照距离过滤
             LocalPanner.pathRange_from_speed(); // 根据速度动态调整路径范围
             LocalPanner.transform_goal();       // 在自动模式下, 将目标点转移到车体坐标系下,并记录下目标相对车体的yaw角
-            LocalPanner.local_planner();        // 正式进行路径规划
+            end = std::chrono::high_resolution_clock::now();
+            duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            ROS_INFO("run one localPlanner flag1 time: %f ms", duration.count() / 1000.0);
+            LocalPanner.local_planner(); // 正式进行路径规划
             if (!pathFound)
             {
                 if (LocalPanner.lctlPtr->get_params().use_fail_closemap)
@@ -86,17 +91,20 @@ int main(int argc, char **argv)
                 LocalPanner.fail_local_planner(); // 找不到路径，发布一个原地的路径点
             }
         }
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        end = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         // 静态变量降低打印频率
-        static int print_count = 0;
-        if (print_count % 10 == 0)
-        {
-            ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
-            print_count = 0;
-        }
-        print_count++;
-        
+        // static int print_count = 0;
+        // if (print_count % 10 == 0)
+        // {
+        //     ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
+        //     print_count = 0;
+        // }
+        // print_count++;
+        // auto end = std::chrono::high_resolution_clock::now();
+        // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
+
         status = ros::ok();
         rate.sleep();
     }

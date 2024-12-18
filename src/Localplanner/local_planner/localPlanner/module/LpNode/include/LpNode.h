@@ -49,7 +49,6 @@ private:
     // 发布减速命令
     ros::Publisher pubSlowDown;
     ros::Publisher pubMap;
-    ros::Publisher pubMarker;
     ros::Publisher pubVirHeadDir;
     ros::Publisher pubAddPoints;
     std::string usual_pcd_path;
@@ -75,8 +74,7 @@ private:
     void goalHandler(const geometry_msgs::PoseStamped::ConstPtr &goal);
     // 控制joySpeed
     void speedHandler(const std_msgs::Float32::ConstPtr &speed);
-    // 额加的雷达避障信息
-    void addCloudHandler(const sensor_msgs::PointCloud2ConstPtr &addPoints);
+    
     void virHeadDirHandler(const std_msgs::Float32::ConstPtr &msg);
     void closeMapHandler(const std_msgs::Bool::ConstPtr &msg);
     void globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg);
