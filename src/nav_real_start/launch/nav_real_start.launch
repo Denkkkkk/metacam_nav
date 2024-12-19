@@ -8,7 +8,6 @@
     <arg name="vehicleX" default="0" />
     <arg name="vehicleY" default="0" />
     <arg name="vehicleYaw" default="0" />
-    <arg name="min_intensity_global" default="0.17" />
     <param name="use_sim_time" value="false" />
 
     <include file="$(find map_to_odom)/launch/map_to_odom.launch">
@@ -19,7 +18,7 @@
     </include>
 
     <!-- 启动Autonomous Exploration Development Environment环境，加载地形分析，局部导航 -->
-    <include file="$(find local_planner)/launch/system_rmuc.launch">
+    <include file="$(find local_planner)/launch/system_lplanner.launch">
         <arg name="ns" value="$(arg ns)" />
         <arg name="vehicleX" value="$(arg vehicleX)" />
         <arg name="vehicleY" value="$(arg vehicleY)" />
@@ -28,17 +27,10 @@
 
     <!-- 启动全局规划 -->
     <group if="$(arg use_global_planner)">
-        <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-            <arg name="min_intensity" value="$(arg min_intensity_global)" />
-        </include>
-        <!-- Map server -->
-        <group if="$(arg use_map)">
-            <node pkg="map_server" name="map_server" type="map_server" respawn="true"
-                args="$(arg map_file)" />
-        </group>
-        <!-- move_base -->
-        <include file="$(find move_base)/launch/move_base_goal.launch">
-            <arg name="odom_topic" value="/Odometry" />
+        <include file="$(find nav_gplanner_start)/launch/system_gplanner.launch">
+        <arg name="ns" value="$(arg ns)" />
+        <arg name="use_map" value="$(arg use_map)" />
+        <arg name="map_file" value="$(arg map_file)" />
         </include>
     </group>
 
@@ -53,6 +45,8 @@
 
     <!-- 启动刑天机器人的串口通信 -->
     <!-- <include file="$(find nav_serial_ctrl)/launch/nav_serial_ctrl.launch" /> -->
+
+    <include file="$(find waypoint_control)/launch/waypoint_control.launch"/>
 
     <!-- 补充的tf转换-->
     <include file="$(find nav_real_start)/launch/tf_real.launch">

@@ -18,7 +18,6 @@
   <!-- Autonomous Exploration Development Environment参数 -->
   <arg name="world_name" default="black" />
   <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
-  <arg name="min_intensity_global" default="0.25" />
 
   <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">
@@ -36,7 +35,7 @@
   </include>
 
   <!-- 启动Autonomous Exploration Development Environment环境，加载地形分析，局部导航 -->
-  <include file="$(find local_planner)/launch/system_rmuc.launch">
+  <include file="$(find local_planner)/launch/system_lplanner.launch">
     <arg name="ns" value="$(arg ns)" />
     <arg name="vehicleX" value="$(arg vehicleX)" />
     <arg name="vehicleY" value="$(arg vehicleY)" />
@@ -61,22 +60,6 @@
   <group if="$(arg use_rviz)">
     <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
       args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
-  </group>
-
-  <!-- 启动全局规划 -->
-  <group if="$(arg use_global_planner)">
-    <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
-      <arg name="min_intensity" value="$(arg min_intensity_global)" />
-    </include>
-    <!-- Map server -->
-    <group if="$(arg use_map)">
-      <node pkg="map_server" name="map_server" type="map_server" respawn="true"
-        args="$(arg map_file)" />
-    </group>
-    <!-- move_base -->
-    <include file="$(find move_base)/launch/move_base_goal.launch">
-      <arg name="odom_topic" value="/odom_interface" />
-    </include>
   </group>
 
   <include file="$(find lio_interface)/launch/lio_interface.launch">

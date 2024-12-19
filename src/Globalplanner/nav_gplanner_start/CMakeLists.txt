@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(nav_start_global)
+project(nav_gplanner_start)
 
 find_package(catkin REQUIRED COMPONENTS
         roscpp
@@ -19,4 +19,12 @@ catkin_package(
         sensor_msgs
         pcl_ros
         geometry_msgs
+)
+
+install(DIRECTORY launch/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
+
+install(DIRECTORY config/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 )

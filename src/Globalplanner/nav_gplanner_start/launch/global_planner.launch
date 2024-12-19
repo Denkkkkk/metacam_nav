@@ -1,6 +1,6 @@
 <launch>
    <!-- Arguments -->
-   <arg name="ns" default="TITA" />
+   <arg name="ns" default="" />
    <arg name="map_file" default="$(find move_base)/map/rmuc.yaml" />
    <arg name="open_rviz" default="true" />
 

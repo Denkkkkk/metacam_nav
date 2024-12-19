@@ -1,7 +1,7 @@
 global_costmap:
    global_frame: map
    robot_base_frame: vehicle
-   static_map: true
+   static_map: false
    obstacle_map: true
    rolling_window: false
    transform_tolerance: 1.0
