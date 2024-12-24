@@ -88,7 +88,7 @@ namespace move_base {
         planner_plan_ = new std::vector<geometry_msgs::PoseStamped>();
         latest_plan_ = new std::vector<geometry_msgs::PoseStamped>();
         controller_plan_ = new std::vector<geometry_msgs::PoseStamped>();
-
+        
         // set up the planner's thread
         planner_thread_ = new boost::thread(boost::bind(&MoveBase::planThread, this));
 
@@ -875,7 +875,7 @@ namespace move_base {
         return hypot(p1.pose.position.x - p2.pose.position.x, p1.pose.position.y - p2.pose.position.y);
     }
 
-    bool MoveBase::executeCycle(geometry_msgs::PoseStamped &goal)
+    bool MoveBase:: executeCycle(geometry_msgs::PoseStamped &goal)
     {
         boost::recursive_mutex::scoped_lock ecl(configuration_mutex_);
         // we need to be able to publish velocity commands

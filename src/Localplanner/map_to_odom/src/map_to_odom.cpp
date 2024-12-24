@@ -30,12 +30,19 @@ map_to_odom::map_to_odom()
     subInitOdom = nh.subscribe<std_msgs::Bool>("/init_odom", 2, &map_to_odom::initOdomCallBack, this);
     subStop = nh.subscribe<std_msgs::Bool>("/stop", 5, &map_to_odom::stopCallBack, this);
 
-    map_to_odom_trans.pose.position.x = defaultX;
-    map_to_odom_trans.pose.position.y = defaultY;
-    map_to_odom_trans.pose.position.z = 0;
+    odom_to_map_trans.pose.position.x = defaultX;
+    odom_to_map_trans.pose.position.y = defaultY;
+    odom_to_map_trans.pose.position.z = 0;
     geometry_msgs::Quaternion geoQuat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, defaultYaw);
-    map_to_odom_trans.pose.orientation = geoQuat;
+    odom_to_map_trans.pose.orientation = geoQuat;
     actu_odom = Eigen::Isometry3d::Identity();
+}
+
+void map_to_odom::pub_odom_to_map()
+{
+    odom_to_map_trans.header.stamp = ros::Time::now();
+    odom_to_map_trans.header.frame_id = "map";
+    pubOdomToMapPose.publish(odom_to_map_trans);
 }
 
 void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
@@ -68,11 +75,11 @@ void map_to_odom::initOdomCallBack(const std_msgs::Bool::ConstPtr &msg)
 {
     if (msg->data)
     {
-        map_to_odom_trans.pose.position.x = defaultX;
-        map_to_odom_trans.pose.position.y = defaultY;
-        map_to_odom_trans.pose.position.z = 0;
+        odom_to_map_trans.pose.position.x = defaultX;
+        odom_to_map_trans.pose.position.y = defaultY;
+        odom_to_map_trans.pose.position.z = 0;
         geometry_msgs::Quaternion geoQuat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, defaultYaw);
-        map_to_odom_trans.pose.orientation = geoQuat;
+        odom_to_map_trans.pose.orientation = geoQuat;
     }
 }
 
@@ -135,14 +142,14 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     // 计算odom到map的坐标变换
     Eigen::Isometry3d odom_to_map = vehicle_to_map * vehicle_to_odom.inverse();
     Eigen::Vector3d translationVector = odom_to_map.translation();
-    map_to_odom_trans.pose.position.x = translationVector.x();
-    map_to_odom_trans.pose.position.y = translationVector.y();
-    map_to_odom_trans.pose.position.z = translationVector.z();
+    odom_to_map_trans.pose.position.x = translationVector.x();
+    odom_to_map_trans.pose.position.y = translationVector.y();
+    odom_to_map_trans.pose.position.z = translationVector.z();
     Eigen::Quaterniond quat = Eigen::Quaterniond(odom_to_map.rotation());
-    map_to_odom_trans.pose.orientation.x = quat.x();
-    map_to_odom_trans.pose.orientation.y = quat.y();
-    map_to_odom_trans.pose.orientation.z = quat.z();
-    map_to_odom_trans.pose.orientation.w = quat.w();
+    odom_to_map_trans.pose.orientation.x = quat.x();
+    odom_to_map_trans.pose.orientation.y = quat.y();
+    odom_to_map_trans.pose.orientation.z = quat.z();
+    odom_to_map_trans.pose.orientation.w = quat.w();
 
     // 发布想要的vehicle到map的坐标变换
     wantVehicleToMap.header.stamp = ros::Time::now();
@@ -164,10 +171,7 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
     pubvehicleToOdom.publish(vehicleToOdom);
 
     // 发布计算得到的odom到map的坐标变换
-    countOdomToMap.header.stamp = ros::Time::now();
-    countOdomToMap.header.frame_id = "map";
-    countOdomToMap.pose = map_to_odom_trans.pose;
-    pubOdomToMapPose.publish(countOdomToMap);
+    pub_odom_to_map();
 
     // 发布重定位后的当前目标点
     geometry_msgs::PoseStamped goal_point = *vTm_msg;
@@ -198,14 +202,16 @@ int main(int argc, char **argv)
     while (status)
     {
         ros::spinOnce();
+        // 发布
+        map_to_odom.pub_odom_to_map();
         // 根据位姿信息发布tf坐标变换
         odomTrans.stamp_ = ros::Time::now();
         odomTrans.frame_id_ = "map";
         odomTrans.child_frame_id_ = map_to_odom.odom_frame;
-        geometry_msgs::PoseStamped map_to_odom_trans1 = map_to_odom.map_to_odom_trans;
-        geometry_msgs::Quaternion geoQuat1 = map_to_odom_trans1.pose.orientation;
+        geometry_msgs::PoseStamped odom_to_map_trans1 = map_to_odom.odom_to_map_trans;
+        geometry_msgs::Quaternion geoQuat1 = odom_to_map_trans1.pose.orientation;
         odomTrans.setRotation(tf::Quaternion(geoQuat1.x, geoQuat1.y, geoQuat1.z, geoQuat1.w));
-        odomTrans.setOrigin(tf::Vector3(map_to_odom_trans1.pose.position.x, map_to_odom_trans1.pose.position.y, map_to_odom_trans1.pose.position.z));
+        odomTrans.setOrigin(tf::Vector3(odom_to_map_trans1.pose.position.x, odom_to_map_trans1.pose.position.y, odom_to_map_trans1.pose.position.z));
         tfBroadcaster.sendTransform(odomTrans);
         status = ros::ok();
         rate.sleep();

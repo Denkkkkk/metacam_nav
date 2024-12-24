@@ -28,7 +28,7 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 
-#include "Eigen/Core"
+#include <Eigen/Dense>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -59,7 +59,7 @@ private:
     int get_relocal_num = 0;
     bool tranf_odom = false;
     geometry_msgs::PoseStamped wantVehicleToMap;
-    geometry_msgs::PoseStamped countOdomToMap;
+
     geometry_msgs::PoseStamped vehicleToOdom;
     int restart_mapping_last = 0;
     bool safetyStop;
@@ -67,14 +67,16 @@ private:
     Eigen::Isometry3d actu_odom;
     bool get_odom = false;
 
-public:
-    map_to_odom();
-    ~map_to_odom() = default;
-    geometry_msgs::PoseStamped map_to_odom_trans;
-    std::string odom_frame;
-    std::string vehicle_frame;
     void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &vTm_msg);
     void initOdomCallBack(const std_msgs::Bool::ConstPtr &initOdom_msg);
     void stopCallBack(const std_msgs::Bool::ConstPtr &stop);
     void odomCallBack(const nav_msgs::Odometry::ConstPtr &msg);
+
+public:
+    map_to_odom();
+    ~map_to_odom() = default;
+    geometry_msgs::PoseStamped odom_to_map_trans;
+    std::string odom_frame;
+    std::string vehicle_frame;
+    void pub_odom_to_map();
 };

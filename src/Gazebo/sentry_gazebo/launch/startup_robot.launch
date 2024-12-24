@@ -67,6 +67,8 @@
     <arg name="ns" value="$(arg ns)" />
   </include>
 
+  <include file="$(find debug_node)/launch/debug_node.launch" />
+
   <!--启动重定位-->
   <!-- <include file="$(find relocalization)/launch/relocalization.launch" /> -->
 </launch>

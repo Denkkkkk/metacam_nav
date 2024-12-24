@@ -1,0 +1,3 @@
+<launch>
+    <node name="debug_node" pkg="debug_node" type="debug_node" output="screen" respawn="true" />
+</launch>

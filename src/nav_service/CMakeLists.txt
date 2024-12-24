@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10)
 project(nav_service)
 
 add_subdirectory(Parameter)
@@ -21,19 +21,12 @@ catkin_package(
 
 include_directories(
         include
-        /usr/local/include # Location when using 'make system_install'
-        /usr/include # More usual location (e.g. when installing using a package)
         ${catkin_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIR}
 )
-link_directories(
-  /usr/local/lib # Location when using 'make system_install'
-  /usr/lib # More usual location (e.g. when installing using a package)
-)
-
 
 add_executable(nav_service src/nav_service.cpp)
-add_dependencies(nav_service ${catkin_EXPORTED_TARGETS})
-target_link_libraries(nav_service ${catkin_LIBRARIES} nav_service_param)
+target_link_libraries(nav_service ${catkin_LIBRARIES} ${EIGEN3_LIBS} nav_service_param)
 
 install(
         TARGETS

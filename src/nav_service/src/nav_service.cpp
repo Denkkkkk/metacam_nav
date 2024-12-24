@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "types.h"
+#include <Eigen/Dense>
 #include <json.hpp>
 #include <queue>
 
@@ -17,11 +18,14 @@ bool is_running = false;
 NavigationModel nav_model;
 double vehicle_x = 0.0;
 double vehicle_y = 0.0;
-int nav_index = 0;
+int *nav_index;
+int queue_path_index = 0;
+int prior_path_index = 0;
 std::vector<Coordinate> nav_path;
 std::vector<Coordinate> nav_mode_path;
 double get_relocal_begin = -100;
 bool reloc_succeed = false;
+Eigen::Isometry3d odom_to_map;
 
 std::vector<Coordinate> get_path_from_nav_model(const NavigationModel &nav_model)
 {
@@ -55,7 +59,23 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
         nav_model = json_data.get<NavigationModel>();
         res.success = true;
         res.message = "get navigation config successfully!";
-        nav_index = 0;
+        // 将全部点都乘odom_to_map，装回到nav_model
+        if (nav_model.points.size() > 0 && nav_model.points[0].x != 99999)
+        {
+            for (auto &point : nav_model.points)
+            {
+                Eigen::Vector3d point_vector(point.x, point.y, point.z);
+                point_vector = odom_to_map * point_vector;
+                point.x = point_vector.x();
+                point.y = point_vector.y();
+                point.z = point_vector.z();
+            }
+        }
+
+        if (queue_path_index >= nav_model.points.size())
+        {
+            queue_path_index = nav_model.points.size() - 1;
+        }
     }
     else
     {
@@ -150,10 +170,10 @@ void navStatusPub(ros::Publisher &nav_status_pub)
     NavStatus nav_status;
     nav_status.version = "v1.4.8";
     nav_status.is_running = is_running;
-    nav_status.target_index = nav_index;
+    nav_status.target_index = *nav_index;
     if (!nav_path.empty())
     {
-        const auto &point = nav_path.at(nav_index);
+        const auto &point = nav_path.at(nav_status.target_index);
         nav_status.target_pose = {point.x, point.y, point.z, 0, 0, 0};
     }
     else
@@ -174,6 +194,23 @@ void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
     reloc_succeed = true;
 }
 
+void odomToMapCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
+{
+    odom_to_map.setIdentity(); // 重置为单位矩阵，否则会发生累积变换
+    // 将里程计转成Eigen::Isometry3d
+    double roll, pitch, yaw;
+    geometry_msgs::Quaternion geoQuat = msg->pose.orientation;
+    tf::Matrix3x3(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w)).getEulerYPR(yaw, pitch, roll);
+    Eigen::Matrix3d odom_to_map_rotation;
+    odom_to_map_rotation = Eigen::AngleAxisd(yaw, Eigen::Vector3d::UnitZ()) *
+                           Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()) *
+                           Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitX());
+    odom_to_map.rotate(odom_to_map_rotation);
+    odom_to_map.pretranslate(Eigen::Vector3d(msg->pose.position.x,
+                                             msg->pose.position.y,
+                                             msg->pose.position.z));
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "nav_service");
@@ -184,6 +221,7 @@ int main(int argc, char **argv)
     // 里程计订阅
     ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 2, odomCallback);
     ros::Subscriber subReLocal = nh.subscribe<geometry_msgs::PoseStamped>("/relocalization", 5, reLocalizationCallBack);
+    ros::Subscriber subOdomToMap = nh.subscribe<geometry_msgs::PoseStamped>("/odomToMapPose", 5, odomToMapCallBack);
     // 发布goal_point
     ros::Publisher goal_point_pub = nh.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 5);
     // 发布停止
@@ -199,26 +237,30 @@ int main(int argc, char **argv)
     nav_model.mode = 0;
     nav_model.points = {};
     nav_model.parameters = {0};
+    // 初始化odom_to_map为单位矩阵
+    odom_to_map.setIdentity();
 
     while (ros::ok())
     {
         loop_rate.sleep();
         ros::spinOnce();
         nav_service_params.update_params();
-        if (nav_service_params.get_params().use_prior_path && nav_model.points.empty())
+        if (nav_service_params.get_params().use_prior_path && (!nav_model.points.empty() && abs(nav_model.points[0].x - 99999) < 0.1))
         {
             nav_path = nav_service_params.get_params().prior_path;
+            nav_index = &prior_path_index;
         }
         else
         {
             nav_path = get_path_from_nav_model(nav_model);
+            nav_index = &queue_path_index;
         }
         navStatusPub(nav_status_pub); // 发布导航状态
 
         // 导航点取出并发布到way_point，到点后再指向下一个
         if (is_running)
         {
-            if (nav_service_params.get_params().use_relocalization && nav_model.points.empty())
+            if (nav_service_params.get_params().use_relocalization && (!nav_model.points.empty() && abs(nav_model.points[0].x - 99999) < 0.1))
             {
                 double get_relocal_duration = ros::Time::now().toSec() - get_relocal_begin;
                 if (!reloc_succeed)
@@ -272,13 +314,13 @@ int main(int argc, char **argv)
                 std_msgs::Bool stop;
                 stop.data = false;
                 stop_pub.publish(stop);
-                const auto &point = nav_path.at(nav_index);
+                const auto &point = nav_path.at(*nav_index);
                 // way_point赋值
                 goal_point.header.frame_id = "map";
                 goal_point.header.stamp = ros::Time::now();
                 goal_point.pose.position.x = point.x;
                 goal_point.pose.position.y = point.y;
-                if (nav_service_params.get_params().use_prior_path)
+                if (nav_service_params.get_params().use_prior_path && (!nav_model.points.empty() && abs(nav_model.points[0].x - 99999) < 0.1))
                 {
                     goal_point.pose.position.z = 0;
                     // 一行代码转换yaw角为四元数
@@ -299,11 +341,14 @@ int main(int argc, char **argv)
             if (dis < nav_service_params.get_params().endGoalDis)
             {
                 ros::Duration(nav_service_params.get_params().endGoal_stopTime).sleep();
-                nav_index += 1;
-                if (nav_index == nav_path.size())
+                *nav_index += 1;
+                if (*nav_index == nav_path.size())
                 {
-                    nav_model.parameters[0] -= 1;
-                    nav_index = 0;
+                    if (nav_model.parameters[0] >= 0)
+                    {
+                        nav_model.parameters[0] -= 1;
+                    }
+                    *nav_index = 0;
                 }
                 ROS_INFO("get point: x: %f, y: %f, z: %f", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
             }
