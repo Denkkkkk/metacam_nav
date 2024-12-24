@@ -47,8 +47,8 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
 
     // 发布局部规划路径
     pubPath = nh.advertise<nav_msgs::Path>("/local_path", 2);
-    pubPannerAtuCloud = nh.advertise<sensor_msgs::PointCloud2>("/PannerAtuCloud", 5); // 实际参与规划的点云
-    pubMap = nh.advertise<sensor_msgs::PointCloud2>("/PannerMap", 5);                 // 实际参与规划的点云
+    pubPannerAtuCloud = nh.advertise<sensor_msgs::PointCloud2>("/PannerAtuCloud", 5);       // 实际参与规划的点云
+    pubMap = nh.advertise<sensor_msgs::PointCloud2>("/PannerMap", 1, true);                
     pubSlowDown = nh.advertise<std_msgs::Float32>("/slow_down", 1);
     pubVirHeadDir = nh.advertise<geometry_msgs::PoseStamped>("/virture_head", 5);
     pubGlobalPath = nh.advertise<nav_msgs::Path>("/path_global", 2);

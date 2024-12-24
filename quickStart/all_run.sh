@@ -62,7 +62,7 @@ else
           gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
           source /opt/ros/$ROS_DISTRO/setup.bash;
           source devel/setup.bash;
-          roslaunch sentry_gazebo startup_robot_a.launch; exec bash"
+          roslaunch sentry_gazebo startup_robot_rm2024.launch; exec bash"
         else
           gnome-terminal --tab --title="仿真环境"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
           source /opt/ros/$ROS_DISTRO/setup.bash;

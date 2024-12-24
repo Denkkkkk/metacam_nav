@@ -6,6 +6,7 @@ find_package(catkin REQUIRED
             roscpp
             nav_msgs
             tf2
+            roslib
         )
 
 find_package(Bullet REQUIRED)

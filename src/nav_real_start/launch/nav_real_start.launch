@@ -28,9 +28,8 @@
     <!-- 启动全局规划 -->
     <group if="$(arg use_global_planner)">
         <include file="$(find nav_gplanner_start)/launch/system_gplanner.launch">
-        <arg name="ns" value="$(arg ns)" />
-        <arg name="use_map" value="$(arg use_map)" />
-        <arg name="map_file" value="$(arg map_file)" />
+            <arg name="ns" value="$(arg ns)" />
+            <arg name="use_map" value="$(arg use_map)" />
         </include>
     </group>
 

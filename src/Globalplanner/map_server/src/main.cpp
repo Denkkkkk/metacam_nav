@@ -46,6 +46,7 @@
 #include "ros/console.h"
 #include "ros/ros.h"
 #include "yaml-cpp/yaml.h"
+#include "ros/package.h"
 
 #ifdef HAVE_YAMLCPP_GT_0_5_0
 // The >> operator disappeared in yaml-cpp 0.5, so this function is
@@ -61,7 +62,7 @@ class MapServer
 {
 public:
     /** Trivial constructor */
-    MapServer(const std::string &fname, double res)
+    MapServer(const std::string &fname)
     {
         std::string mapfname = "";
         double origin[3];
@@ -84,20 +85,9 @@ public:
         // Latched publisher for data
         map_pub_ = nh_.advertise<nav_msgs::OccupancyGrid>("/map", 1, true);
 
-        deprecated_ = (res != 0);
-        if (!deprecated_)
+        if (!loadMapFromYaml(fname))
         {
-            if (!loadMapFromYaml(fname))
-            {
-                exit(-1);
-            }
-        }
-        else
-        {
-            if (!loadMapFromParams(fname, res))
-            {
-                exit(-1);
-            }
+            exit(-1);
         }
     }
 
@@ -107,7 +97,6 @@ private:
     ros::Publisher metadata_pub_;
     ros::ServiceServer get_map_service_;
     ros::ServiceServer change_map_srv_;
-    bool deprecated_;
     std::string frame_id_;
 
     /** Callback invoked when someone requests our service */
@@ -173,22 +162,6 @@ private:
         metadata_pub_.publish(meta_data_message_);
         map_pub_.publish(map_resp_.map);
         return true;
-    }
-
-    /** Load a map using the deprecated method
-     */
-    bool loadMapFromParams(std::string map_file_name, double resolution)
-    {
-        ros::NodeHandle private_nh("~");
-        int negate;
-        double occ_th;
-        double free_th;
-        double origin[3];
-        private_nh.param("negate", negate, 0);
-        private_nh.param("occupied_thresh", occ_th, 0.65);
-        private_nh.param("free_thresh", free_th, 0.196);
-        origin[0] = origin[1] = origin[2] = 0.0;
-        return loadMapFromValues(map_file_name, resolution, negate, occ_th, free_th, origin, TRINARY);
     }
 
     /** Load a map given a path to a yaml file
@@ -329,21 +302,22 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "map_server", ros::init_options::AnonymousName);
     ros::NodeHandle nh("~");
-    if (argc != 3 && argc != 2)
+    std::string map_file_name;
+    std::string usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
+    try
     {
-        ROS_ERROR("%s", USAGE);
-        exit(-1);
+        YAML::Node usual_conf = YAML::LoadFile(usual_config);
+        map_file_name = usual_conf["globalPlanner"]["map_file_name"].as<std::string>();
     }
-    if (argc != 2)
+    catch (YAML::BadFile &e)
     {
-        ROS_WARN("Using deprecated map server interface. Please switch to new interface.");
+        std::cerr << "map_server YAML Parsing Error: " << e.what() << std::endl;
     }
-    std::string fname(argv[1]);
-    double res = (argc == 2) ? 0.0 : atof(argv[2]);
+    std::string fname = ros::package::getPath("param_config") + "/map/" + map_file_name;
 
     try
     {
-        MapServer ms(fname, res);
+        MapServer ms(fname);
         ros::spin();
     }
     catch (std::runtime_error &e)

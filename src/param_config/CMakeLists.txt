@@ -10,3 +10,7 @@ install(DIRECTORY config/
 install(DIRECTORY launch/
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
+
+install(DIRECTORY map/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/map
+)

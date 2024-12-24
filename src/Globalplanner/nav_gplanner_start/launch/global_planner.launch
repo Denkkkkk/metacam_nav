@@ -1,7 +1,6 @@
 <launch>
    <!-- Arguments -->
    <arg name="ns" default="" />
-   <arg name="map_file" default="$(find move_base)/map/rmuc.yaml" />
    <arg name="open_rviz" default="true" />
 
    <arg name="world_name" default="RMUC2024" />
@@ -46,7 +45,7 @@
       <arg name="ns" value="$(arg ns)" />
    </include>
    <!-- Map server -->
-   <node pkg="map_server" name="map_server" type="map_server" respawn="true" args="$(arg map_file)" />
+   <node pkg="map_server" name="map_server" type="map_server" respawn="true" />
 
    <!-- move_base -->
    <include file="$(find move_base)/launch/move_base.launch">

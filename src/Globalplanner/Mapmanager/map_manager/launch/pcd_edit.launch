@@ -1,5 +1,4 @@
 <launch>
-    <arg name="map_file" default="$(find map_manager)/map/rmuc_my.yaml" />
     <arg name="leaf_size" default="0.2" />
 
     <include file="$(find pcl_filter)/launch/environment.launch">
@@ -7,5 +6,5 @@
     </include>
 
     <!-- Map server -->
-    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" />
+    <node pkg="map_server" name="map_server" type="map_server" />
 </launch>

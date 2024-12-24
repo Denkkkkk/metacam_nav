@@ -17,7 +17,6 @@
   <arg name="vehicleYaw" default="1.57" />
   <!-- Autonomous Exploration Development Environment参数 -->
   <arg name="world_name" default="RMUC2024" />
-  <!-- <arg name="map_file" default="$(find map_manager)/map/rmuc.yaml" /> -->
 
   <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">

@@ -8,6 +8,9 @@ localPlanner:
   slow_dis: 0.95            # 近障减速距离
   obstacleHeightThre: 0.1   # 地形分析中，intensity的筛选阈值
 
+globalPlanner:
+  map_file_name: "white_explore.yaml"  #二维栅格地图文件名
+
 pathFollower:
   endGoalDis: 0.4              # 到达目标点范围内就停止
   use_closeGoal_direct: false  # 开启到目标点附近的精确到点模式（在靠近目标0.6m时会关闭避障）
@@ -23,7 +26,7 @@ pathFollower:
 usualParams:
   maxSpeed: 0.75               # 整车最大速度
   use_relocalization: true     # 是否使用重定位调整到同一个地图坐标系
-  use_map: false               # 是否使用先验地图
+  use_map: true                # 是否使用先验地图
   use_prior_path: true         # 是否使用先验路径
 
 nav_service:

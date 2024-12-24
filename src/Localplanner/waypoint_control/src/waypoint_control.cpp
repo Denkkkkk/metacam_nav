@@ -22,6 +22,7 @@ waypoint_control::waypoint_control()
     pubControlMode = nh.advertise<std_msgs::Int8>("/control_mode", 1);
     pubCloseMap = nh.advertise<std_msgs::Bool>("/close_map", 2);
 
+    nhPrivate.param("use_recovery_mode", use_recovery_mode, false);
     nhPrivate.param("lateral_dis", lateral_dis, 0.8);
     nhPrivate.param("lateral_goal_dis", lateral_goal_dis, 0.8);
     nhPrivate.param("lateral_time", lateral_time, 2.0);
@@ -153,7 +154,7 @@ void waypoint_control::updateCase()
      * 4. 全局路径丢失超时
      */
     cancelLateraling(); // 判断横移结束并更新waypoint持续时间
-    if ((vehicle_goal_dis > lateral_goal_dis && point_duration > default_point_time) || is_lateraling)
+    if ((use_recovery_mode &&vehicle_goal_dis > lateral_goal_dis && point_duration > default_point_time) || is_lateraling)
     {
         control_mode = TRANSVERSE;
         return;
@@ -191,7 +192,7 @@ void waypoint_control::run()
     {
         if (clear_justnow)
         {
-            ros::Duration(0.06).sleep();
+            // ros::Duration(0.06).sleep();
             clear_justnow = false;
         }
         if (vehicle_goal_dis < reach_goal_dis && use_swing)

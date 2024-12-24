@@ -125,4 +125,5 @@ private:
     bool goal_point_only = false; // waypoint持续最大时间
     bool clear_justnow = false;
     bool debug = false;
+    bool use_recovery_mode = false;
 };
