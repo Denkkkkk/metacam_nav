@@ -3,7 +3,6 @@
   <arg name="use_global_planner" default="true" />
   <arg name="use_rviz" default="true" />
   <arg name="use_2dlaser" default="false" />
-  <arg name="use_map" default="true" />
 
   <!-- 仿真系统参数 -->
   <arg name="ns" default="" />
@@ -71,7 +70,6 @@
   <group if="$(arg use_global_planner)">
     <include file="$(find nav_gplanner_start)/launch/system_gplanner.launch">
       <arg name="ns" value="$(arg ns)" />
-      <arg name="use_map" value="$(arg use_map)" />
     </include>
   </group>
 

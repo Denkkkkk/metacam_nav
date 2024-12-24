@@ -3,7 +3,6 @@
   <arg name="use_global_planner" default="false" />
   <arg name="use_rviz" default="true" />
   <arg name="use_2dlaser" default="false" />
-  <arg name="use_map" default="false" />
 
   <!-- 仿真系统参数 -->
   <arg name="ns" default="" />

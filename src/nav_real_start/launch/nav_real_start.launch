@@ -1,6 +1,6 @@
 <launch>
     <!-- 选择性开启-->
-    <arg name="use_global_planner" default="false" />
+    <arg name="use_global_planner" default="true" />
     <arg name="use_rviz" default="false" />
 
     <!-- 局部规划的初始点位-->
@@ -29,7 +29,6 @@
     <group if="$(arg use_global_planner)">
         <include file="$(find nav_gplanner_start)/launch/system_gplanner.launch">
             <arg name="ns" value="$(arg ns)" />
-            <arg name="use_map" value="$(arg use_map)" />
         </include>
     </group>
 
@@ -45,7 +44,7 @@
     <!-- 启动刑天机器人的串口通信 -->
     <!-- <include file="$(find nav_serial_ctrl)/launch/nav_serial_ctrl.launch" /> -->
 
-    <include file="$(find waypoint_control)/launch/waypoint_control.launch"/>
+    <include file="$(find waypoint_control)/launch/waypoint_control.launch" />
 
     <!-- 补充的tf转换-->
     <include file="$(find nav_real_start)/launch/tf_real.launch">
