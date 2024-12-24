@@ -41,7 +41,7 @@
 #include <limits>
 #include <pcl_ros/transforms.h>
 #include <pluginlib/class_list_macros.h>
-#include <pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet.h>
+#include <pcl_to_laserscan/pointcloud_to_laserscan_nodelet.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
 #include <string>
@@ -49,7 +49,7 @@
 #include <yaml-cpp/yaml.h>
 #include <ros/package.h>
 
-namespace pointcloud_to_laserscan {
+namespace pcl_to_laserscan {
     void PointCloudToLaserScanNodelet::update_params()
     {
         // 创建静态计数器
@@ -291,6 +291,6 @@ namespace pointcloud_to_laserscan {
         }
         pub_.publish(output);
     }
-} // namespace pointcloud_to_laserscan
+} // namespace pcl_to_laserscan
 
-PLUGINLIB_EXPORT_CLASS(pointcloud_to_laserscan::PointCloudToLaserScanNodelet, nodelet::Nodelet)
+PLUGINLIB_EXPORT_CLASS(pcl_to_laserscan::PointCloudToLaserScanNodelet, nodelet::Nodelet)

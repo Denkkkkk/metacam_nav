@@ -9,8 +9,8 @@
         <arg name="camera" default="$(arg camera)"/>
     </include>
 
-    <!-- push pointcloud_to_laserscan nodelet into sensor's nodelet manager-->
-    <node pkg="nodelet" type="nodelet" name="pointcloud_to_laserscan" args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet $(arg camera)_nodelet_manager">
+    <!-- push pcl_to_laserscan nodelet into sensor's nodelet manager-->
+    <node pkg="nodelet" type="nodelet" name="pcl_to_laserscan" args="load pcl_to_laserscan/pointcloud_to_laserscan_nodelet $(arg camera)_nodelet_manager">
 
         <remap from="cloud_in" to="$(arg camera)/depth_registered/points_processed"/>
         <remap from="scan" to="$(arg camera)/scan"/>

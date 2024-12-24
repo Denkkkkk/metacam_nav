@@ -3,9 +3,9 @@
 <launch>
     <arg name="ns" default="" />
 
-    <!-- run pointcloud_to_laserscan node -->
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"
-        name="pointcloud_to_laserscan" output="screen">
+    <!-- run pcl_to_laserscan node -->
+    <node pkg="pcl_to_laserscan" type="pointcloud_to_laserscan_node"
+        name="pcl_to_laserscan" output="screen">
 
         <remap from="cloud_in" to="/terrain_map_ext" />
         <remap from="scan" to="/terrain_map_2d" />

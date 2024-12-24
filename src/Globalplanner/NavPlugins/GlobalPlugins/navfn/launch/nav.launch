@@ -1,6 +1,6 @@
 <launch>
   <include file="$(find vehicle_simulator)/launch/rm_map.launch" />
-  <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch" />
+  <include file="$(find pcl_to_laserscan)/launch/my_cloud_to_laser.launch" />
   
   <node pkg="joint_state_publisher" name="joint_state_publisher" type="joint_state_publisher" />
   <node pkg="robot_state_publisher" name="robot_state_publisher" type="robot_state_publisher" />

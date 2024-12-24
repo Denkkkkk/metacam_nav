@@ -52,12 +52,12 @@
 #include <tf2_ros/message_filter.h>
 #include <tf2_ros/transform_listener.h>
 
-namespace pointcloud_to_laserscan {
+namespace pcl_to_laserscan {
     typedef tf2_ros::MessageFilter<sensor_msgs::PointCloud2> MessageFilter;
      
     /**
      * Class to process incoming pointclouds into laserscans. Some initial code was pulled from the defunct turtlebot
-     * pointcloud_to_laserscan implementation.
+     * pcl_to_laserscan implementation.
      */
     class PointCloudToLaserScanNodelet : public nodelet::Nodelet
     {
@@ -101,6 +101,6 @@ namespace pointcloud_to_laserscan {
         std::string usual_config;
     };
 
-} // namespace pointcloud_to_laserscan
+} // namespace pcl_to_laserscan
 
 #endif // POINTCLOUD_TO_LASERSCAN_POINTCLOUD_TO_LASERSCAN_NODELET_H

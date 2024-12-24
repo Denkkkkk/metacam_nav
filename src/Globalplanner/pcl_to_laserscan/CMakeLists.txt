@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(pointcloud_to_laserscan)
+project(pcl_to_laserscan)
 
 find_package(catkin REQUIRED COMPONENTS
   laser_geometry
@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES laserscan_to_pointcloud pointcloud_to_laserscan
+  LIBRARIES laserscan_to_pointcloud pcl_to_laserscan
   CATKIN_DEPENDS laser_geometry message_filters nodelet roscpp sensor_msgs tf2 tf2_ros tf2_sensor_msgs
 )
 
@@ -25,14 +25,14 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(pointcloud_to_laserscan src/pointcloud_to_laserscan_nodelet.cpp)
-target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES} yaml-cpp)
+add_library(pcl_to_laserscan src/pointcloud_to_laserscan_nodelet.cpp)
+target_link_libraries(pcl_to_laserscan ${catkin_LIBRARIES} yaml-cpp)
 
 add_executable(pointcloud_to_laserscan_node src/pointcloud_to_laserscan_node.cpp)
-target_link_libraries(pointcloud_to_laserscan_node pointcloud_to_laserscan ${catkin_LIBRARIES} yaml-cpp)
+target_link_libraries(pointcloud_to_laserscan_node pcl_to_laserscan ${catkin_LIBRARIES} yaml-cpp)
 
 install(TARGETS
-  pointcloud_to_laserscan
+  pcl_to_laserscan
   pointcloud_to_laserscan_node
 	RUNTIME DESTINATION lib
 	LIBRARY DESTINATION lib

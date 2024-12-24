@@ -9,8 +9,8 @@
         <arg name="camera" default="$(arg camera)"/>
     </include>
 
-    <!-- run pointcloud_to_laserscan node -->
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+    <!-- run pcl_to_laserscan node -->
+    <node pkg="pcl_to_laserscan" type="pointcloud_to_laserscan_node" name="pcl_to_laserscan">
 
         <remap from="cloud_in" to="$(arg camera)/depth_registered/points_processed"/>
         <remap from="scan" to="$(arg camera)/scan"/>

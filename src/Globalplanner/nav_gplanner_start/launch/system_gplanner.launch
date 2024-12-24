@@ -3,7 +3,7 @@
     <arg name="ns" default="" />
     <arg name="use_map" default="true" />
 
-    <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch">
+    <include file="$(find pcl_to_laserscan)/launch/my_cloud_to_laser.launch">
       <arg name="ns" value="$(arg ns)" />
     </include>
     <!-- Map server -->

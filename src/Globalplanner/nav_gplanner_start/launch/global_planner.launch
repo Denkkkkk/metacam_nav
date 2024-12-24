@@ -31,7 +31,7 @@
    </include>
 
    <!-- 3D点云转2D-->
-   <include file="$(find pointcloud_to_laserscan)/launch/my_cloud_to_laser.launch" />
+   <include file="$(find pcl_to_laserscan)/launch/my_cloud_to_laser.launch" />
 
    <include file="$(find terrain_analysis)/launch/terrain_analysis.launch" />
    <include file="$(find terrain_analysis_ext)/launch/terrain_analysis_ext.launch">
