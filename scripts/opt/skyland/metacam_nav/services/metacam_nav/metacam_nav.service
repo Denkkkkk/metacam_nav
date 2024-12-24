@@ -1,7 +1,7 @@
 [Unit]
 Description=metacam_nav Programme
 [Service]
-User=denk
+User=skyland
 ExecStart=-/opt/skyland/metacam_nav/services/metacam_nav/metacam_nav.sh
 ExecReload=-/opt/skyland/metacam_nav/services/metacam_nav/metacam_nav.sh
 Type=simple
