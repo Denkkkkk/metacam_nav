@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(move_base)
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/Globalplanner/move_base")
+
 find_package(catkin REQUIRED
     COMPONENTS
         actionlib
@@ -38,7 +40,6 @@ catkin_package(
     CATKIN_DEPENDS
         dynamic_reconfigure
         geometry_msgs
-        move_base_msgs
         nav_msgs
         roscpp
 )

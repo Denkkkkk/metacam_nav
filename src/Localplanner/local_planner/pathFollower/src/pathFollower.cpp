@@ -2,7 +2,7 @@
  * @file pathFollower.cpp
  * @author 李东权
  * @brief 路径跟随和速度控制
- * @version 2.0 
+ * @version 2.0
  * @date 2023-11-26
  *
  * @copyright Copyright (c) 2024
@@ -58,8 +58,9 @@ RoboCtrl::RoboCtrl()
 }
 
 // 外部减速
-void RoboCtrl::slowDown()
+bool RoboCtrl::slowDown()
 {
+    bool return_flag = false;
     double local_slowDown_update_duaration = ros::Time::now().toSec() - local_slowDown_update_time;
     if (local_slowDown_update_duaration > 2.0)
     {
@@ -74,18 +75,20 @@ void RoboCtrl::slowDown()
     {
         near_cloud_stop = true;
         maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
+        return_flag = true;
     }
     else if (pctlPtr->get_params().localPlanner_pathRange <= 1.0) // 规划范围较小优先发起减速
     {
         maxSpeed1 = pctlPtr->get_params().maxSpeed * 0.4;
+        return_flag = true;
     }
     else if (terrainCloud_minDis < pctlPtr->get_params().localPlanner_slow_dis)
     {
         maxSpeed1 = pctlPtr->get_params().maxSpeed * pctlPtr->get_params().slowdown_rate;
     }
-
     if (maxSpeed1 < pctlPtr->get_params().cloudSlow_minSpeed)
         maxSpeed1 = pctlPtr->get_params().cloudSlow_minSpeed;
+    return return_flag;
 }
 
 /**
@@ -303,29 +306,28 @@ void RoboCtrl::pure_persuit()
     }
     if (pctlPtr->get_params().useCloudSlowDown)
     {
-        slowDown();
-    }
-    /**
-     * @brief 转弯点减速
-     *
-     */
-    if (pctlPtr->get_params().use_map)
-    {
-        if (control_mode == MIDPlanning && pctlPtr->get_params().use_MIDPlanning_slow)
+        if (!slowDown())
         {
-            maxSpeed1 *= pctlPtr->get_params().MIDPlanning_slow_rate;
-            if (maxSpeed1 < pctlPtr->get_params().MIDPlanning_minSpeed)
-                maxSpeed1 = pctlPtr->get_params().MIDPlanning_minSpeed;
-            mid_slow_delay = 0;
-        }
-        else if (mid_slow_delay < 50)
-        {
-            maxSpeed1 *= pctlPtr->get_params().MIDPlanning_slow_rate;
-            if (maxSpeed1 < pctlPtr->get_params().MIDPlanning_minSpeed)
-                maxSpeed1 = pctlPtr->get_params().MIDPlanning_minSpeed;
-            mid_slow_delay++;
+            if (pctlPtr->get_params().use_map)
+            {
+                if (control_mode == MIDPlanning && pctlPtr->get_params().use_MIDPlanning_slow)
+                {
+                    maxSpeed1 *= pctlPtr->get_params().MIDPlanning_slow_rate;
+                    if (maxSpeed1 < pctlPtr->get_params().MIDPlanning_minSpeed)
+                        maxSpeed1 = pctlPtr->get_params().MIDPlanning_minSpeed;
+                    mid_slow_delay = 0;
+                }
+                else if (mid_slow_delay < 45)
+                {
+                    maxSpeed1 *= pctlPtr->get_params().MIDPlanning_slow_rate;
+                    if (maxSpeed1 < pctlPtr->get_params().MIDPlanning_minSpeed)
+                        maxSpeed1 = pctlPtr->get_params().MIDPlanning_minSpeed;
+                    mid_slow_delay++;
+                }
+            }
         }
     }
+
     ROS_WARN("maxSpeed1: %f", maxSpeed1);
     /**
      * @brief 距离计算

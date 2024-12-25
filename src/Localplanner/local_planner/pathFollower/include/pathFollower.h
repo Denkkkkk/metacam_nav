@@ -65,7 +65,7 @@ private:
     void controlModeCallback(const std_msgs::Int8::ConstPtr &msg);
     void imuCallback(const sensor_msgs::Imu::ConstPtr &imu);
     void slowCallback(const std_msgs::Float32::ConstPtr &slowDown);
-    void slowDown();
+    bool slowDown();
     void terrainCloudCallback(const sensor_msgs::PointCloud2::ConstPtr &terrainCloud2);
 
     ros::NodeHandle nh;
