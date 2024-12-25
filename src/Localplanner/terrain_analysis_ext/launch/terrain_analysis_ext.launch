@@ -1,8 +1,7 @@
 <launch>
 
   <arg name="checkTerrainConn" default="true" />
-
-  <node pkg="terrain_analysis_ext" type="terrainAnalysisExt" name="terrainAnalysisExt"
+    <node pkg="terrain_analysis_ext" type="terrainAnalysisExt" name="terrainAnalysisExt"
     output="screen" respawn="true">
     <param name="scanVoxelSize" type="double" value="0.02" />            <!--下采样体素大小-->
     <param name="decayTime" type="double" value="0.6" />                 <!--衰减时间,体素地图中超过这个时间的点云会被清除-->
@@ -14,14 +13,14 @@
     <param name="voxelPointUpdateThre" type="int" value="20" />
     <param name="voxelTimeUpdateThre" type="double" value="0.5" />
     <param name="lowerBoundZ" type="double" value="-1.0" />
-    <param name="upperBoundZ" type="double" value="1.0" />
+    <param name="upperBoundZ" type="double" value="0.8" />
     <param name="disRatioZ" type="double" value="0.1" />
     <!-- 关键部分1,执行地形连接性检查,其实就是查找和车体当前地形高度一致(连接)的一大片区域 -->
     <param name="checkTerrainConn" type="bool" value="$(arg checkTerrainConn)" />
-    <param name="terrainConnThre" type="double" value="0.5" />
+     <param name="terrainConnThre" type="double" value="0.5" />
     <param name="terrainUnderVehicle" type="double" value="-0.75" />
     <param name="ceilingFilteringThre" type="double" value="2.0" />
-    <param name="localTerrainMapRadius" type="double" value="6.0" />        <!--保留的局部地形地图半径为5m-->
+    <param name="localTerrainMapRadius" type="double" value="6.0" />       <!--保留的局部地形地图半径为5m-->
   </node>
 
 </launch>

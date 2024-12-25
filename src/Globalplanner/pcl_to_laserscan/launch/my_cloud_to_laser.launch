@@ -7,7 +7,7 @@
     <node pkg="pcl_to_laserscan" type="pointcloud_to_laserscan_node"
         name="pcl_to_laserscan" output="screen">
 
-        <remap from="cloud_in" to="/terrain_map_ext" />
+        <remap from="cloud_in" to="/terrain_map" />
         <remap from="scan" to="/terrain_map_2d" />
 
         <!-- 是否使用intensity来代替高度-->
@@ -18,13 +18,13 @@
         <rosparam>
             transform_tolerance: 0.5
             min_height: -1.0
-            max_height: 1.0
+            max_height: 0.8
 
             angle_min: -3.1415926 # -M_PI/2_1.5708
             angle_max: 3.1415926 # M_PI/2
             angle_increment: 3.14/720 # M_PI/360.0
             scan_time: 0.1
-            range_min: 0.2
+            range_min: 0.25
             range_max: 20
             use_inf: true
             inf_epsilon: 1.0

@@ -28,9 +28,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     lctlPtr = new ParamControl();
 
     load_pcd_map();
-    // 全局目标点初始化到很远
-    goal_point.pose.position.x = 100;
-    goal_point.pose.position.y = 100;
     joySpeed = maxSpeed;
 
     // 回调函数，提取里程计信息，更新车体的位姿信息
@@ -43,7 +40,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
     subSpeed = nh.subscribe<std_msgs::Float32>("/speed", 5, &LpNode::speedHandler, this);
     // 关闭局部地图标志位
     subCloseMap = nh.subscribe<std_msgs::Bool>("/close_map", 2, &LpNode::closeMapHandler, this);
-    subGlobal_point = nh.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 2, &LpNode::globalPointHandler, this);
 
     // 发布局部规划路径
     pubPath = nh.advertise<nav_msgs::Path>("/local_path", 2);
@@ -157,11 +153,6 @@ void LpNode::transform_goal()
     {
         actual_goalClearRange = lctlPtr->get_params().goalClearRange;
     }
-    // 目标点转移到车体坐标系
-    float relativeGoalX_global = ((goal_point.pose.position.x - vehicleX) * cosVehicleYaw + (goal_point.pose.position.y - vehicleY) * sinVehicleYaw);
-    float relativeGoalY_global = (-(goal_point.pose.position.x - vehicleX) * sinVehicleYaw + (goal_point.pose.position.y - vehicleY) * cosVehicleYaw);
-    // 计算车体到goalpoint（目标点）之间的距离
-    relativeGoalDis_global = sqrt(relativeGoalX_global * relativeGoalX_global + relativeGoalY_global * relativeGoalY_global);
 
     // joyDir为目标点相对车体的yaw角
     joyDir = atan2(relativeGoalY, relativeGoalX) * 180 / PI;
@@ -217,7 +208,7 @@ void LpNode::local_planner()
             //  ①checkObstacle为true
             // *②只考虑规划路径范围内的点云，这是主要的，也可以说可以只看这个
             //  ③如果使用pathCropByGoal，超过目标点的点云就不用管了
-            if (dis < pathRange && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->get_params().pathCropByGoal) && (dis <= (relativeGoalDis_global + lctlPtr->get_params().goalClearRange_global)) && lctlPtr->get_params().checkObstacle)
+            if (dis < pathRange && (dis <= (relativeGoalDis + actual_goalClearRange) || !lctlPtr->get_params().pathCropByGoal) && lctlPtr->get_params().checkObstacle)
             {
                 // 下文是对此段代码的解释
                 // rotAng当前检索方向和车体的角度
@@ -592,7 +583,7 @@ void LpNode::makerInit()
     marker.pose.orientation.z = 0.0;
     marker.pose.orientation.w = 1.0;
     // 立方体大小
-    marker.scale.x = 0;
+    marker.scale.x = 0; 
     marker.scale.y = 0;
     marker.scale.z = 0.5;
     // 颜色和透明度

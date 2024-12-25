@@ -97,6 +97,10 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
         vehicleYawRec = virture_headDir;
         for (int i = 0; i < pathSize; i++)
         {
+            if (i == 0 || i == 1)
+            {
+                continue;
+            }
             double pointX = pathIn->poses[i].pose.position.x - vehicleX;
             double pointY = pathIn->poses[i].pose.position.y - vehicleY;
             // 将全局路径转换到车体坐标系
@@ -105,7 +109,7 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
             double dis = sqrt(pow(goal_path_temp.poses[i].pose.position.x, 2) + pow(goal_path_temp.poses[i].pose.position.y, 2));
             if (dis > 2.0 || i == pathSize - 1)
             {
-                goal_path.poses.resize(i + 1);
+                goal_path.poses.resize(i + 1 - 2);
                 for (int j = 0; j < i + 1; j++)
                 {
                     goal_path.poses[j] = goal_path_temp.poses[j];

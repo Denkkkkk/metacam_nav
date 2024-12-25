@@ -4,7 +4,7 @@ localPlanner:
   dirThre: 65  # 目标点方向允许规划范围
   add_point_radius_far: 0.11  # 大于1.5m距离的障碍物额外膨胀add_point_radius_far*distance的半径
   # 用于规划的点云的参数
-  terrainVoxelSize: 0.10  # 地形分析的体素大小
+  terrainVoxelSize: 0.2  # 地形分析的体素大小
   checkObstacle: true  # 控制是否根据用于的规划点云进行地形障碍检查
   checkRotObstacle: true  # 长条形车或差速底盘过窄道，限制转弯
   close_map_time: 2.5  # 关闭局部地图的超时时间
@@ -47,7 +47,7 @@ pathFollower:
   goalSlowDisThre: 1.4         # 靠近全局目标点时减速
   getGoal_speed: 0.2           # 刚好追踪到目标点时的速度
   # Generally fixed parameters
-  lookAheadDis: 0.5     # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
+  lookAheadDis: 0.8     # 每次只从车体当前位置往前lookAheadDis的距离的目标点来确定路径相对车头的方向
   useLoaclSlow: true    # 启用局部路径跟踪减速
   endPathDis: 0.05      # 跟踪到局部路径的末尾多少距离内就不再跟踪
   pathSlowDisThre: 0.4  # 局部路径跟踪开始减速的距离阈值, 局部路径最长就1m

@@ -5,6 +5,8 @@ global_costmap:
    obstacle_map: true
    rolling_window: false
    transform_tolerance: 1.0
+   update_frequency: 6.0
+   resolution: 0.2
 
    # 全局层的膨胀半径大一点，衰减也快一点
    inflation_radius: 0.8

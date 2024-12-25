@@ -14,6 +14,16 @@ do
     echo
 done
 
+# install dependencies needed
+softwares=("common")
+for software in "${softwares[@]}"
+do
+    echo "=============================="
+    cd $INSTALL_PATH/dependencies/$software
+    ./setup.bash --uninstall --install
+    echo
+done
+
 # run config files
 cd $INSTALL_PATH/config
 ./setup.bash

@@ -7,12 +7,12 @@ local_costmap:
   robot_base_frame: vehicle
   static_map: true
   rolling_window: true      #是否在机器人移动过程中需要滚动窗口，始终保持机器人在当前窗口中心位置;
-  width: 20.0                #滚动窗口的总宽度，单位是米;
-  height: 20.0               #滚动窗口的总高度，单位是米;
+  width: 16.0               #滚动窗口的总宽度，单位是米;
+  height: 16.0              #滚动窗口的总高度，单位是米;
   transform_tolerance: 1.0  #坐标系间的转换可以忍受的最大延时;
-  resolution: 0.1
+  resolution: 0.2
   update_frequency: 10.0
   publish_frequency: 10.0
 
   #局部层的膨胀半径,应该大于车半径才有意义
-  inflation_radius: 0.32         
+  inflation_radius: 0.4         

@@ -38,8 +38,6 @@ private:
     ros::Subscriber subCloseMap;
     // 已经到达目的地
     ros::Subscriber subGetGoal;
-    // 全局目标点
-    ros::Subscriber subGlobal_point;
 
     // 发布局部规划路径
     ros::Publisher pubPath;
@@ -60,7 +58,6 @@ private:
     float goalClearCenter_x = -2.2;
     float goalClearCenter_y = 3.5;
     bool get_addedObstacles = false;
-    geometry_msgs::PoseStamped goal_point;
 
 #if PLOTPATHSET == 1
     ros::Publisher pubFreePaths;
@@ -74,10 +71,8 @@ private:
     void goalHandler(const geometry_msgs::PoseStamped::ConstPtr &goal);
     // 控制joySpeed
     void speedHandler(const std_msgs::Float32::ConstPtr &speed);
-    
     void virHeadDirHandler(const std_msgs::Float32::ConstPtr &msg);
     void closeMapHandler(const std_msgs::Bool::ConstPtr &msg);
-    void globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg);
     void load_pcd_map();
 
 public:

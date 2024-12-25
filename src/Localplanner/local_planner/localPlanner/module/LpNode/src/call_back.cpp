@@ -135,8 +135,8 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
             // 45度插值一次
             for (int j = 1; j < 8; j++)
             {
-                point.x = terrainCloudCrop->points[i].x + add_point_radius_auc * cos(j * 45 * M_PI / 180);
-                point.y = terrainCloudCrop->points[i].y + add_point_radius_auc * sin(j * 45 * M_PI / 180);
+                point.x = terrainCloudCrop->points[i].x + add_point_radius_auc * cos(j * 90 * M_PI / 180);
+                point.y = terrainCloudCrop->points[i].y + add_point_radius_auc * sin(j * 90 * M_PI / 180);
                 point.z = terrainCloudCrop->points[i].z;
                 point.intensity = lctlPtr->get_params().obstacleHeightThre + 0.1;
                 terrainCloudDwz->push_back(point);
@@ -160,9 +160,4 @@ void LpNode::terrainCloudHandler(const sensor_msgs::PointCloud2::ConstPtr &terra
     newTerrainCloud = true;
     plannerCloud->clear();
     *plannerCloud = *terrainCloudDwz;
-}
-
-void LpNode::globalPointHandler(const geometry_msgs::PoseStamped::ConstPtr &msg)
-{
-    goal_point = *msg;
 }

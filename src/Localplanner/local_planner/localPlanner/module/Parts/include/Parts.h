@@ -97,7 +97,6 @@ extern float cosVehicleYaw;
 extern bool pathFound;           // 找到最终规划出来的路径
 extern double pathRange;         // 路径范围(黄色)
 extern float relativeGoalDis;    // 目标点相对车体的距离
-extern float relativeGoalDis_global; // 全局点相对车体的距离
 extern float rotAng;             // rotAng当前检索方向和车体的角度
 extern float angDiff;            // rotAng叠加上joyDir
 extern float minObsAngCW;        // minObsAngCW是考虑车体的直径和考虑侧方障碍物的情况下，车顺时针能旋转的最小角度
