@@ -55,4 +55,7 @@
         <arg name="ns" value="$(arg ns)" />
     </include>
 
+    <!--启动重定位-->
+    <include file="$(find relocalization)/launch/relocalization.launch" /> 
+
 </launch>

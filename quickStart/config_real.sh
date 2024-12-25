@@ -13,6 +13,6 @@ sudo apt install -y ros-$ROS_DISTRO-voxel-grid
 sudo apt install -y ros-$ROS_DISTRO-costmap-converter
 sudo apt install -y ros-$ROS_DISTRO-move-base-msgs
 sudo apt install -y ros-$ROS_DISTRO-tf2-sensor-msgs
-sudo apt install -y ros-$ROS_DISTRO-mbf-costmap-core
-sudo apt install -y ros-$ROS_DISTRO-mbf-msgs
-sudo apt install -y ros-$ROS_DISTRO-teb-local-planner
+# sudo apt install -y ros-$ROS_DISTRO-mbf-costmap-core
+# sudo apt install -y ros-$ROS_DISTRO-mbf-msgs
+# sudo apt install -y ros-$ROS_DISTRO-teb-local-planner
