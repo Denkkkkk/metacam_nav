@@ -14,6 +14,9 @@ cmake-build-debug
 *.STL
 *.bag
 
+relocal*.pcd
+terrain*.pcd
+
 src/vehicle_simulator/mesh/*
 src/vehicle_simulator/mesh/matterport/meshes/*
 src/vehicle_simulator/mesh/matterport/segmentations/*

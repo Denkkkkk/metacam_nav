@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   pcl_ros
+  tf2_eigen
 )
 
 # find_package(PCL REQUIRED)
@@ -38,10 +39,10 @@ link_directories(
   /usr/lib       # More usual location (e.g. when installing using a package)
 )
 
-add_executable(map_create src/map_create.cpp)
-target_link_libraries(map_create ${catkin_LIBRARIES}  )
+add_executable(nav_map_create src/nav_map_create.cpp)
+target_link_libraries(nav_map_create ${catkin_LIBRARIES})
 
-install(TARGETS  map_create
+install(TARGETS nav_map_create
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -52,5 +53,5 @@ install(DIRECTORY launch/
 )
 
 install(DIRECTORY pcd/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/pcd
 )

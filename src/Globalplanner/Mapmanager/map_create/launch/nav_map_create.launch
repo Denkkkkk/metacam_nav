@@ -1,0 +1,13 @@
+<launch>
+
+  <node pkg="map_create" type="nav_map_create" name="nav_map_create" output="screen">
+    <param name="record" value="true" />
+    <param name="leaf_size" value="0.1" />
+    <param name="pcd_path" value="$(find map_create)/pcd/" />
+    <param name="visual_pcd_path" value="$(find map_create)/pcd/relocal20241226_22_02.pcd" />
+    <param name="use_sim_time" value="false" />
+    <param name="obstacleHeightThre" value="0.15" />
+    <param name="save_always" value="true" />
+  </node>
+
+</launch>

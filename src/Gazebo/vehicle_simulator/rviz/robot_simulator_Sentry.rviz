@@ -23,7 +23,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: MAPcloud
+    SyncSource: addpoints
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -108,7 +108,7 @@ Visualization Manager:
       Color: 255; 0; 0
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: true
       Max Color: 255; 255; 255
       Max Intensity: 0.10000000149011612
@@ -125,7 +125,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: false
       Autocompute Value Bounds:
@@ -352,6 +352,8 @@ Visualization Manager:
           Value: false
         lidar_holder:
           Value: false
+        map:
+          Value: true
         odom:
           Value: true
         vehicle:
@@ -367,24 +369,25 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          base_footprint:
-            vehicle:
-              back_left_wheel:
-                {}
-              back_right_wheel:
-                {}
-              camera:
-                {}
-              front_left_wheel:
-                {}
-              front_right_wheel:
-                {}
-              lidar_holder:
-                {}
-              velodyne_base_link:
-                velodyne:
+        map:
+          odom:
+            base_footprint:
+              vehicle:
+                back_left_wheel:
                   {}
+                back_right_wheel:
+                  {}
+                camera:
+                  {}
+                front_left_wheel:
+                  {}
+                front_right_wheel:
+                  {}
+                lidar_holder:
+                  {}
+                velodyne_base_link:
+                  velodyne:
+                    {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -434,19 +437,19 @@ Visualization Manager:
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
-      Max Color: 255; 255; 255
+      Max Color: 0; 0; 0
       Min Color: 0; 0; 0
       Name: terrain_map_record
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
-      Size (Pixels): 10
+      Size (Pixels): 7
       Size (m): 1
       Style: Points
-      Topic: /terrain_map_record
+      Topic: /terrain_map_pub
       Unreliable: false
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -530,7 +533,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.10000000149011612
       Style: Spheres
-      Topic: /PannerMap
+      Topic: /map_flie_pub
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: false
@@ -909,6 +912,34 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 255; 255; 255
+      Name: cloud_map_record
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 7
+      Size (m): 1
+      Style: Points
+      Topic: /cloud_map_pub
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -926,7 +957,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 137.16099548339844
+      Distance: 32.54698944091797
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -934,17 +965,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 73.74076843261719
-        Y: 21.3946533203125
+        X: -0.2811408042907715
+        Y: -3.4504952430725098
         Z: -3.7325298762880266e-07
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 1.5397964715957642
       Target Frame: vehicle
-      Yaw: 1.4053679704666138
+      Yaw: 3.2903687953948975
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055
