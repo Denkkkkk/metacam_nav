@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
         nav_msgs
         std_srvs
 )
+set(CMAKE_CXX_STANDARD 11)
 
 catkin_package()
 
@@ -16,17 +17,16 @@ include_directories(
 )
 
 #INTERFACE 类型的库不编译任何源代码，只提供头文件、宏定义、链接选项等。
-#add_library(nav_logging  INTERFACE)
-#target_link_libraries(nav_logging
-#        INTERFACE
-#        ${catkin_LIBRARIES}
-#)
-
-#动态库
-add_library(nav_logging SHARED
-        src/nav_logging.cpp
-)
+add_library(nav_logging  INTERFACE)
 target_link_libraries(nav_logging
+        INTERFACE
+        ${catkin_LIBRARIES}
+)
+
+add_library(spd_logging SHARED
+        src/spd_logging.cpp
+)
+target_link_libraries(spd_logging
         ${catkin_LIBRARIES}
 )
 
@@ -35,9 +35,8 @@ target_link_libraries(navlog_control
         ${catkin_LIBRARIES}
         yaml-cpp
         nav_logging
+        spd_logging
 )
-
-
 
 install(
      TARGETS
@@ -53,5 +52,4 @@ install(DIRECTORY launch/
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-        PATTERN ".svn" EXCLUDE
 )

@@ -9,7 +9,7 @@ localPlanner:
   obstacleHeightThre: 0.1    # 地形分析中，intensity的筛选阈值
 
 globalPlanner:
-  map_file_name: "white_explore_25_25.yaml"  #二维栅格地图文件名
+  map_file_name: "gswj.yaml"  #二维栅格地图文件名
 
 pathFollower:
   endGoalDis: 0.4              # 到达目标点范围内就停止

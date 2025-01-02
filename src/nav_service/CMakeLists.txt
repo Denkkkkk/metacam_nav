@@ -26,6 +26,7 @@ include_directories(
 )
 
 add_executable(nav_service src/nav_service.cpp)
+add_dependencies(nav_service nav_service_param)
 target_link_libraries(nav_service ${catkin_LIBRARIES} ${EIGEN3_LIBS} nav_service_param)
 
 install(

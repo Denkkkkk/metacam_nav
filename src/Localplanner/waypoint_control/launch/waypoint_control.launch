@@ -14,7 +14,7 @@
 
     <arg name="use_midplan" default="true" />
     <arg name="need_midplan_dis" default="2.0" />
-    <arg name="lenth_forward" default="0.45" />
+    <arg name="lenth_forward" default="0.6" />
     <arg name="lenth_back" default="1.8" />
     <arg name="curvature_threshold" default="40.0" />
     <arg name="get_midPlanner_dis" default="0.5" />     <!-- 同时使用中间点和引导点规划时，被中间点接管的到点阈值-->
