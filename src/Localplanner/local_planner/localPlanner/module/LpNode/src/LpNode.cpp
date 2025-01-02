@@ -169,11 +169,11 @@ void LpNode::local_planner()
         // 动态调整规划方向,更小的范围要先判断
         if (pathRange == lctlPtr->get_params().minPathRange)
         {
-            lctlPtr->set_enlarge_dirThre(15);
+            lctlPtr->set_enlarge_dirThre(20);
         }
         else if (pathRange <= 1.2)
         {
-            lctlPtr->set_enlarge_dirThre(5);
+            lctlPtr->set_enlarge_dirThre(10);
         }
         else
         {

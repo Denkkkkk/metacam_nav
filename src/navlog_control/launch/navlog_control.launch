@@ -1,0 +1,3 @@
+<launch>
+    <node name="navlog_control" pkg="navlog_control" type="navlog_control" output="screen" respawn="false" />
+</launch>

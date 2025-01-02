@@ -1,3 +1,0 @@
-<launch>
-    <node name="nav_service" pkg="nav_service" type="nav_service" output="screen" respawn="true" />
-</launch>

@@ -1,7 +1,7 @@
 localPlanner:
   # 常用参数
   use_pcd_map: false
-  dirThre: 65  # 目标点方向允许规划范围
+  dirThre: 60  # 目标点方向允许规划范围
   add_point_radius_far: 0.11  # 大于1.5m距离的障碍物额外膨胀add_point_radius_far*distance的半径
   # 用于规划的点云的参数
   terrainVoxelSize: 0.2  # 地形分析的体素大小
