@@ -56,6 +56,6 @@
     </include>
 
     <!--启动重定位-->
-    <include file="$(find relocalization)/launch/relocalization.launch" /> 
+    <!-- <include file="$(find relocalization)/launch/relocalization.launch" />  -->
 
 </launch>

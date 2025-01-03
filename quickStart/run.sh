@@ -1,7 +1,7 @@
 #!/bin/bash
 # 1>&2防止命令的执行结果被重定向
 usage() {
-  echo "Usage: ${0} [-s|--nav_service] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--qingqing] " 1>&2
+  echo "Usage: ${0} [-s|--nav_service] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--relocal] " 1>&2
   exit 1 
 }
 # 读取命令行参数
@@ -34,9 +34,9 @@ while [[ $# -gt 0 ]];do # $#表示参数个数, -gt表示大于
     echo "edit_map."
       shift 1
       ;;
-    -q|--qingqing)
+    -q|--relocal)
     para_q="-q"
-    echo "qingqing_map."
+    echo "relocal."
       shift 1
       ;;
     *)
@@ -62,4 +62,8 @@ do
 done
 echo "……"
 
-gnome-terminal --tab -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;./quickStart/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"
+script_path=$(readlink -f "${BASH_SOURCE[0]}")
+echo "script_path: ${script_path}"
+parent_path=$(dirname "$script_path")
+
+gnome-terminal --tab -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;$parent_path/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"

@@ -5,11 +5,35 @@ cd $(dirname $0)
 sleep 0.5s
 source ~/.bashrc
 
-sudo apt-get install libsdl1.2-dev
-sudo apt-get install libsdl-image1.2-dev
-sudo apt install -y ros-$ROS_DISTRO-move-base-msgs
-sudo apt install -y ros-$ROS_DISTRO-tf2-sensor-msgs
-sudo apt install --upgrade ros-$ROS_DISTRO-octomap*
+# sudo apt-get install libsdl1.2-dev
+# sudo apt-get install libsdl-image1.2-dev
+# sudo apt install -y ros-$ROS_DISTRO-move-base-msgs
 # sudo apt install -y ros-$ROS_DISTRO-mbf-costmap-core
 # sudo apt install -y ros-$ROS_DISTRO-mbf-msgs
 # sudo apt install -y ros-$ROS_DISTRO-teb-local-planner
+
+cd ..
+dir=$(pwd);
+
+# 指定文件和匹配的模式
+file="$HOME/.bashrc"
+pattern1="sentry_run"
+pattern2="sentry_kill"
+pattern3="metacam_nav"
+# 使用 sed 命令删除匹配的行
+sed -i "/$pattern1/d" "$file"
+sed -i "/$pattern2/d" "$file"
+sed -i "/$pattern3/d" "$file"
+sed -i "/ROSCONSOLE_FORMAT/d" "$file"
+
+echo "alias sentry_run='. ${dir}/quickStart/run.sh'" >> ~/.bashrc
+echo "alias sentry_kill='. ${dir}/quickStart/all_kill.sh'" >> ~/.bashrc
+echo "source ${dir}/devel/setup.bash" >> ~/.bashrc
+echo "export ROSCONSOLE_FORMAT='[\${node}]: \${message}'" >> ~/.bashrc
+
+sleep 0.5s
+. $HOME/.bashrc
+
+echo -e "\nConfig done!"
+echo -e "Use \033[33m'sentry_run'\033[0m to start the sentry robot with parameters: -f|--far_planner -c|--catkin -r|--real\n  e.g. sentry_run -d -f -c -r"
+echo -e "Use \033[33m'sentry_kill'\033[0m to kill all the ros process."

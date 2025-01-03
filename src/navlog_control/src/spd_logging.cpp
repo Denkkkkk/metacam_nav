@@ -23,7 +23,7 @@ void NAV_HIGHLIGHT(const char* msg)
     {
         node_name = "Unknown_Node";
     }
-    spdlog::trace(node_name,msg);
+    spdlog::info(node_name,msg);
 }
 
 void NAV_WARNING(const char* msg)

@@ -1,3 +1,4 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
 #include "navlog_control/spd_logging.h"
 
 int main(int argc, char **argv)

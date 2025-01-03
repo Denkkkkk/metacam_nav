@@ -48,6 +48,12 @@ then # 启动实车环境
     source /opt/ros/$ROS_DISTRO/setup.bash;
     source devel/setup.bash;
     roslaunch nav_real_start nav_real_start.launch;exec bash"
+
+    sleep 1.5s
+    gnome-terminal --tab --title="relocalization"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
+    source /opt/ros/$ROS_DISTRO/setup.bash;
+    source devel/setup.bash;
+    roslaunch relocalization relocalization.launch;exec bash"
 # 启动仿真环境
 else
     if [ ${para_m} -eq 1 ];
@@ -78,10 +84,6 @@ else
     source /opt/ros/noetic/setup.bash;
     source devel/setup.bash;
     roslaunch waypoint_control waypoint_control.launch; exec bash"
-    # gnome-terminal --tab --title="map_to_odom"  -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;
-    # source /opt/ros/$ROS_DISTRO/setup.bash;
-    # source devel/setup.bash;
-    # roslaunch map_to_odom map_to_odom.launch; exec bash"
 
     if [ ${para_s} -eq 1 ];
     then

@@ -2,7 +2,7 @@
 # catkin/cmake/toplevel.cmake
 cmake_minimum_required(VERSION 3.0.2)
 project(Project)
-
+#message(“TOP-----------------------------------------------------------------------------------------------------------------------------------------”)
 # choose build options
 option(BUILD_DIABLO_SERIAL "build diablo_serial or not" OFF)
 option(BUILD_UNITREE "build unitree_legged_sdk or not" OFF)
