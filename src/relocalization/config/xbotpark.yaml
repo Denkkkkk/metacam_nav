@@ -6,7 +6,7 @@ gt: "../test_data/easy/gt"
 output_folder: "../test_data/output"
 
 ## 3D-BBS parameters
-min_level_res: 1.0 # [m], e.g. outdoor: 1.0, indoor: 0.5
+min_level_res: 0.5 # [m], e.g. outdoor: 1.0, indoor: 0.5
 max_level: 6
 
 ## Angular search range [rad]

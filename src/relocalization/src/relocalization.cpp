@@ -18,7 +18,7 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
 
     scan_pointcloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_pointcloud", 10);
 
-    scan_map_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_map", 10, true);
+    scan_map_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_map", 10);
 
     icp_pointcloud_publisher_ = node_handle_.advertise<PointCloudT>("icp_pointcloud", 1, this);
 
@@ -35,6 +35,8 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
     need_relocal_sub = node_handle_.subscribe<std_msgs::Bool>("/need_reloc", 1, &Scan2MapLocation::needRelocCallBack, this);
 
     vehicle_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("rector_points", 1, this);
+
+    odom_cloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("odom_cloud", 1, this);
 
     // relocalization_srv_ = node_handle_.advertiseService("relocat_srv", &Scan2MapLocation::RelocalizeCallback, this);
 
@@ -161,11 +163,11 @@ void Scan2MapLocation::Init3DBBS()
     std::cout << "[Voxel map] Creating hierarchical voxel map..." << std::endl;
 
     auto initi_t1 = std::chrono::high_resolution_clock::now();
-#ifdef BUILD_CUDA
-    bbs3d_ptr = std::make_unique<gpu::BBS3D>();
-#else
-    bbs3d_ptr = std::make_unique<cpu::BBS3D>();
-#endif
+    #ifdef  BUILD_CUDA
+        bbs3d_ptr = std::make_unique<gpu::BBS3D>();
+    #else
+        bbs3d_ptr = std::make_unique<cpu::BBS3D>();
+    #endif
     bbs3d_ptr->set_tar_points(tar_points, min_level_res, max_level);
     bbs3d_ptr->set_trans_search_range(tar_points);
     auto init_t2 = std::chrono::high_resolution_clock::now();
@@ -251,20 +253,31 @@ void Scan2MapLocation::OdomCallback(const nav_msgs::Odometry::ConstPtr &odometry
         point.y = vehicleY;
         point.z = vehicleZ;
         odom_cloud_->points.push_back(point);
-        odom_cloud_->width = 1;
-        odom_cloud_->height = odom_cloud_->points.size();
-        odom_cloud_->is_dense = false;
+//        odom_cloud_->width = 1;
+//        odom_cloud_->height = odom_cloud_->points.size();
+//        odom_cloud_->is_dense = false;
         odom_filter.setInputCloud(odom_cloud_);
         odom_filter.setLeafSize(0.3, 0.3, 0.3);
-        odom_filter.filter(*odom_cloud_);
+        pcl::PointCloud<pcl::PointXYZ> odom_cloud_filtered;
+        odom_filter.filter(odom_cloud_filtered);
+        odom_cloud_->clear();
+        *odom_cloud_ = odom_cloud_filtered;
         if (!reloc_active)
         {
             std::cout << "[Reloc] trajectory: " << odom_cloud_->points.size() * 0.3 << "m" << std::endl;
+            //publishu odom_cloud
+            sensor_msgs::PointCloud2 odom_pointcloud;
+            pcl::toROSMsg(*odom_cloud_, odom_pointcloud);
+            odom_pointcloud.header.frame_id = "map";
+            odom_pointcloud.header.stamp = ros::Time::now();
+            odom_cloud_publisher_.publish(odom_pointcloud);
+
         }
 
         if (odom_cloud_->points.size() > 10 && reloc_active == false)
         {
             reloc_active = true;
+            std::cout << "odom_interface_to_map: " << odom_cloud_->points.size() << std::endl;
             //            need_reloc.data = false;
             std::cout << "[Reloc] Relocation is active." << std::endl;
         }

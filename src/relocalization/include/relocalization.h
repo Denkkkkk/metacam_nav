@@ -97,7 +97,7 @@ private:
     ros::Publisher scan_map_publisher_;
 
     ros::Publisher vehicle_publisher_;
-
+    ros::Publisher odom_cloud_publisher_;
 
     geometry_msgs::PoseWithCovarianceStamped location_match; // 定位结果
     geometry_msgs::PoseStamped pub_match_result;             // 定位结果

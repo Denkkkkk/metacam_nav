@@ -3,7 +3,7 @@
         default="$(find relocalization)/pcd/gswj_map.pcd" />
     <arg name="config_path"
         default="$(find relocalization)/config/xbotpark.yaml" />
-    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find relocalization)/launch/rviz/default.rviz"/> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find relocalization)/launch/rviz/default.rviz"/>
     <node name="relocalization" pkg="relocalization" type="relocalization" output="screen"
         respawn="true">
         <param name="pcd_path" value="$(arg pcd_path)" />
