@@ -18,7 +18,7 @@ Scan2MapLocation::Scan2MapLocation() : scan_resoult(new sensor_msgs::PointCloud2
 
     scan_pointcloud_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_pointcloud", 10);
 
-    scan_map_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_map", 10);
+    scan_map_publisher_ = node_handle_.advertise<sensor_msgs::PointCloud2>("scan_map", 10, true);
 
     icp_pointcloud_publisher_ = node_handle_.advertise<PointCloudT>("icp_pointcloud", 1, this);
 
@@ -161,11 +161,11 @@ void Scan2MapLocation::Init3DBBS()
     std::cout << "[Voxel map] Creating hierarchical voxel map..." << std::endl;
 
     auto initi_t1 = std::chrono::high_resolution_clock::now();
-    #ifdef  BUILD_CUDA
-        bbs3d_ptr = std::make_unique<gpu::BBS3D>();
-    #else
-        bbs3d_ptr = std::make_unique<cpu::BBS3D>();
-    #endif
+#ifdef BUILD_CUDA
+    bbs3d_ptr = std::make_unique<gpu::BBS3D>();
+#else
+    bbs3d_ptr = std::make_unique<cpu::BBS3D>();
+#endif
     bbs3d_ptr->set_tar_points(tar_points, min_level_res, max_level);
     bbs3d_ptr->set_trans_search_range(tar_points);
     auto init_t2 = std::chrono::high_resolution_clock::now();
