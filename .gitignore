@@ -27,7 +27,6 @@ src/vehicle_simulator/log/*
 !src/vehicle_simulator/mesh/matterport
 !readme.txt
 
-*.png
 *.jpg
 *.PCD
 *.gif
