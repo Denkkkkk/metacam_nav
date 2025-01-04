@@ -1,9 +1,5 @@
 #!/bin/bash
 # 2024.3.13 Created by ldq、zh
-usage() {
-  echo "Usage: ${0} [-s|--nav_service] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--qingqing] " 1>&2
-  exit 1 
-}
 # 读取命令行参数
 para_s=0
 para_r=0
@@ -34,7 +30,6 @@ while [[ $# -gt 0 ]];do # $#表示参数个数, -gt表示大于
       shift 1
       ;;
     *)
-      usage
       shift
       ;;
   esac

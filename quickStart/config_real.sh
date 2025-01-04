@@ -5,16 +5,13 @@ cd $(dirname $0)
 sleep 0.5s
 source ~/.bashrc
 
-# sudo apt-get install libsdl1.2-dev
-# sudo apt-get install libsdl-image1.2-dev
-# sudo apt install -y ros-$ROS_DISTRO-move-base-msgs
-# sudo apt install -y ros-$ROS_DISTRO-mbf-costmap-core
-# sudo apt install -y ros-$ROS_DISTRO-mbf-msgs
-# sudo apt install -y ros-$ROS_DISTRO-teb-local-planner
+sudo apt-get install libsdl1.2-dev
+sudo apt-get install libsdl-image1.2-dev
 
+sudo apt -y install  wmctrl # 安装wmctrl令窗口置顶
+sudo chmod +x all_kill.sh all_run.sh run.sh
 cd ..
 dir=$(pwd);
-
 # 指定文件和匹配的模式
 file="$HOME/.bashrc"
 pattern1="sentry_run"

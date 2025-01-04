@@ -1,9 +1,14 @@
 #!/bin/bash
 # 1>&2防止命令的执行结果被重定向
+
+succeed=1
 usage() {
-  echo "Usage: ${0} [-s|--nav_service] [-r|--real] [-k|--key_test] [-m|--edit_map] [-q|--relocal] " 1>&2
-  exit 1 
+  echo "Usage: [-s|--nav_service] [-r|--real_robot] [-k|--use_global_planner && rmuc2024] [-m|--use_global_planner && no_gazebo_map] [-q|--relocal] " 1>&2
+  succeed=0
 }
+
+
+
 # 读取命令行参数
 para_s=""
 para_r=""
@@ -24,9 +29,9 @@ while [[ $# -gt 0 ]];do # $#表示参数个数, -gt表示大于
     echo "real_robot."
       shift 1
       ;;
-    -k|--key_test)
+    -k|--use_global_planner)
     para_k="-k"
-    echo "key_test."
+    echo "use_global_planner."
       shift 1
       ;;
     -m|--edit_map)
@@ -46,6 +51,8 @@ while [[ $# -gt 0 ]];do # $#表示参数个数, -gt表示大于
   esac
 done
 
+if [ ${succeed} -eq 1 ]; then
+
 export ROSCONSOLE_FORMAT='[${node}] [${time:%M:%S}]: ${message}'
 
 if [ -z ${para_r} ]; then
@@ -63,7 +70,10 @@ done
 echo "……"
 
 script_path=$(readlink -f "${BASH_SOURCE[0]}")
-echo "script_path: ${script_path}"
+# echo "script_path: ${script_path}"
 parent_path=$(dirname "$script_path")
 
 gnome-terminal --tab -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;$parent_path/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"
+
+
+fi
