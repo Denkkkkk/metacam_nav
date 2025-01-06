@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(octomap_server)
 
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/Globalplanner/Mapmanager/octomap_server")
+
 set(PACKAGE_DEPENDENCIES
   roscpp
   visualization_msgs
@@ -10,7 +12,6 @@ set(PACKAGE_DEPENDENCIES
   nav_msgs
   std_msgs
   std_srvs
-  octomap_ros
   octomap_msgs
   dynamic_reconfigure
   nodelet
