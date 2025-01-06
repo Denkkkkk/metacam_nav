@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-
+"""
+os: 用于与操作系统进行交互，比如处理文件和目录路径。
+re: 用于正则表达式匹配和替换操作。
+yaml: 用于读取和写入 YAML 格式的文件。
+subprocess: 用于执行系统命令，尤其是外部命令。
+datetime: 用于获取和处理日期和时间。
+"""
 import os
 import re
 import yaml
@@ -9,6 +15,10 @@ from datetime import datetime
 
 passwords = [" ", "skyland2024"]
 
+"""
+尝试以不同的密码执行管理员命令 (sudo)，直到找到一个有效密码
+每次尝试使用一个密码，先执行 touch 和 rm 命令来测试密码是否有效（这些命令用于测试权限）。
+"""
 def super_command(cmd, pwd=None):
     if pwd is None:
         global passwords
@@ -23,6 +33,11 @@ def super_command(cmd, pwd=None):
     cmd = f"echo '{pwd}' | sudo -S {cmd}"
     return cmd
 
+"""
+将多个命令连接成一个字符串，以便执行
+cmds: 命令列表
+force: 是否强制执行，即使前面的命令执行失败才执行后面的命令
+"""
 def one_command(cmds, force=False):
     """
     make commands into a single command
