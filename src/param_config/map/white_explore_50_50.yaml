@@ -1,6 +1,6 @@
 image: white_explore_50_50.pgm
-resolution: 0.10000
-origin: [-40, -50, 0]
+resolution: 0.08000
+origin: [-20, -20, 0]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.196
