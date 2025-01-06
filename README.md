@@ -2,6 +2,28 @@
 
 metacam_nav 依赖外部里程计输入的机器人自主规划导航代码仓库
 
+# 编译
+
+1. 配置依赖
+
+```bash
+bash ./quickStart/config_simulator.sh
+```
+
+2. 编译选项
+
+- 编译仿真器和调试模式
+
+```bash
+catkin_make -DBUILD_SIMULATOR=ON -DCMAKE_BUILD_TYPE=Debug
+```
+
+- 编译实际发布版本
+
+```bash
+catkin_make -DCMAKE_BUILD_TYPE=Release
+```
+
 # 程序启动
 
 > 可以查看./quickStart/all_run.sh 的内容观察启动的对应launch文件内部结构
@@ -9,8 +31,6 @@ metacam_nav 依赖外部里程计输入的机器人自主规划导航代码仓�
 1. 快速调试——配置快速启动终端命令
 
 ```bash
-./quickStart/config_simulator.sh
-
 source ~/.bashrc
 ```
 
@@ -28,9 +48,7 @@ source ~/.bashrc
 
 注意：-k -r -m 这三个只能三选一来启动环境
 
-示例：
-
-以下启动带顶层服务、全局规划器。但不加载gazebo仿真环境（常用于对实地建的用户地图进行仿真测试）
+示例：以下启动带顶层服务、全局规划器。但不加载gazebo仿真环境（常用于对实地建的用户地图进行仿真测试）
 
 ```bash
 sentry_run -s -m

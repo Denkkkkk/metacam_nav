@@ -10,7 +10,7 @@
     <arg name="update_begin_dis_goalPoint" default="0.5" />
     <arg name="update_begin_dis_vehicleDis" default="1.2" />
     <arg name="use_guide" default="true" />
-    <arg name="guide_dis" default="1.2" />
+    <arg name="guide_dis" default="1.8" />
 
     <arg name="use_midplan" default="true" />
     <arg name="need_midplan_dis" default="2.0" />

@@ -659,7 +659,7 @@ Visualization Manager:
           Topic: /move_base/DWAPlannerROS/global_plan
           Unreliable: false
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Global Map
     - Class: rviz/Group
       Displays:
@@ -957,7 +957,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 32.458946228027344
+      Distance: 80.36714935302734
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -965,8 +965,8 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -6.903568744659424
-        Y: -4.024942874908447
+        X: -27.446666717529297
+        Y: 1.303281307220459
         Z: 4.472714499570429e-05
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
