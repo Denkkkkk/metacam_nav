@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
         nav_msgs
         std_srvs
 )
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 catkin_package()
 
@@ -23,8 +23,9 @@ target_link_libraries(nav_logging
         ${catkin_LIBRARIES}
 )
 
+
 add_library(spd_logging SHARED
-        src/spd_logging.cpp
+        src/navlog_text/spd_class.cpp
 )
 target_link_libraries(spd_logging
         ${catkin_LIBRARIES}
