@@ -340,8 +340,8 @@ void LpNode::local_planner()
             if (fabs(pathRange - lctlPtr->get_params().minPathRange) < 0.01)
             {
                 // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.0
-                lctlPtr->set_add_point_radius(0.1);
-                ROS_INFO("set_add_point_radius rate: 0.1 .");
+                lctlPtr->set_add_point_radius(0.2);
+                ROS_INFO("set_add_point_radius rate: 0.2 .");
                 break;
             }
             // 先把规模调成0
