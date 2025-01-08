@@ -200,7 +200,7 @@ void RoboCtrl::controlModeCallback(const std_msgs::Int8::ConstPtr &msg)
         control_mode = GUIDEPlanning;
         break;
     case 3:
-        control_mode = TRANSVERSE;
+        control_mode = RECOVER;
         break;
     case 4:
         control_mode = SWING;

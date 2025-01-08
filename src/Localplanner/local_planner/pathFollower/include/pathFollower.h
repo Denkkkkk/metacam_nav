@@ -37,7 +37,7 @@ enum ControlMode
     GOALDIRECT,
     MIDPlanning,
     GUIDEPlanning,
-    TRANSVERSE,
+    RECOVER,
     SWING
 };
 

@@ -91,29 +91,11 @@ class MapGenerator
       ROS_INFO("Writing map occupancy data to %s", mapmetadatafile.c_str());
       FILE* yaml = fopen(mapmetadatafile.c_str(), "w");
 
-
       /*
-resolution: 0.100000
-origin: [0.000000, 0.000000, 0.000000]
-#
-negate: 0
-occupied_thresh: 0.65
-free_thresh: 0.196
-
-       */
-
-      geometry_msgs::Quaternion orientation = map->info.origin.orientation;
-      tf2::Matrix3x3 mat(tf2::Quaternion(
-        orientation.x,
-        orientation.y,
-        orientation.z,
-        orientation.w
-      ));
-      double yaw, pitch, roll;
-      mat.getEulerYPR(yaw, pitch, roll);
-
+        设置yaml文件的内容
+      */
       fprintf(yaml, "image: %s\nresolution: %f\norigin: [%f, %f, %f]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.196\n\n",
-              mapdatafile.c_str(), map->info.resolution, map->info.origin.position.x, map->info.origin.position.y, yaw);
+              mapdatafile.c_str(), map->info.resolution, map->info.origin.position.x, map->info.origin.position.y, 0.0);
 
       fclose(yaml);
 

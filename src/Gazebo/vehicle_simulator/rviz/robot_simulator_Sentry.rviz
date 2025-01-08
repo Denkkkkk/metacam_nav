@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /LaserScan1
         - /Local Map1/Costmap1
       Splitter Ratio: 0.5252659320831299
     Tree Height: 1225
@@ -576,7 +577,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: true
       Max Color: 0; 0; 0
-      Min Color: 114; 159; 207
+      Min Color: 0; 0; 0
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -957,7 +958,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 80.36714935302734
+      Distance: 48.19580841064453
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -965,17 +966,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -27.446666717529297
-        Y: 1.303281307220459
+        X: -7.545859336853027
+        Y: -2.08408260345459
         Z: 4.472714499570429e-05
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5397964715957642
+      Pitch: 1.4947967529296875
       Target Frame: vehicle
-      Yaw: 3.2903687953948975
+      Yaw: 3.1503677368164062
     Saved:
       - Class: rviz/XYOrbit
         Distance: 29.307783126831055

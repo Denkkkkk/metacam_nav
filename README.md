@@ -4,7 +4,7 @@ metacam_nav 依赖外部里程计输入的机器人自主规划导航代码仓�
 
 # 编译
 
-1. 配置依赖
+1. 安装配置依赖
 
 ```bash
 bash ./quickStart/config_simulator.sh

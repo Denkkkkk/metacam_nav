@@ -1,12 +1,11 @@
 <launch>
     <arg name="map_topic" default="/projected_map" />
-    <arg name="save_file" default="$(find map_manager)/map/gswj" />
+    <arg name="save_file" default="$(find map_manager)/map/test" />
     <arg name="occ_thresh" default="90" />
     <arg name="free_thresh" default="0" />
 
     <node pkg="map_server" type="map_saver" name="save_map" output="screen"
         args="--occ $(arg occ_thresh) --free $(arg free_thresh) -f $(arg save_file)">
-
         <remap from="map" to="$(arg map_topic)" />
     </node>
 </launch>

@@ -10,7 +10,7 @@ local_costmap:
   width: 16.0               #滚动窗口的总宽度，单位是米;
   height: 16.0              #滚动窗口的总高度，单位是米;
   transform_tolerance: 1.0  #坐标系间的转换可以忍受的最大延时;
-  resolution: 0.08
+  resolution: 0.1
   update_frequency: 10.0
   publish_frequency: 10.0
 

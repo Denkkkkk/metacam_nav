@@ -156,7 +156,7 @@ void waypoint_control::updateCase()
     cancelLateraling(); // 判断横移结束并更新waypoint持续时间
     if ((use_recovery_mode &&vehicle_goal_dis > lateral_goal_dis && point_duration > default_point_time) || is_lateraling)
     {
-        control_mode = TRANSVERSE;
+        control_mode = RECOVER;
         return;
     }
     /**
@@ -195,39 +195,18 @@ void waypoint_control::run()
             // ros::Duration(0.06).sleep();
             clear_justnow = false;
         }
-        if (vehicle_goal_dis < reach_goal_dis && use_swing)
+        if (vehicle_goal_dis < lateral_goal_dis) // 恢复模式距离内不累计时间
         {
-            control_mode = SWING;
+            point_begin = ros::Time::now().toSec();
         }
-        else
-        {
-            if (vehicle_goal_dis < lateral_goal_dis) // 恢复模式距离内不累计时间
-            {
-                point_begin = ros::Time::now().toSec();
-            }
-            updateCase();
-        }
-    }
-    // 最高优先级的下台阶准备
-    bool in_SUBDUCTION_Guide = false;
-    nh.param("semantic_map/in_SUBDUCTION_Guide", in_SUBDUCTION_Guide, false);
-    if (in_SUBDUCTION_Guide)
-    {
-        // 前往下台阶准备区关闭这里的waypoint发布
-        control_mode = SUBDUCTION_Guide;
+        updateCase();
     }
     std::string control_mode_str;
     switch (control_mode)
     {
-    case SUBDUCTION_Guide:
-        need_pub_goal = true;                   // 使能回来全局目标点发布
-        _midP_mode_ptr->is_midplanning = false; // 清除中间点
-        point_last.pose.position.z = -1;        // 重置新点时间累计
-        control_mode_str = "SUBDUCTION_Guide";
-        break;
-    case TRANSVERSE:
-        control_mode_str = "TRANSVERSE";
-        control_mode_pub = pubTRANSVERSE;
+    case RECOVER:
+        control_mode_str = "RECOVER";
+        control_mode_pub = pubRECOVER;
         if (!is_lateraling)
         {
             lateral_begin = ros::Time::now().toSec();
@@ -290,12 +269,8 @@ void waypoint_control::run()
             need_pub_goal = false;
         }
         break;
-    case SWING:
-        control_mode_str = "SWING";
-        control_mode_pub = pubSWING;
-        break;
     }
-    if (control_mode != TRANSVERSE)
+    if (control_mode != RECOVER)
         ROS_WARN("control_mode: %s", control_mode_str.c_str());
     else
         ROS_ERROR("control_mode: %s", control_mode_str.c_str());

@@ -25,10 +25,7 @@ enum ControlMode
 {
     GOALDIRECT,
     MIDPOINT,
-    TRANSVERSE,
-    SWING,
-    PRIPOINT, // 优先点规划
-    SUBDUCTION_Guide
+    RECOVER,
 };
 
 enum ControlModePub
@@ -36,14 +33,7 @@ enum ControlModePub
     pubGOALDIRECT,
     pubMIDPlanning,
     pubGUIDEPlanning,
-    pubTRANSVERSE,
-    pubSWING
-};
-
-enum LateralDir
-{
-    LEFT,
-    RIGHT
+    pubRECOVER,
 };
 
 class waypoint_control
@@ -96,7 +86,7 @@ private:
     double goalX_last;
     double goalY_last;
 
-    // 横移参数
+    // 恢复模式参数
     bool is_lateraling = false;    // 是否正在横移
     double lateral_dis = 0.8;      // 尝试跳出卡死位置的后移距离
     double lateral_time = 2.0;     // 横移持续时间(秒)
@@ -104,11 +94,7 @@ private:
     double lateral_begin = -1.0;   // 横移开始时间
     double lateral_end = -1.0;     // 横移结束时间
     double lateral_duration = 0;   // 横移持续时间
-    LateralDir lateral_dir = LEFT; // 横移方向
     double update_begin_dis;       // 更新横移开始时间的前后点距离
-
-    // 到点摇摆参数
-    bool use_swing = false;
 
     /* 跟随全局规划参数 */
     geometry_msgs::PoseStamped goal_point;
