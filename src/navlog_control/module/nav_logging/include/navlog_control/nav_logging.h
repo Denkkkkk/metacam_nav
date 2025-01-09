@@ -40,7 +40,7 @@
 #define NAV_HIGHLIGHT(msg...)                                           \
     do                                                                  \
     {                                                                   \
-        /* 获取当前时间 */                                              \
+        /* 获取当前时间 */                                        \
         time_t rawtime;                                                 \
         struct tm *timeinfo;                                            \
         char timeStr[20];                                               \
@@ -48,14 +48,14 @@
         timeinfo = localtime(&rawtime);                                 \
         strftime(timeStr, sizeof(timeStr), "%m-%d %H:%M:%S", timeinfo); \
                                                                         \
-        /* 获取当前 ROS 节点名称 */                                     \
+        /* 获取当前 ROS 节点名称 */                             \
         const char *node_name = ros::this_node::getName().c_str();      \
         if (!node_name)                                                 \
         {                                                               \
             node_name = "Unknown_Node";                                 \
         }                                                               \
                                                                         \
-        /* 打印日志消息 */                                              \
+        /* 打印日志消息 */                                        \
         printf("\033[35m[%s] [%s] ", node_name, timeStr);               \
         printf(msg);                                                    \
         printf("\033[0m\n");                                            \
@@ -65,7 +65,7 @@
 #define NAV_WARNING(msg...)                                             \
     do                                                                  \
     {                                                                   \
-        /* 获取当前时间 */                                              \
+        /* 获取当前时间 */                                        \
         time_t rawtime;                                                 \
         struct tm *timeinfo;                                            \
         char timeStr[20];                                               \
@@ -73,14 +73,14 @@
         timeinfo = localtime(&rawtime);                                 \
         strftime(timeStr, sizeof(timeStr), "%m-%d %H:%M:%S", timeinfo); \
                                                                         \
-        /* 获取当前 ROS 节点名称 */                                     \
+        /* 获取当前 ROS 节点名称 */                             \
         const char *node_name = ros::this_node::getName().c_str();      \
         if (!node_name)                                                 \
         {                                                               \
             node_name = "Unknown_Node";                                 \
         }                                                               \
                                                                         \
-        /* 打印日志消息 */                                              \
+        /* 打印日志消息 */                                        \
         printf("\033[33m[%s] [%s] ", node_name, timeStr);               \
         printf(msg);                                                    \
         printf("\033[0m\n");                                            \
@@ -90,7 +90,7 @@
 #define NAV_PASS(msg...)                                                \
     do                                                                  \
     {                                                                   \
-        /* 获取当前时间 */                                              \
+        /* 获取当前时间 */                                        \
         time_t rawtime;                                                 \
         struct tm *timeinfo;                                            \
         char timeStr[20];                                               \
@@ -98,14 +98,14 @@
         timeinfo = localtime(&rawtime);                                 \
         strftime(timeStr, sizeof(timeStr), "%m-%d %H:%M:%S", timeinfo); \
                                                                         \
-        /* 获取当前 ROS 节点名称 */                                     \
+        /* 获取当前 ROS 节点名称 */                             \
         const char *node_name = ros::this_node::getName().c_str();      \
         if (!node_name)                                                 \
         {                                                               \
             node_name = "Unknown_Node";                                 \
         }                                                               \
                                                                         \
-        /* 打印日志消息 */                                              \
+        /* 打印日志消息 */                                        \
         printf("\033[32m[%s] [%s] ", node_name, timeStr);               \
         printf(msg);                                                    \
         printf("\033[0m\n");                                            \
@@ -115,7 +115,7 @@
 #define NAV_ERROR(msg...)                                               \
     do                                                                  \
     {                                                                   \
-        /* 获取当前时间 */                                              \
+        /* 获取当前时间 */                                        \
         time_t rawtime;                                                 \
         struct tm *timeinfo;                                            \
         char timeStr[20];                                               \
@@ -123,14 +123,14 @@
         timeinfo = localtime(&rawtime);                                 \
         strftime(timeStr, sizeof(timeStr), "%m-%d %H:%M:%S", timeinfo); \
                                                                         \
-        /* 获取当前 ROS 节点名称 */                                     \
+        /* 获取当前 ROS 节点名称 */                             \
         const char *node_name = ros::this_node::getName().c_str();      \
         if (!node_name)                                                 \
         {                                                               \
             node_name = "Unknown_Node";                                 \
         }                                                               \
                                                                         \
-        /* 打印日志消息 */                                              \
+        /* 打印日志消息 */                                        \
         printf("\033[31m[%s] [%s] ", node_name, timeStr);               \
         printf(msg);                                                    \
         printf("\033[0m\n");                                            \
@@ -139,7 +139,7 @@
 #define NAV_INFO(msg...)                                                \
     do                                                                  \
     {                                                                   \
-        /* 获取当前时间 */                                              \
+        /* 获取当前时间 */                                        \
         time_t rawtime;                                                 \
         struct tm *timeinfo;                                            \
         char timeStr[20];                                               \
@@ -147,14 +147,14 @@
         timeinfo = localtime(&rawtime);                                 \
         strftime(timeStr, sizeof(timeStr), "%m-%d %H:%M:%S", timeinfo); \
                                                                         \
-        /* 获取当前 ROS 节点名称 */                                     \
+        /* 获取当前 ROS 节点名称 */                             \
         const char *node_name = ros::this_node::getName().c_str();      \
         if (!node_name)                                                 \
         {                                                               \
             node_name = "Unknown_Node";                                 \
         }                                                               \
                                                                         \
-        /* 打印日志消息 */                                              \
+        /* 打印日志消息 */                                        \
         printf(node_name, timeStr);                                     \
         printf(msg);                                                    \
         printf("\n");                                                   \

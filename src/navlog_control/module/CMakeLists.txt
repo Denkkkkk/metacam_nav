@@ -1,0 +1,2 @@
+add_subdirectory(nav_logging)
+add_subdirectory(spd_logging)

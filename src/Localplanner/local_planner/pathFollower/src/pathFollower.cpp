@@ -10,7 +10,7 @@
  */
 #include "pathFollower.h"
 
-using namespace std;
+using namespace std;                            
 
 RoboCtrl::RoboCtrl()
 {
@@ -21,7 +21,7 @@ RoboCtrl::RoboCtrl()
     goal_point_origin = way_point;
     use_real_goal = true;
     cmdTopic = ns + "/cmd_vel";
-    if (ns != "")
+    if (ns != "")                          
     {
         ns += "/";
     }

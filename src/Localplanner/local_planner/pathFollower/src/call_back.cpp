@@ -151,7 +151,7 @@ void RoboCtrl::goalPathCallback(const nav_msgs::Path::ConstPtr &pathIn)
     pathInit = true;
 };
 
-/**
+/**比
  * @brief 停止模式回调
  *
  * @param speed

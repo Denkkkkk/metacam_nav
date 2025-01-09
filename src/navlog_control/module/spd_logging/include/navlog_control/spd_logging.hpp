@@ -3,6 +3,7 @@
 #define SPD_LOGGING_H
 #include "spdlog/spdlog.h"
 #include "ros/ros.h"
+#include "navlog_control/spd_class.h"
 template <typename... Args>
 using format_string_t = fmt::format_string<Args...>;
 
@@ -25,7 +26,8 @@ void NAV_HIGHLIGHT(format_string_t<Args...> fmt, Args &&...args)
     {
         node_name = "Unknown_Node";
     }
-    spdlog::info(fmt, std::forward<Args>(args)...);
+    spdlog::details::log_msg my_msg("mylogger", spdlog::level::info, "Hello World!");
+    spdClass.info_sink->log(my_msg);//sink_3、sink输出
 }
 void NAV_WARNING(const char* msg);
 void NAV_PASS(const char* msg);
