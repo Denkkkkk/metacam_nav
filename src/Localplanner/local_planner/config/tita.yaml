@@ -23,7 +23,7 @@ localPlanner:
   dirWeight: 80  # 评分中，只允许路径终点在这个转弯角度内的路径通过
   detourWei: 1.2  # 绕行系数
   pathCropByGoal: true  # 删除超过圆形区域的路径点
-  goalClearRange_global: 10.0  # 全局范围
+  goalClearRange_global: 10.0  # 全局范围   
   # scale点云收拢比例控制
   usePathScale: false
   defPathScale: 1.0  # 默认缩放范围
