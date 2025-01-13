@@ -28,8 +28,6 @@ void NAV_HIGHLIGHT(format_string_t<Args...> fmt, Args &&...args)
     }
     spdlog::details::log_msg my_msg("mylogger", spdlog::level::info, fmt, args...);
     spdClass.info_sink->log(my_msg);//sink_3、sink输出
-
-    
 }
 void NAV_WARNING(const char* msg);
 void NAV_PASS(const char* msg);
