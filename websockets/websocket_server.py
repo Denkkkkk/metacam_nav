@@ -1,29 +1,26 @@
 import websocket
 import threading
+import time
 
-# 处理来自客户端的消息
+# 服务器接收到消息后的回调函数
 def on_message(ws, message):
-    print(f"Received message from client: {message}")
-    ws.send("Hello, Client! I received your message.")
+    print(f"收到消息: {message}")
+    ws.send("消息已接收，感谢连接！")  # 服务器响应客户端
 
-# 处理连接事件
-def on_open(ws):
-    print("Server: Connection opened")
+# 服务器关闭后的回调函数
+def on_close(ws, close_status_code, close_msg):
+    print("连接关闭")
 
 # 启动WebSocket服务器
-def run_server():
-        
-    server = websocket.WebSocketApp(
-        "ws://localhost:8080",  # 服务端地址
-        on_message=on_message,
-        on_open=on_open
-    )
-
-    # 启动 WebSocket 服务器
+def start_server():
+    # WebSocket 服务器地址
+    server_address = "ws://0.0.0.0:38976"
+    
+    # 创建 WebSocket 服务器实例
+    server = websocket.WebSocketServer(server_address, on_message=on_message, on_close=on_close)
+    print("WebSocket 服务器已启动，等待客户端连接...")
     server.run_forever()
 
 if __name__ == "__main__":
-    # 使用线程启动服务器，确保它在主线程之外运行
-    server_thread = threading.Thread(target=run_server)
-    server_thread.start()
-    server_thread.join()
+    # 启动 WebSocket 服务器
+    start_server()

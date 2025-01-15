@@ -19,7 +19,11 @@ def format_cmd_vel_message(cmd_vel_msg):
             "z": cmd_vel_msg.angular.z
         }
     })
-
+    
+# WebSocket客户端的发送函数
+def on_open(ws):
+    rospy.loginfo("WebSocket 连接已打开")
+    
 class Ros1Send:
     def __init__(self):
         # 初始化 ROS 节点
@@ -28,21 +32,17 @@ class Ros1Send:
         rospy.Subscriber("/cmd_vel", Twist, self.callback)
         # 打印订阅者启动信息
         rospy.loginfo("Subscribed to /cmd_vel topic")
-        self.ws = websocket.WebSocketApp("ws://0.0.0.0:38976", on_open=self.on_open)
         
-    # WebSocket客户端的发送函数
-    def on_open(self,ws):
-        rospy.loginfo("WebSocket 连接已打开")
-
+        
     def callback(self, msg):
+        ws = websocket.WebSocketApp("ws://0.0.0.0:38976", on_open=on_open)
         # 处理接收到的 /cmd_vel 消息
         formatted_msg = format_cmd_vel_message(msg)
-        # self.ws.send(formatted_msg)
+        ws.send(formatted_msg)
+        ws.
         print(f"Sent: {formatted_msg}")
         
     def spin(self):
-        # 保持节点的活动
-        self.ws.run_forever()
         rospy.spin()
         
         
