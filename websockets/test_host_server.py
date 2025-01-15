@@ -8,8 +8,8 @@ async def echo(websocket):
         
         try:
             # 尝试将接收到的消息解析为 JSON 格式
-            # data = json.loads(message)
-            print(f"Received JSON data: {message}")
+            data = json.loads(message)
+            print(f"Received JSON data: {data}")
         except json.JSONDecodeError:
             print("Received non-JSON message:")
             print(f"Message: {message}")
