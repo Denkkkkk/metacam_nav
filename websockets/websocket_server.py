@@ -12,6 +12,7 @@ def on_open(ws):
 
 # 启动WebSocket服务器
 def run_server():
+        
     server = websocket.WebSocketApp(
         "ws://localhost:8080",  # 服务端地址
         on_message=on_message,
