@@ -1,0 +1,14 @@
+<launch>
+   <arg name="vehicleX" default="0.0" />
+   <arg name="vehicleY" default="0.0" />
+   <arg name="vehicleYaw" default="0.0" />
+   <arg name="ns" default="" />
+
+   <node pkg="odom_tf" type="odom_tf" name="odom_tf" output="screen" respawn="true">
+      <param name="vehicleX" type="double" value="$(arg vehicleX)" />
+      <param name="vehicleY" type="double" value="$(arg vehicleY)" />
+      <param name="vehicleYaw" type="double" value="$(arg vehicleYaw)" />
+      <param name="ns" type="string" value="$(arg ns)" />
+   </node>
+
+</launch>
