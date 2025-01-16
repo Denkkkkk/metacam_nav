@@ -69,20 +69,25 @@ class TestaListener(Node):
         # Log some information about the point cloud (e.g., number of points)
         self.get_logger().info(f"Received PointCloud2 with {len(points)} points")
         
-        # Prepare the point cloud data, skipping invalid points
-        valid_points = []
-        
-        for point in points:
-            try:
-                # Convert the point to a float (assuming it's a string or other convertible type)
-                valid_points.append(str(float(point)))
-            except ValueError:
-                # Log the invalid point and skip itd
-                self.get_logger().warn(f"Skipping invalid point: {point}")
-        
         # Prepare the point cloud data as a string
-        point_data = '#'.join(valid_points)
+        point_data = '#'.join(map(str, points))
         
+        for item in point_data.split('#'):
+            try:
+                points.append(float(item))
+            except ValueError:
+                print("Skipping invalid value: ",item)  # Log and skip invalid values
+        if len(points) % 3 != 0:
+           print("Received point cloud data is incomplete. Skipping.")
+           return  # Skip this set if the data is incomplete
+        # Group points into (x, y, z) tuples
+        point_data1 = [points[i:i+3] for i in range(0, len(points), 3)]  # Group into (x, y, z) tuples
+        # Count the number of points
+        num_points = len(point_data1)
+        print("send ",num_points," points in the point cloud")
+        
+        
+        # print("Sending PointCloud2 data:", point_data)
         # Send the point cloud data over the socket
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -91,7 +96,6 @@ class TestaListener(Node):
                 sock.sendall(point_data.encode('utf-8'))  # Send the data as UTF-8 encoded string
         except socket.error as exc:
             self.get_logger().error(f"Caught exception socket.error: {exc}")
-
 
     def extract_points_from_pointcloud(self, msg):
         # This function extracts 3D points from a PointCloud2 message.

@@ -20,12 +20,12 @@ def receivedata(pub_cloud):
 
             while not rospy.is_shutdown():
                 # Continuously receive data (maximum 1024 bytes)
-                data = connection.recv(1024)
+                data = connection.recv(1024*500)
 
                 if data:
                     # Decode received data into string
                     received_str = data.decode('utf-8')
-                    rospy.loginfo(f"Received point cloud data: {received_str}")
+                    # print(f"Received data: {received_str}")
 
                     # Process the received point cloud data and publish it to /cloud_registered topic
                     try:
@@ -43,6 +43,10 @@ def receivedata(pub_cloud):
 
                         # Group points into (x, y, z) tuples
                         point_data = [points[i:i+3] for i in range(0, len(points), 3)]  # Group into (x, y, z) tuples
+                        
+                        # Count the number of points
+                        num_points = len(point_data)
+                        rospy.loginfo(f"Received {num_points} points in the point cloud")
 
                         # Create a PointCloud2 message
                         header = Header()
