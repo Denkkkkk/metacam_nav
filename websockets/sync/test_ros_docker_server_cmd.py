@@ -46,7 +46,7 @@ def receivedata(pub):
                     # 创建 Odometry 消息对象
                     odom_msg = Odometry()
 
-                    # 设置位置信息websockets/sync/test_ros_docker_server.py
+                    # 设置位置信息
                     odom_msg.pose.pose.position = Point(positionx, positiony, positionz)
                     odom_msg.pose.pose.orientation = Quaternion(orientationx, orientationy, orientationz, orientationw)
 
