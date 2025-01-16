@@ -23,8 +23,8 @@ public:
 
         // 填充变换数据
         transformStamped.header.stamp = ros::Time::now();
-        transformStamped.header.frame_id = "body";  // 里程计相对于这个坐标系
-        transformStamped.child_frame_id = "mapping_init";  // 发布到这个坐标系
+        transformStamped.header.frame_id = "mapping_init";  // 里程计相对于这个坐标系
+        transformStamped.child_frame_id = "body";  // 发布到这个坐标系
 
         // 从里程计消息中获取位置和方向
         transformStamped.transform.translation.x = msg->pose.pose.position.x;

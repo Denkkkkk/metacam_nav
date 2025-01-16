@@ -23,7 +23,7 @@ def receive_data(cmd_vel_publisher):
     # 创建一个 TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_sock:
         # 绑定到特定的地址和端口
-        server_sock.bind(('0.0.0.0', 38977))  # 监听端口38977
+        server_sock.bind(('0.0.0.0', 38960))  # 监听端口38977
         server_sock.listen(1)  # 最大连接数为1
 
         

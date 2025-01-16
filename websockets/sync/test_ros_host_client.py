@@ -71,17 +71,17 @@ class TestaListener(Node):
         
         # Prepare the point cloud data as a string
         point_data = '#'.join(map(str, points))
-        
+        points_1 = []
         for item in point_data.split('#'):
             try:
-                points.append(float(item))
+                points_1.append(float(item))
             except ValueError:
                 print("Skipping invalid value: ",item)  # Log and skip invalid values
-        if len(points) % 3 != 0:
+        if len(points_1) % 3 != 0:
            print("Received point cloud data is incomplete. Skipping.")
            return  # Skip this set if the data is incomplete
-        # Group points into (x, y, z) tuples
-        point_data1 = [points[i:i+3] for i in range(0, len(points), 3)]  # Group into (x, y, z) tuples
+        # Group points_1 into (x, y, z) tuples
+        point_data1 = [points_1[i:i+3] for i in range(0, len(points_1), 3)]  # Group into (x, y, z) tuples
         # Count the number of points
         num_points = len(point_data1)
         print("send ",num_points," points in the point cloud")

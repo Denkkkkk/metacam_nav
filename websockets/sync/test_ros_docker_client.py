@@ -8,7 +8,7 @@ def callback(msg):
     data = str(msg.linear.x) + "#" + str(msg.angular.z)
     try:        
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:            
-            sock.connect(('0.0.0.0', 38977))            
+            sock.connect(('0.0.0.0', 38960))            
             rospy.loginfo("Sending message to System B")            
             sock.sendall(data.encode('utf-8'))    
     except socket.error as exc:        
