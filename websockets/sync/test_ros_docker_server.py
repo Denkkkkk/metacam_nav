@@ -7,9 +7,9 @@ def receivedata(pub):
     # 创建一个 TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_sock:
         # 绑定到特定的地址和端口
-        server_sock.bind(('0.0.0.0', 38991)) 
+        server_sock.bind(('0.0.0.0', 38992)) 
         server_sock.listen(1)  # 最大连接数为1
-        print("Server is listening on port 38991...")
+        print("Server is listening on port 38992...")
 
         # 等待连接
         connection, client_address = server_sock.accept()
