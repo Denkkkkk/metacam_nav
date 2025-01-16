@@ -26,9 +26,7 @@ def receive_data(cmd_vel_publisher):
         server_sock.bind(('0.0.0.0', 38977))  # 监听端口38977
         server_sock.listen(1)  # 最大连接数为1
 
-        print("Server is listening on port 38977...")
-
-        # 等待连接
+        
         connection, client_address = server_sock.accept()
 
         with connection:

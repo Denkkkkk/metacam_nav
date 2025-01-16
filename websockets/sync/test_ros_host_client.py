@@ -44,7 +44,7 @@ class TestaListener(Node):
         
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect(('0.0.0.0', 38979))  # Connect to System B on port 38979
+                sock.connect(('0.0.0.0', 38991))  # Connect to System B on port 38979
                 self.get_logger().info("Sending message to System B")
                 sock.sendall(data.encode('utf-8'))  # Send the data as UTF-8 encoded string
         except socket.error as exc:
