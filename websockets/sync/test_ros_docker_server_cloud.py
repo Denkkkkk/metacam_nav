@@ -8,9 +8,9 @@ def receivedata(pub_cloud):
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_sock:
         # Bind to a specific address and port
-        server_sock.bind(('0.0.0.0', 38993))  # Listening on port 38993 for point cloud data
+        server_sock.bind(('0.0.0.0', 38994))  # Listening on port 38994 for point cloud data
         server_sock.listen(1)  # Max connection count is 1
-        rospy.loginfo("Server is listening on port 38993...")
+        rospy.loginfo("Server is listening on port 38994...")
 
         # Wait for a connection
         connection, client_address = server_sock.accept()
@@ -29,8 +29,19 @@ def receivedata(pub_cloud):
 
                     # Process the received point cloud data and publish it to /cloud_registered topic
                     try:
-                        # Convert received data into point cloud format
-                        points = list(map(float, received_str.split('#')))  # Split and convert to float
+                        # Split received string into list and filter out non-numeric values
+                        points = []
+                        for item in received_str.split('#'):
+                            try:
+                                points.append(float(item))
+                            except ValueError:
+                                rospy.logwarn(f"Skipping invalid value: {item}")  # Log and skip invalid values
+                        
+                        if len(points) % 3 != 0:
+                            rospy.logwarn("Received point cloud data is incomplete. Skipping.")
+                            continue  # Skip this set if the data is incomplete
+
+                        # Group points into (x, y, z) tuples
                         point_data = [points[i:i+3] for i in range(0, len(points), 3)]  # Group into (x, y, z) tuples
 
                         # Create a PointCloud2 message

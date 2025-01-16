@@ -69,17 +69,29 @@ class TestaListener(Node):
         # Log some information about the point cloud (e.g., number of points)
         self.get_logger().info(f"Received PointCloud2 with {len(points)} points")
         
+        # Prepare the point cloud data, skipping invalid points
+        valid_points = []
+        
+        for point in points:
+            try:
+                # Convert the point to a float (assuming it's a string or other convertible type)
+                valid_points.append(str(float(point)))
+            except ValueError:
+                # Log the invalid point and skip itd
+                self.get_logger().warn(f"Skipping invalid point: {point}")
+        
         # Prepare the point cloud data as a string
-        point_data = '#'.join(map(str, points))
+        point_data = '#'.join(valid_points)
         
         # Send the point cloud data over the socket
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect(('0.0.0.0', 38993))  # Connect to System B
+                sock.connect(('0.0.0.0', 38994))  # Connect to System B
                 self.get_logger().info("Sending PointCloud2 data to System B")
                 sock.sendall(point_data.encode('utf-8'))  # Send the data as UTF-8 encoded string
         except socket.error as exc:
             self.get_logger().error(f"Caught exception socket.error: {exc}")
+
 
     def extract_points_from_pointcloud(self, msg):
         # This function extracts 3D points from a PointCloud2 message.
