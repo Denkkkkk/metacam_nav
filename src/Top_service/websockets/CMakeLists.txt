@@ -7,8 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
 )
 
-set(PYTHON_EXECUTABLE "/usr/bin/python3")
-
 catkin_python_setup()
 
 install(DIRECTORY launch/

@@ -44,8 +44,8 @@ class TestaListener(Node):
         angular_velocity_z = msg.twist.twist.angular.z
         
         # Log the received data for debugging
-        self.get_logger().info(f"Position: ({position_x}, {position_y}, {position_z})")
-        self.get_logger().info(f"Orientation: ({orientation_x}, {orientation_y}, {orientation_z}, {orientation_w})")
+        # self.get_logger().info(f"Position: ({position_x}, {position_y}, {position_z})")
+        # self.get_logger().info(f"Orientation: ({orientation_x}, {orientation_y}, {orientation_z}, {orientation_w})")
         # self.get_logger().info(f"Linear Velocity: ({linear_velocity_x}, {linear_velocity_y}, {linear_velocity_z})")
         # self.get_logger().info(f"Angular Velocity: ({angular_velocity_x}, {angular_velocity_y}, {angular_velocity_z})")
         
@@ -58,7 +58,7 @@ class TestaListener(Node):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.connect(('0.0.0.0', 38992))  # Connect to System B on port 38979
-                self.get_logger().info("Sending message to System B")
+                self.get_logger().info("Sending Odometry to System B")
                 sock.sendall(data.encode('utf-8'))  # Send the data as UTF-8 encoded string
         except socket.error as exc:
             self.get_logger().error(f"Caught exception socket.error: {exc}")
@@ -66,10 +66,7 @@ class TestaListener(Node):
     def callback_cloud(self, msg):
         # Extract the raw point cloud data and its metadata
         points = self.extract_points_from_pointcloud(msg)
-        
-        # Log some information about the point cloud (e.g., number of points)
-        self.get_logger().info(f"Received PointCloud2 with {len(points)} points")
-        
+                
         # Prepare the point cloud data as a string
         point_data = '#'.join(map(str, points))
         points_1 = []

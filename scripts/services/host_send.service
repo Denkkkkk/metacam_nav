@@ -1,0 +1,18 @@
+[Unit]
+Description=Hourly File Cleanup Service
+After=network.target
+
+[Service]
+User=gs
+Type=simple
+Environment="ROS_DOMAIN_ID=42"
+Environment="ROS_LOCALHOST_ONLY=0"
+ExecStart=-/home/gs/workspace/metacam_nav/scripts/services/host_send.sh
+ExecReload=-/home/gs/workspace/metacam_nav/scripts/services/host_send.sh
+Restart=always
+RestartSec=1s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

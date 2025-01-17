@@ -10,7 +10,7 @@ def callback(msg):
     try:        
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:            
             sock.connect(('0.0.0.0', 38960))            
-            rospy.logwarn("Sending message to System B")            
+            rospy.logwarn("Sending /cmd_vel x: %s , z: %s to System B", msg.linear.x, msg.angular.z)            
             sock.sendall(data.encode('utf-8'))    
     except socket.error as exc:        
         rospy.logerr("Caught exception socket.error : %s", exc)

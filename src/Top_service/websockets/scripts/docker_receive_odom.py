@@ -25,7 +25,7 @@ def receivedata(pub):
                 if data:
                     # 输出接收到的数据
                     received_str = data.decode('utf-8')
-                    rospy.logwarn(f"Received data: {received_str}")
+                    # rospy.logwarn(f"Received data: {received_str}")
 
                     # 解析接收到的字符串，假设格式为 "positionx#positiony#positionz#orientationx#orientationy#orientationz#orientationw#linearvelocityx#linearvelocityy#linearvelocityz#angularvelocityx#angularvelocityy#angularvelocityz"
                     try:
@@ -57,10 +57,11 @@ def receivedata(pub):
 
                         # 发布消息到 /Odometry
                         pub.publish(odom_msg)
-                        rospy.logwarn(f"Published to /Odometry: position = ({positionx}, {positiony}, {positionz}), "
-                            f"orientation = ({orientationx}, {orientationy}, {orientationz}, {orientationw}), "
-                            f"linear_velocity = ({linearvelocityx}, {linearvelocityy}, {linearvelocityz}), "
-                            f"angular_velocity = ({angularvelocityx}, {angularvelocityy}, {angularvelocityz})")
+                        rospy.logwarn(f"Published Odometry data to /Odometry topic")
+                        # rospy.logwarn(f"Published to /Odometry: position = ({positionx}, {positiony}, {positionz}), "
+                        #     f"orientation = ({orientationx}, {orientationy}, {orientationz}, {orientationw}), "
+                        #     f"linear_velocity = ({linearvelocityx}, {linearvelocityy}, {linearvelocityz}), "
+                        #     f"angular_velocity = ({angularvelocityx}, {angularvelocityy}, {angularvelocityz})")
                     except ValueError:
                         rospy.logwarn("Error: Received data format is incorrect.")
                 else:

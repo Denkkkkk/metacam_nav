@@ -57,6 +57,8 @@
 
     <include file="$(find debug_node)/launch/debug_node.launch" />
 
+    <include file="$(find websockets)/launch/websockets_docker.launch" />
+
     <!--启动重定位-->
     <!-- <include file="$(find relocalization)/launch/relocalization.launch" />  -->
 

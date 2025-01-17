@@ -21,7 +21,7 @@ def receivedata(pub_cloud):
 
             while not rospy.is_shutdown():
                 # Continuously receive data (maximum 1024 bytes)
-                data = connection.recv(1024*500)
+                data = connection.recv(1024*100)
 
                 if data:
                     # Decode received data into string
