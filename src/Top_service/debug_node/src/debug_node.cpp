@@ -52,11 +52,11 @@ void update_param()
     // 调用服务
     if (client.call(srv))
     {
-        ROS_INFO("Service call successful. Response: %s", srv.response.message.c_str());
+        // ROS_INFO("Service call successful. Response: %s", srv.response.message.c_str());
     }
     else
     {
-        ROS_ERROR("Failed to call service /nav/update_config");
+        ROS_ERROR("debug_node Failed to call service /nav/update_config");
     }
     return;
 }

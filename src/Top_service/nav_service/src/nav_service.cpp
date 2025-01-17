@@ -258,7 +258,7 @@ int main(int argc, char **argv)
         navStatusPub(nav_status_pub); // 发布导航状态
 
         // 导航点取出并发布到way_point，到点后再指向下一个
-        if (is_running)
+        if ((nav_model.mode !=1) && (is_running || nav_model.mode == 2) )
         {
             if (nav_service_params.get_params().use_relocalization && (!nav_model.points.empty() && abs(nav_model.points[0].x - 99999) < 0.1))
             {
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
                 stop_pub.publish(stop);
                 continue;
             }
-            else if (nav_model.parameters.empty() && !nav_service_params.get_params().use_prior_path)
+            else if (nav_model.parameters.empty() && !(nav_service_params.get_params().use_prior_path && abs(nav_model.points[0].x - 99999) < 0.1))
             {
                 ROS_ERROR("nav_model Parameters Is Empty!");
                 // 强制停止
@@ -299,9 +299,9 @@ int main(int argc, char **argv)
                 stop_pub.publish(stop);
                 continue;
             }
-            else if (nav_model.parameters[0] <= 0 && !nav_service_params.get_params().use_prior_path)
+            else if (nav_model.parameters[0] <= 0 && !(nav_service_params.get_params().use_prior_path && abs(nav_model.points[0].x - 99999) < 0.1))
             {
-                ROS_ERROR("nav_model.parameters[0] :%f !", nav_model.parameters[0]);
+                ROS_ERROR("NO nav_times, nav_model.parameters[0] :%f !", nav_model.parameters[0]);
                 // 强制停止
                 std_msgs::Bool stop;
                 stop.data = true;

@@ -117,7 +117,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     if (get_goal.data && pctlPtr->get_params().use_getgoal_yaw && abs(goalyaw_diff) > 0.1 && abs(vehicleSpeed) < 0.001)
     {
         cmd_vel.linear.x = 0.0;
-        cmd_vel.angular.x = -1.0;
+        cmd_vel.angular.x = 0.0;
         // 转向控制，上下死区
         if (abs(goalyaw_diff) < 0.1)
         {
