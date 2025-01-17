@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import socket
 import rospy
 from nav_msgs.msg import Odometry
@@ -10,13 +10,13 @@ def receivedata(pub):
         # 绑定到特定的地址和端口
         server_sock.bind(('0.0.0.0', 38992)) 
         server_sock.listen(1)  # 最大连接数为1
-        print("Server is listening on port 38992...")
+        rospy.logwarn("Server is listening on port 38992...")
 
         # 等待连接
         connection, client_address = server_sock.accept()
 
         with connection:
-            print(f"Connection established with {client_address}")
+            rospy.logwarn(f"Connection established with {client_address}")
 
             while not rospy.is_shutdown():
                 # 持续接收数据（最大1024字节）
@@ -25,7 +25,7 @@ def receivedata(pub):
                 if data:
                     # 输出接收到的数据
                     received_str = data.decode('utf-8')
-                    print(f"Received data: {received_str}")
+                    rospy.logwarn(f"Received data: {received_str}")
 
                     # 解析接收到的字符串，假设格式为 "positionx#positiony#positionz#orientationx#orientationy#orientationz#orientationw#linearvelocityx#linearvelocityy#linearvelocityz#angularvelocityx#angularvelocityy#angularvelocityz"
                     try:
@@ -57,12 +57,12 @@ def receivedata(pub):
 
                         # 发布消息到 /Odometry
                         pub.publish(odom_msg)
-                        print(f"Published to /Odometry: position = ({positionx}, {positiony}, {positionz}), "
+                        rospy.logwarn(f"Published to /Odometry: position = ({positionx}, {positiony}, {positionz}), "
                             f"orientation = ({orientationx}, {orientationy}, {orientationz}, {orientationw}), "
                             f"linear_velocity = ({linearvelocityx}, {linearvelocityy}, {linearvelocityz}), "
                             f"angular_velocity = ({angularvelocityx}, {angularvelocityy}, {angularvelocityz})")
                     except ValueError:
-                        print("Error: Received data format is incorrect.")
+                        rospy.logwarn("Error: Received data format is incorrect.")
                 else:
                     # 如果没有接收到数据，等待新的连接或数据
                     break

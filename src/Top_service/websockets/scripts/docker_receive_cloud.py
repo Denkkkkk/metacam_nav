@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import socket
 import rospy
 from sensor_msgs.msg import PointCloud2
@@ -11,13 +11,13 @@ def receivedata(pub_cloud):
         # Bind to a specific address and port
         server_sock.bind(('0.0.0.0', 38994))  # Listening on port 38994 for point cloud data
         server_sock.listen(1)  # Max connection count is 1
-        rospy.loginfo("Server is listening on port 38994...")
+        rospy.logwarn("Server is listening on port 38994...")
 
         # Wait for a connection
         connection, client_address = server_sock.accept()
 
         with connection:
-            rospy.loginfo(f"Connection established with {client_address}")
+            rospy.logwarn(f"Connection established with {client_address}")
 
             while not rospy.is_shutdown():
                 # Continuously receive data (maximum 1024 bytes)
@@ -47,7 +47,7 @@ def receivedata(pub_cloud):
                         
                         # Count the number of points
                         num_points = len(point_data)
-                        rospy.loginfo(f"Received {num_points} points in the point cloud")
+                        rospy.logwarn(f"Received {num_points} points in the point cloud")
 
                         # Create a PointCloud2 message
                         header = Header()
@@ -59,7 +59,7 @@ def receivedata(pub_cloud):
 
                         # Publish PointCloud2 message to /cloud_registered topic
                         pub_cloud.publish(pc_data)
-                        rospy.loginfo(f"Published PointCloud2 data to /cloud_registered topic")
+                        rospy.logwarn(f"Published PointCloud2 data to /cloud_registered topic")
 
                     except Exception as e:
                         rospy.logwarn(f"Error processing point cloud data: {e}")

@@ -1,0 +1,6 @@
+<launch>
+
+   <node pkg="websockets" type="host_send.py" name="host_send" output="screen" respawn="true"/>
+   <node pkg="websockets" type="host_receive_cmd_vel.py" name="host_receive_cmd_vel" output="screen" respawn="true"/>
+
+</launch>
