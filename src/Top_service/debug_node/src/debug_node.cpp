@@ -40,20 +40,6 @@ void update_param()
     nlohmann::json j;
     input_file >> j; // 读取文件内容到 JSON 对象 j
     from_json(j, nav_model);
-    // 打印读取到的数据
-    // std::cout << "Mode: " << nav_model.mode << std::endl;
-    // std::cout << "Parameters: ";
-    // for (const auto &param : nav_model.parameters)
-    // {
-    //     std::cout << param << " ";
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << "Points: " << std::endl;
-    // for (const auto &point : nav_model.points)
-    // {
-    //     std::cout << "Point(x: " << point.x << ", y: " << point.y << ", z: " << point.z << ")" << std::endl;
-    // }
 
     // 转string格式
     std::string json_str = j.dump();
@@ -75,18 +61,11 @@ void update_param()
     return;
 }
 
-void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
-{
-    vehicle_x = msg->pose.pose.position.x;
-    vehicle_y = msg->pose.pose.position.y;
-}
-
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "debug_node");
     ros::NodeHandle nh;
     client = nh.serviceClient<std_srvs::Trigger>("/nav/update_config");
-    ros::Subscriber odom_sub = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 2, odomCallback);
 
     local_config = ros::package::getPath("debug_node") + "/config/nav_mode.json";
 

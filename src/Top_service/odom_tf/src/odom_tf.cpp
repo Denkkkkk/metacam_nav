@@ -45,7 +45,7 @@ private:
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "odom_to_mapping_init");
+    ros::init(argc, argv, "odom_tf");
     OdomToMappingInit odom_to_mapping_init;
 
     // 循环处理ROS回调函数
