@@ -6,11 +6,11 @@ import socket
 def callback(msg):    
     # rospy.logwarn("Received on testa,linear.x: %s", msg.linear.x)    
     # rospy.logwarn("Received on testa,angular.z: %s", msg.angular.z)
-    data = str(msg.linear.x) + "#" + str(msg.angular.z)
+    data = str(msg.linear.x) + "#" + str(msg.angular.x)+ "#" + str(msg.angular.z)
     try:        
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:            
             sock.connect(('0.0.0.0', 38960))            
-            rospy.logwarn("Sending /cmd_vel x: %s , z: %s to System B", msg.linear.x, msg.angular.z)            
+            rospy.logwarn("Sending /cmd_vel x: %s ,a.x %s a.z: %s to System B", msg.linear.x,msg.angular.x,msg.angular.z)            
             sock.sendall(data.encode('utf-8'))    
     except socket.error as exc:        
         rospy.logerr("Caught exception socket.error : %s", exc)

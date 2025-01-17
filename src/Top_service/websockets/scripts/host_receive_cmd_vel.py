@@ -11,14 +11,15 @@ class CmdVelPublisher(Node):
         self.publisher_ = self.create_publisher(Twist, '/cmd_vel', 10)
         self.get_logger().warn("CmdVelPublisher has been initialized")
 
-    def publish_cmd_vel(self, linear_x, angular_z):
+    def publish_cmd_vel(self, linear_x,angular_x, angular_z):
         # 创建一个Twist消息
         twist = Twist()
         twist.linear.x = linear_x
+        twist.angular.x = angular_x
         twist.angular.z = angular_z
         # 发布消息
         self.publisher_.publish(twist)
-        self.get_logger().warn(f"Published linear.x: {linear_x}, angular.z: {angular_z}")
+        self.get_logger().warn(f"Published linear.x: {linear_x},angular.x: {angular_x} ,angular.z: {angular_z}")
 
 def receive_data(cmd_vel_publisher):
     # 创建一个 TCP/IP socket
@@ -46,12 +47,13 @@ def receive_data(cmd_vel_publisher):
                 # 解析数据并发布
                 try:
                     # 假设数据格式为 "1.0#0.0"，我们将其分离
-                    linear_x_str, angular_z_str = data_str.split('#')
+                    linear_x_str,angular_x_str,angular_z_str = data_str.split('#')
                     linear_x = float(linear_x_str)
+                    angular_x = float(angular_x_str)
                     angular_z = float(angular_z_str)
 
                     # 发布到ROS 2话题
-                    cmd_vel_publisher.publish_cmd_vel(linear_x, angular_z)
+                    cmd_vel_publisher.publish_cmd_vel(linear_x,angular_x,angular_z)
                 except ValueError as e:
                     cmd_vel_publisher.get_logger().warn(f"Failed to parse the data: {data_str}, Error: {e}")
 
