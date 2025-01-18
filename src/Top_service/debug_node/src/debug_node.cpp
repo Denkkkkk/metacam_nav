@@ -17,6 +17,7 @@ double vehicle_x = 0.0;
 double vehicle_y = 0.0;
 ros::ServiceClient client;
 std::string local_config;
+std::string cached_json_str = ""; // 缓存的 JSON 字符串
 
 /**
  * @brief 开启导航服务
@@ -39,24 +40,36 @@ void update_param()
     // 解析 JSON 数据
     nlohmann::json j;
     input_file >> j; // 读取文件内容到 JSON 对象 j
-    from_json(j, nav_model);
 
-    // 转string格式
+    // 将 JSON 对象转换为字符串
     std::string json_str = j.dump();
-    // 打印
-    // std::cout << "JSON String: " << json_str << std::endl;
-    ros::param::set("/nav/config", json_str);
 
-    // 创建请求和响应对象
-    std_srvs::Trigger srv;
-    // 调用服务
-    if (client.call(srv))
+    // 2. 比较当前读取的 JSON 字符串与缓存的内容
+    if (json_str != cached_json_str) 
     {
-        // ROS_INFO("Service call successful. Response: %s", srv.response.message.c_str());
+        // 3. 如果文件内容发生变化，更新 ROS 参数
+        ros::param::set("/nav/config", json_str);
+
+        // 更新缓存
+        cached_json_str = json_str;
+
+        // 创建请求和响应对象
+        std_srvs::Trigger srv;
+
+        // 调用服务
+        if (client.call(srv))
+        {
+            // ROS_INFO("Service call successful. Response: %s", srv.response.message.c_str());
+        }
+        else
+        {
+            ROS_ERROR("Failed to call service /nav/update_config");
+        }
     }
     else
     {
-        ROS_ERROR("debug_node Failed to call service /nav/update_config");
+        // 文件没有发生变化，跳过更新
+        ROS_INFO("No change in JSON data. Skipping update.");
     }
     return;
 }
