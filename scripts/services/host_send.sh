@@ -1,4 +1,6 @@
 #!/bin/bash
+sleep 2s
+
 source /opt/ros/humble/setup.bash
 source /opt/ros/humble/setup.sh
 source /opt/ros/humble/share/rclpy/local_setup.bash

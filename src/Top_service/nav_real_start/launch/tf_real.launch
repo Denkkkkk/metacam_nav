@@ -2,7 +2,7 @@
      <arg name="ns" default="" />
 
      <!--手动设定雷达到机器人位置的转换,二代车-->
-     <node pkg="tf" type="static_transform_publisher" name="vehicleTObody" output="screen" args="-0.0 0.0 -0.0 0.0 -0.349 0 body $(arg ns)/vehicle  10" respawn="true" />
+     <node pkg="tf" type="static_transform_publisher" name="vehicleTObody" output="screen" args="-0.0 0.0 0.0 -0.0 -0.349 0 body $(arg ns)/vehicle  10" respawn="true" />
 
      <node pkg="tf" type="static_transform_publisher" name="mapping_initTOodom" output="screen" args="0.0 0.0 0.0 0.0 0.0 0.0  $(arg ns)/odom mapping_init 10" respawn="true" />
 
