@@ -12,6 +12,7 @@ cmake-build-debug
 .DS_Store
 .active
 *.bag
+*.tar
 
 relocal*.pcd
 terrain*.pcd
