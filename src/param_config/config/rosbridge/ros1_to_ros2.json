@@ -1,0 +1,4 @@
+{
+    "ROS_DOMAIN_ID": 42,
+    "/cmd_vel": "/cmd_vel"
+}

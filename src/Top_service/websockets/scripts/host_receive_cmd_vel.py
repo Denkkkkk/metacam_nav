@@ -1,77 +1,71 @@
 #!/usr/bin/env python3
 import socket
 import rclpy
-from geometry_msgs.msg import Twist
 from rclpy.node import Node
+from geometry_msgs.msg import Twist
 
 class CmdVelPublisher(Node):
     def __init__(self):
         super().__init__('host_receive_cmd_vel')
-        # 创建一个话题发布者，发布到"/cmd_vel"话题，消息类型是Twist
         self.publisher_ = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.get_logger().warn("CmdVelPublisher has been initialized")
+        self.get_logger().info("CmdVelPublisher initialized. Waiting for incoming connections...")
 
-    def publish_cmd_vel(self, linear_x,angular_x, angular_z):
-        # 创建一个Twist消息
+    def publish_cmd_vel(self, linear_x, angular_x, angular_z):
         twist = Twist()
         twist.linear.x = linear_x
         twist.angular.x = angular_x
         twist.angular.z = angular_z
-        # 发布消息
         self.publisher_.publish(twist)
-        self.get_logger().warn(f"Published linear.x: {linear_x},angular.x: {angular_x} ,angular.z: {angular_z}")
+        self.get_logger().info(f"Published linear.x: {linear_x}, angular.x: {angular_x}, angular.z: {angular_z}")
 
-def receive_data(cmd_vel_publisher):
-    # 创建一个 TCP/IP socket
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_sock:
-        # 绑定到特定的地址和端口
-        server_sock.bind(('0.0.0.0', 38960))  # 监听端口38960
-        server_sock.listen(1)  # 最大连接数为1
 
-        
-        connection, client_address = server_sock.accept()
+def main(args=None):
+    rclpy.init(args=args)
+    node = CmdVelPublisher()
 
-        with connection:
-            cmd_vel_publisher.get_logger().warn(f"Connection established with {client_address}")
+    # 建立服务器 Socket
+    server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_ip = '0.0.0.0'
+    server_port = 39000
+    server_sock.bind((server_ip, server_port))
+    server_sock.listen(1)
+    node.get_logger().info(f"Server listening on {server_ip}:{server_port}")
+
+    try:
+        while rclpy.ok():
+            node.get_logger().info("Waiting for a new TCP client...")
             
-            while True:
-                # 持续接收数据（最大1024字节）
-                data = connection.recv(1024)
-                
-                if not data:
-                    # 如果没有接收到数据，退出
-                    return
-                
-                # 解码接收到的数据
-                data_str = data.decode('utf-8')
-                # 解析数据并发布
-                try:
-                    # 假设数据格式为 "1.0#0.0"，我们将其分离
-                    linear_x_str,angular_x_str,angular_z_str = data_str.split('#')
-                    linear_x = float(linear_x_str)
-                    angular_x = float(angular_x_str)
-                    angular_z = float(angular_z_str)
+            # 等待客户端连接（阻塞）
+            connection, client_address = server_sock.accept()
+            node.get_logger().warn(f"Connection established with {client_address}")
 
-                    # 发布到ROS 2话题
-                    cmd_vel_publisher.publish_cmd_vel(linear_x,angular_x,angular_z)
-                except ValueError as e:
-                    cmd_vel_publisher.get_logger().warn(f"Failed to parse the data: {data_str}, Error: {e}")
+            # 在当前连接上，循环读取数据，直到对方断开
+            with connection:
+                while rclpy.ok():
+                    data = connection.recv(1024)
+                    if not data:
+                        node.get_logger().warn("Connection closed by client.")
+                        break  # 跳出内部循环，回到 accept
 
-def main():
-    # 初始化ROS 2
-    rclpy.init()
+                    # 解码数据并发布
+                    data_str = data.decode('utf-8').strip()
+                    try:
+                        linear_x_str, angular_x_str, angular_z_str = data_str.split('#')
+                        linear_x = float(linear_x_str)
+                        angular_x = float(angular_x_str)
+                        angular_z = float(angular_z_str)
+                        node.publish_cmd_vel(linear_x, angular_x, angular_z)
+                    except ValueError as e:
+                        node.get_logger().error(f"Failed to parse data: '{data_str}', Error: {e}")
 
-    # 创建发布者节点
-    cmd_vel_publisher = CmdVelPublisher()
-    while(rclpy.ok()):
-        try:
-            # 调用接收数据的函数
-            receive_data(cmd_vel_publisher)
-        except KeyboardInterrupt:
-            cmd_vel_publisher.get_logger().warn("Server has been stopped.")
+    except KeyboardInterrupt:
+        node.get_logger().warn("Server interrupted by user.")
 
-    # 清理并关闭ROS 2
-    rclpy.shutdown()
+    finally:
+        server_sock.close()
+        node.get_logger().info("Server socket closed.")
+        rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
