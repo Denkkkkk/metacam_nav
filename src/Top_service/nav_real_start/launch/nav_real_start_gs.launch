@@ -1,6 +1,7 @@
 <launch>
     <!-- 选择性开启-->
-    <arg name="use_global_planner" default="true" />
+    <arg name="use_global_planner" default="false" />
+    <arg name="run_in_docker" default="true" />
     <arg name="use_rviz" default="false" />
 
     <!-- 局部规划的初始点位-->
@@ -49,15 +50,18 @@
     <include file="$(find nav_real_start)/launch/tf_real.launch">
         <arg name="ns" value="$(arg ns)" />
     </include>
-    <include file="$(find odom_tf)/launch/odom_tf.launch" />
+    
 
     <include file="$(find lio_interface)/launch/lio_interface.launch">
         <arg name="ns" value="$(arg ns)" />
     </include>
 
-    <include file="$(find debug_node)/launch/debug_node.launch" />
+    <group if="$(arg run_in_docker)">
+        <include file="$(find odom_tf)/launch/odom_tf.launch" />
+        <include file="$(find debug_node)/launch/debug_node.launch" />
+        <include file="$(find websockets)/launch/websockets_docker.launch" />
+     </group>
 
-    <include file="$(find websockets)/launch/websockets_docker.launch" />
 
     <!--启动重定位-->
     <!-- <include file="$(find relocalization)/launch/relocalization.launch" />  -->
