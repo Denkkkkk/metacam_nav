@@ -34,13 +34,13 @@ localPlanner:
 
 pathFollower:
   # sports parameters
-  yawRateGain: 1.8        # 一般情况下的车头转动增益
+  yawRateGain: 2.0        # 一般情况下的车头转动增益
   stopYawRateGain: 3.0    # 静止下的车头转动增益
   maxYawRate: 35.0        # 车头最大转动角速度
   maxStopYawRate: 45.0    # 静止时车头最大转动角速度
-  dirDiffThre_slow: 0.28  # 角度差
+  dirDiffThre_slow: 0.35  # 角度差
   dirDiffThre_keep: 0.05  # 角度差
-  quick_turn_speed: 0.05  # 减速到这个速度就允许快速转向
+  quick_turn_speed: 0.1  # 减速到这个速度就允许快速转向
   # get goal parameters
   close_direct_speed: 0.2      # 到目标点附近直冲的速度
   closeGoal_direct_dis: 0.55   # 到目标点附近直走的阈值&&达到getGoal_speed的距离

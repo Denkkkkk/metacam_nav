@@ -27,7 +27,7 @@ pathFollower:
 
 #通用参数配置
 usualParams:
-  maxSpeed: 0.75               # 整车最大速度
+  maxSpeed: 1.1               # 整车最大速度
   use_relocalization: false     # 是否使用重定位调整到同一个地图坐标系
   use_map: true                # 是否使用先验地图
   use_prior_path: true         # 是否使用先验路径

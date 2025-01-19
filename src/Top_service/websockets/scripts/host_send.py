@@ -38,7 +38,7 @@ class TestaListener(Node):
         orientation_w = msg.pose.pose.orientation.w
         linear_velocity_x = msg.twist.twist.linear.x
         linear_velocity_y = msg.twist.twist.linear.y
-        linear_velocity_z = msg.twist.twist.linear.z
+        linear_velocity_z = msg.twist.twist.linear.z                                                                                                                                                                                                            
         angular_velocity_x = msg.twist.twist.angular.x
         angular_velocity_y = msg.twist.twist.angular.y
         angular_velocity_z = msg.twist.twist.angular.z
