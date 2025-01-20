@@ -1,5 +1,5 @@
 - 实时生成的.pcd文件
-roslaunch map_create nav_map_create.launch
+roslaunch map_manager nav_map_create.launch
 
 ！手动运行后请注意及时请空生成的pcd文件，避免造成内存紧张
 

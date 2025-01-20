@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "terrain_map_record", ros::init_options::AnonymousName); // 节点匿名化，AnonymousName 会在节点名称后添加一个随机的唯一后缀，这样即使你有多个同名的节点，也不会发生冲突
     MapRecord map_record_node;
-    ros::Rate rate(10);
+    ros::Rate rate(1);
     bool status = ros::ok();
     while (status)
     {
