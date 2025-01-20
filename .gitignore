@@ -4,6 +4,7 @@ devel
 install
 output
 test
+log_files
 
 cmake-build-debug
 .catkin_workspace

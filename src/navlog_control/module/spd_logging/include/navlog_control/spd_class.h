@@ -2,6 +2,10 @@
 #include "spdlog/spdlog.h"
 #include <filesystem>
 #include <iostream>
+#include <spdlog/sinks/rotating_file_sink.h>
+
+#include <ros/package.h>
+#include <ros/this_node.h>
 
 namespace fs = std::filesystem;
 
@@ -9,26 +13,24 @@ class spd_class
 {
 
 private:
-    /* data */
-
-    /*func*/
-    static void create_log_directory_if_not_exists(const std::string &dir_path);
-
 public:
+    std::string navlog_pack = ros::package::getPath("navlog_control");
+    std::string ros_node_name = ros::this_node::getName();
     spd_class()
     {
-        // create_log_directory_if_not_exists("./navlog.txt");
-        info_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("/home/denk/skyland_innovation/metacam_nav/src/navlog_control/log_files/navlog.txt"); // 创建sink指针
-        info_sink->set_pattern("[%Y-%m-%d %H:%M:%S] %v");                                                                                                     // sink_1、设置格式
-        info_sink->set_level(spdlog::level::info);                                                                                                            // sink_2、设置最低输出等级
+        file_logger = spdlog::rotating_logger_mt(ros_node_name, navlog_pack + "/log_files/" + ros_node_name + ".txt", 1024 * 100000, 0);
+        file_logger->set_pattern("[%Y-%m-%d %H:%M:%S][%n][%l] %v");
+
+
+        my_logger= std::make_shared<spdlog::logger>("mylogger");//创建logger
+        my_logger->set_pattern("[%Y-%m-%d %H:%M:%S][%n][%l] %v");//logger_1、设置格式
     }
     ~spd_class()
     {
-        logger->flush();
-        info_sink->flush();
+        file_logger->flush();
     }
-    std::shared_ptr<spdlog::logger> logger = spdlog::default_logger();
-    std::shared_ptr<spdlog::sinks::basic_file_sink_mt> info_sink;
+    std::shared_ptr<spdlog::logger> file_logger;
+    std::shared_ptr<spdlog::logger> my_logger;
 };
 
 inline spd_class spdClass;
