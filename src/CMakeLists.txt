@@ -2,7 +2,9 @@
 # catkin/cmake/toplevel.cmake
 cmake_minimum_required(VERSION 3.0.2)
 project(Project)
-#message(“TOP-----------------------------------------------------------------------------------------------------------------------------------------”)
+#message(“-------------------------------------------------------------------cmake variables created by ldq----------------------------------------------------------------------”)
+cmake_policy(SET CMP0077 NEW)
+cmake_policy(SET CMP0054 OLD)
 # choose build options
 option(BUILD_DIABLO_SERIAL "build diablo_serial or not" OFF)
 option(BUILD_UNITREE "build unitree_legged_sdk or not" OFF)
@@ -15,8 +17,9 @@ set(CATKIN_ENABLE_TESTING OFF)
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
-set(CATKIN_TOPLEVEL TRUE)
+#message(“-------------------------------------------------------------------cmake variables created by ldq----------------------------------------------------------------------”)
 
+set(CATKIN_TOPLEVEL TRUE)
 # search for catkin within the workspace
 set(_cmd "catkin_find_pkg" "catkin" "${CMAKE_SOURCE_DIR}")
 execute_process(COMMAND ${_cmd}

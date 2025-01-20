@@ -15,7 +15,7 @@
   <arg name="vehicleZ" default="0.0" />
   <arg name="vehicleYaw" default="0.0" />
   <!-- Autonomous Exploration Development Environment参数 -->
-  <arg name="world_name" default="block" />
+  <arg name="world_name" default="black" />
 
   <!-- 启动gazebo仿真环境，加载地图和机器人，同时添加控制器 -->
   <include file="$(find sentry_gazebo)/launch/environment/gazebo_rmuc.launch">

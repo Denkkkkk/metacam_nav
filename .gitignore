@@ -7,6 +7,7 @@ test
 log_files
 
 cmake-build-debug
+cmake-build-debugros
 .catkin_workspace
 .vscode
 .idea
