@@ -1,0 +1,5 @@
+FROM ros:foxy-ros1-bridge
+ 
+# 设置环境变量
+ENV ROS_HOSTNAME=bridge
+ENV ROS_MASTER_URI=http://127.0.0.1:11311

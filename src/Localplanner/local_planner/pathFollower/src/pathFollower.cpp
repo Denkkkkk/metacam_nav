@@ -67,9 +67,9 @@ bool RoboCtrl::slowDown()
         local_slowDown = 1000;
     }
     // 打印局部规划器最近的点云距离
-    ROS_WARN("localplanner_cloud_minDis: %f", local_slowDown);
+    // ROS_WARN("localplanner_cloud_minDis: %f", local_slowDown);
     // 打印terrainCloud_minDis
-    ROS_WARN("terrainCloud_minDis: %f", terrainCloud_minDis);
+    // ROS_WARN("terrainCloud_minDis: %f", terrainCloud_minDis);
     near_cloud_stop = false;
     if (terrainCloud_minDis < pctlPtr->get_params().vehicle_stop_range) // 急停
     {
@@ -117,7 +117,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     if (get_goal.data && pctlPtr->get_params().use_getgoal_yaw && abs(goalyaw_diff) > 0.1 && abs(vehicleSpeed) < 0.001)
     {
         cmd_vel.linear.x = 0.0;
-        cmd_vel.angular.x = -1.0;
+        cmd_vel.angular.x = 0.0;
         // 转向控制，上下死区
         if (abs(goalyaw_diff) < 0.1)
         {
@@ -328,7 +328,7 @@ void RoboCtrl::pure_persuit()
         }
     }
 
-    ROS_WARN("maxSpeed1: %f", maxSpeed1);
+    // ROS_WARN("maxSpeed1: %f", maxSpeed1);
     /**
      * @brief 距离计算
      *

@@ -1,0 +1,7 @@
+<launch>
+
+   <node pkg="websockets" type="docker_send.py" name="docker_send" output="screen" respawn="true"/>
+   <node pkg="websockets" type="docker_receive_cloud.py" name="docker_receive_cloud" output="screen" respawn="true"/>
+   <node pkg="websockets" type="docker_receive_odom.py" name="docker_receive_odom" output="screen" respawn="true"/>
+
+</launch>
