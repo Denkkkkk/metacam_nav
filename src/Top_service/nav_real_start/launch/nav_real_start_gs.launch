@@ -11,13 +11,6 @@
     <arg name="vehicleYaw" default="0" />
     <param name="use_sim_time" value="false" />
 
-    <include file="$(find map_to_odom)/launch/map_to_odom.launch">
-        <arg name="vehicleX" value="$(arg vehicleX)" />
-        <arg name="vehicleY" value="$(arg vehicleY)" />
-        <arg name="vehicleYaw" value="$(arg vehicleYaw)" />
-        <arg name="ns" value="$(arg ns)" />
-    </include>
-
     <!-- 启动Autonomous Exploration Development Environment环境，加载地形分析，局部导航 -->
     <include file="$(find local_planner)/launch/system_lplanner.launch">
         <arg name="ns" value="$(arg ns)" />
