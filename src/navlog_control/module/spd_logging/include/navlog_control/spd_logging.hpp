@@ -64,8 +64,8 @@ void NAV_WARNING(format_string_t<Args...> fmt, Args &&...args)
     }
 
     CREATE_STATIC();
-    spdClass.file_logger->info(fmt, std::forward<Args>(args)...);
-    spdlog::info(fmt, std::forward<Args>(args)...);
+    spdClass.file_logger->warn(fmt, std::forward<Args>(args)...);
+    spdlog::warn(fmt, std::forward<Args>(args)...);
 }
 
 template <typename... Args>
