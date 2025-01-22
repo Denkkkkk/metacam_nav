@@ -1,8 +1,8 @@
-# 代码库介绍
+# Introduction
 
 metacam_nav 依赖外部里程计输入的机器人自主规划导航代码仓库
 
-# 编译
+# Compile
 
 1. 安装配置依赖
 
@@ -24,7 +24,7 @@ catkin_make -DBUILD_SIMULATOR=ON -DCMAKE_BUILD_TYPE=Debug
 catkin_make -DCMAKE_BUILD_TYPE=Release
 ```
 
-# 程序启动
+# Start
 
 > 可以查看./quickStart/all_run.sh 的内容观察启动的对应launch文件内部结构
 
@@ -54,7 +54,13 @@ source ~/.bashrc
 sentry_run -s -m
 ```
 
-# 工作空间介绍
+2. 在实车上运行
+
+```
+roslaunch nav_real_start nav_real_start.launch
+```
+
+# Workspace introduction
 
 ![image-20250104165616849](doc/image-20250104165616849.png)
 
@@ -70,7 +76,7 @@ sentry_run -s -m
 
 ![image-20250104170619102](doc/image-20250104170619102.png)
 
-## 程序运行的消息链路
+## Topic chain
 
 
 
