@@ -1,9 +1,11 @@
 #include "navlog_control/spd_logging.hpp"
+#include <ros/ros.h>
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "navlog_control");
     ros::NodeHandle nh;
+    INIT_NAVLOG_ROS();
     ros::Rate rate(10);
     while (ros::ok())
     {
