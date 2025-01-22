@@ -6,9 +6,6 @@ void ParamControl::load_params()
     nh.getParam("robot", robot);
     local_config = ros::package::getPath("local_planner") + "/config/" + robot + ".yaml";
     usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
-    // 打印路径
-    std::cout << "local_config: " << local_config << std::endl;
-    std::cout << "usual_config: " << usual_config << std::endl;
 
     load_config(local_config, usual_config);
     param_rate_init();
@@ -52,7 +49,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     param_rate_init();
     // 从nav_config.yaml读取 local_planner 参数
     // 读取参数
-    std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
     try
     {
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
@@ -72,7 +68,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     }
 
     // 从local_planner.yaml读取 local_planner 参数
-    std::cout << "[YAML] Loading " << ros::this_node::getName() << " local" << " parameters... " << std::endl;
     try
     {
         YAML::Node local_conf = YAML::LoadFile(local_config);

@@ -15,9 +15,10 @@ bool need_pub_Map = true;
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "localPlanner");
+    INIT_NAVLOG_ROS();
     LpNode LocalPanner;          // 实例化局部规划器
     LocalPanner.read_pathfile(); // 初始化容器，并读取保存各个path数据文件
-    ros::Rate rate(12);
+    ros::Rate rate(20);
     bool status = ros::ok();
 
     while (status)
@@ -81,7 +82,7 @@ int main(int argc, char **argv)
             LocalPanner.transform_goal();       // 在自动模式下, 将目标点转移到车体坐标系下,并记录下目标相对车体的yaw角
             end = std::chrono::high_resolution_clock::now();
             duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            ROS_INFO("run one localPlanner flag1 time: %f ms", duration.count() / 1000.0);
+            RELEASE_NAV_INFO("run one localPlanner flag1 time: {} ms", duration.count() / 1000.0);
             LocalPanner.local_planner(); // 正式进行路径规划
             if (!pathFound)
             {
@@ -92,17 +93,7 @@ int main(int argc, char **argv)
         }
         end = std::chrono::high_resolution_clock::now();
         duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        // 静态变量降低打印频率
-        // static int print_count = 0;
-        // if (print_count % 10 == 0)
-        // {
-        //     ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
-        //     print_count = 0;
-        // }
-        // print_count++;
-        // auto end = std::chrono::high_resolution_clock::now();
-        // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        ROS_INFO("run one localPlanner time: %f ms", duration.count() / 1000.0);
+        RELEASE_NAV_INFO("run one localPlanner time: {} ms", duration.count() / 1000.0);
 
         status = ros::ok();
         rate.sleep();

@@ -16,8 +16,8 @@ add_executable(navlog_control src/navlog_control.cpp)
 target_link_libraries(navlog_control
         ${catkin_LIBRARIES}
         yaml-cpp
-        nav_logging
-        spd_logging
+        nav_normal_log
+        nav_spd_log
 )
 
 install(

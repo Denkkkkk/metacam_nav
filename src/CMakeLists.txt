@@ -2,6 +2,7 @@
 # catkin/cmake/toplevel.cmake
 cmake_minimum_required(VERSION 3.0.2)
 project(Project)
+set(CMAKE_CXX_STANDARD 17)
 #message(“-------------------------------------------------------------------cmake variables created by ldq----------------------------------------------------------------------”)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0054 OLD)

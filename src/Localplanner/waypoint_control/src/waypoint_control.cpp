@@ -283,7 +283,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "waypoint_control");
     waypoint_control wpControl;
-    ros::Rate rate(30);
+    ros::Rate rate(50);
     bool status = ros::ok();
     while (status)
     {

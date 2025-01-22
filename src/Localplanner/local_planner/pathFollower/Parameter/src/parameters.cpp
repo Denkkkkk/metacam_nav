@@ -18,7 +18,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
 {
     // 从nav_config.yaml读取 local_planner 参数
     // 读取参数
-    std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
     try
     {
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
@@ -45,8 +44,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     {
         std::cerr << "YAML Parsing Error: " << e.what() << std::endl;
     }
-
-    std::cout << "[YAML] Loading " << ros::this_node::getName() << " local" << " parameters... " << std::endl;
     try
     {
         YAML::Node local_conf = YAML::LoadFile(local_config);

@@ -56,7 +56,6 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
 #endif
     // 计算速度控制的K值
     planRangeK = pow(4, maxSpeed) / (lctlPtr->get_params().adjacentRange - lctlPtr->get_params().minPathRange);
-    ROS_WARN("planRangeK: %f", planRangeK);
     makerInit();
 }
 
@@ -68,7 +67,7 @@ LpNode::LpNode() : terrainMapRecord_pcl(new pcl::PointCloud<pcl::PointXYZI>())
 */
 void LpNode::read_pathfile()
 {
-    printf("\nReading path files.\n");
+    DEBUG_NAV_PASS("\nReading path files.\n");
     // 初始化点云栈
     for (int i = 0; i < laserCloudStackNum; i++)
     {
@@ -106,7 +105,7 @@ void LpNode::read_pathfile()
     readPathList();
     // 读取correspondences.txt文件,目的是将体素网格和路径相对应
     readCorrespondences();
-    printf("\real_files complete.\n\n");
+    DEBUG_NAV_PASS("\real_files complete.\n\n");
 }
 
 // 转车头系并按距离等裁剪点云，adjacentRange为规划考虑的点云的范围
@@ -163,7 +162,7 @@ void LpNode::local_planner()
     // 如果pathScale和pathRange都不是最小值
     while ((pathScale != lctlPtr->get_params().minPathScale && lctlPtr->get_params().usePathScale) || pathRange >= lctlPtr->get_params().minPathRange)
     {
-        ROS_INFO("Planning...pathRange: %f", pathRange);
+        NAV_PASS("Planning...pathRange: {}", pathRange);
         // 向参数服务器设置参数pathRange
         nhPrivate.setParam("pathRange", pathRange);
         // 动态调整规划方向,更小的范围要先判断
@@ -309,17 +308,17 @@ void LpNode::local_planner()
             if (pathRange <= lctlPtr->get_params().minPathRange + 3 * lctlPtr->get_params().pathRangeStep)
             {
                 lctlPtr->set_add_point_radius(0.5);
-                ROS_INFO("set_add_point_radius rate: 0.5 .");
+                DEBUG_NAV_PASS("set_add_point_radius rate: 0.5 .");
             }
             else if (pathRange <= lctlPtr->get_params().minPathRange + lctlPtr->get_params().pathRangeStep)
             {
-                lctlPtr->set_add_point_radius(0.1);
-                ROS_INFO("set_add_point_radius rate: 0.1 .");
+                lctlPtr->set_add_point_radius(0.2);
+                NAV_PASS("set_add_point_radius rate: 0.2 .");
             }
             else
             {
                 lctlPtr->set_add_point_radius(1); // 重置为默认
-                ROS_INFO("set_add_point_radius: default .");
+                DEBUG_NAV_PASS("set_add_point_radius: default .");
             }
             // 找到了路，下次就可以扩大搜索范围
             if (pathRange < lctlPtr->get_params().adjacentRange - lctlPtr->get_params().pathRangeStep)
@@ -341,7 +340,7 @@ void LpNode::local_planner()
             {
                 // 如果在最小范围内还找不到路，直接把add_point_radius设置为0.0
                 lctlPtr->set_add_point_radius(0.2);
-                ROS_INFO("set_add_point_radius rate: 0.2 .");
+                DEBUG_NAV_PASS("set_add_point_radius rate: 0.2 .");
                 break;
             }
             // 先把规模调成0
@@ -376,7 +375,7 @@ void LpNode::local_planner()
 
 void LpNode::fail_local_planner()
 {
-    ROS_INFO("Path not found!");
+    NAV_PASS("Path not found!");
     nav_msgs::Path path;
     path.header.stamp = ros::Time().now();
     path.header.frame_id = robotFrame;
@@ -650,7 +649,7 @@ void LpNode::close_map()
 {
     if (lctlPtr->get_params().use_pcd_map)
     {
-        ROS_INFO("Close local map!");
+        NAV_PASS("Close local map!");
         lctlPtr->set_use_pcd_map(false);
         close_map_begin = ros::Time::now().toSec();
     }

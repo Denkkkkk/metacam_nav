@@ -42,6 +42,11 @@
         <arg name="ns" value="$(arg ns)" />
     </include>
 
+    <!-- 补充的tf转换-->
+    <include file="$(find nav_real_start)/launch/tf_real.launch">
+        <arg name="ns" value="$(arg ns)" />
+    </include>
+
     <!--启动重定位-->
     <!-- <include file="$(find relocalization)/launch/relocalization.launch" />  -->
 

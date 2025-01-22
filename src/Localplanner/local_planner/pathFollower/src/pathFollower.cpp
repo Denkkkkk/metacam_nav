@@ -9,7 +9,7 @@
  *
  */
 #include "pathFollower.h"
-
+#include "navlog_control/spd_logging.hpp"
 using namespace std;                            
 
 RoboCtrl::RoboCtrl()
@@ -157,8 +157,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     pubCmd_vel.publish(cmd_vel);
     car_speed.data = vehicleSpeed;
     pubSpeed.publish(car_speed);
-    ROS_WARN("vehicleSpeed: %f", vehicleSpeed);
-    ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
+    NAV_WARN("cmd_vel.linear.x: {}, cmd_vel.angular.z:{}", cmd_vel.linear.x, cmd_vel.angular.z);
 }
 /**
  * @brief 以全局目标点为方向发布速度
@@ -213,8 +212,7 @@ void RoboCtrl::pubVehicleSpeed_goalDir(const double vehicleSpeed, const double g
     }
     pubCmd_vel.publish(cmd_vel);
     pubSpeed.publish(car_speed);
-    ROS_WARN("vehicleSpeed: %f", vehicleSpeed);
-    ROS_WARN("cmd_vel.linear.x: %f, cmd_vel.angular.z:%f", cmd_vel.linear.x, cmd_vel.angular.z);
+    NAV_WARN("cmd_vel.linear.x: {}, cmd_vel.angular.z:{}", cmd_vel.linear.x, cmd_vel.angular.z);
 }
 
 void RoboCtrl::slowStop()
@@ -362,25 +360,25 @@ void RoboCtrl::pure_persuit()
         slowStop();
         if (get_goal.data)
         {
-            ROS_ERROR("GetGoal STOP!");
+            NAV_ERROR("GetGoal STOP!");
         }
         if (no_odom_flag)
         {
-            ROS_ERROR("NoOdom_get STOP!");
+            NAV_ERROR("NoOdom_get STOP!");
         }
         if (safetyStop)
         {
             // 外部请求强制停车
             pathInit = false;
-            ROS_ERROR("SafetyStop STOP!");
+            NAV_ERROR("SafetyStop STOP!");
         }
         if (pathSize < 2 || !pathInit)
         {
-            ROS_ERROR("NoPath_get STOP!");
+            NAV_ERROR("NoPath_get STOP!");
         }
         if (near_cloud_stop)
         {
-            ROS_ERROR("NearCloudStop STOP!");
+            NAV_ERROR("NearCloudStop STOP!");
         }
         return;
     }
@@ -393,7 +391,7 @@ void RoboCtrl::pure_persuit()
         double goal_dir = atan2(endDisY, endDisX);
         vehicleSpeed = pctlPtr->get_params().close_direct_speed;
         pubVehicleSpeed_goalDir(vehicleSpeed, goal_dir);
-        ROS_INFO("closeGoal_direct!");
+        DEBUG_NAV_WARN("closeGoal_direct!");
         return;
     }
     else
@@ -508,7 +506,7 @@ void RoboCtrl::pure_persuit()
                 vehicleYawRate = -dirDiff * 5;
             }
         }
-        ROS_WARN("dirDiff: %f ;vehicleYawRate: %f", dirDiff, vehicleYawRate);
+        DEBUG_NAV_WARN("dirDiff: {} ;vehicleYawRate: {}", dirDiff, vehicleYawRate);
 
         // 追踪到路径末尾减速
         if (endPathDis_now / pctlPtr->get_params().pathSlowDisThre < 1 && pctlPtr->get_params().useLoaclSlow)
@@ -528,7 +526,7 @@ void RoboCtrl::pure_persuit()
         {
             joySpeed2 = joySpeed2 > 0 ? 0.08 : -0.08;
         }
-        ROS_WARN("joySpeed2: %f", joySpeed2);
+        DEBUG_NAV_WARN("joySpeed2: {}", joySpeed2);
 
         // 当偏差方向在直行区间，全速前进
         if (fabs(dirDiff) < pctlPtr->get_params().dirDiffThre_slow)
@@ -621,6 +619,7 @@ void RoboCtrl::pure_persuit()
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "pathFollower");
+    INIT_NAVLOG_ROS();
     RoboCtrl roboctrl;
     ros::Rate rate(roboctrl.pub_rate);
     bool status = ros::ok();
@@ -632,14 +631,7 @@ int main(int argc, char **argv)
         roboctrl.pure_persuit();
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        // 静态变量降低打印频率
-        static int print_count = 0;
-        if (print_count % 10 == 0)
-        {
-            ROS_INFO("run one pathFollower time: %f ms", duration.count() / 1000.0);
-            print_count = 0;
-        }
-        print_count++;
+        RELEASE_NAV_INFO("run one pathFollower time: {} ms", duration.count() / 1000.0);
         status = ros::ok();
         rate.sleep();
     }

@@ -15,7 +15,6 @@
 #include "spdlog/spdlog.h"
 #include <functional>
 #include <ros/this_node.h>
-#include <unordered_map>
 
 template <typename... Args>
 using format_string_t = fmt::format_string<Args...>;
@@ -32,11 +31,22 @@ namespace spdlog_nav {
     do                    \
     {                     \
         static int i = 1; \
-        if (i++ < 10)     \
+        if (i++ < 30)     \
         {                 \
             return;       \
         }                 \
         i = 1;            \
+    } while (false)
+
+#define CREATE_STATIC_DEBUG() \
+    do                        \
+    {                         \
+        static int i = 1;     \
+        if (i++ < 150)        \
+        {                     \
+            return;           \
+        }                     \
+        i = 1;                \
     } while (false)
 
     template <typename... Args>
@@ -50,7 +60,7 @@ namespace spdlog_nav {
     }
 
     template <typename... Args>
-    inline void NAV_WARNING(format_string_t<Args...> fmt, Args &&...args)
+    inline void NAV_WARN(format_string_t<Args...> fmt, Args &&...args)
     {
         CREATE_STATIC();
         spd_class.file_logger->set_level(spdlog::level::warn);
@@ -89,17 +99,12 @@ namespace spdlog_nav {
         spd_class.my_logger->info(fmt, std::forward<Args>(args)...);
     }
 
-#ifdef NDEBUG
-#define DEBUG_NAV_WARNING(msg) ((void)0)
-#define DEBUG_NAV_ERROR(msg) ((void)0)
-#define DEBUG_NAV_HIGHLIGHT(msg) ((void)0)
-#define DEBUG_NAV_INFO(msg) ((void)0)
-#define DEBUG_NAV_PASS(msg) ((void)0)
-#else
+    /*
+     * @brief 单次打印函数
+     */
     template <typename... Args>
-    inline void DEBUG_NAV_HIGHLIGHT(format_string_t<Args...> fmt, Args &&...args)
+    inline void NAV_HIGHLIGHT_ONCE(format_string_t<Args...> fmt, Args &&...args)
     {
-        CREATE_STATIC();
         spd_class.file_logger->set_level(spdlog::level::critical);
         spd_class.my_logger->set_level(spdlog::level::critical);
         spd_class.file_logger->critical(fmt, std::forward<Args>(args)...);
@@ -107,9 +112,62 @@ namespace spdlog_nav {
     }
 
     template <typename... Args>
-    inline void DEBUG_NAV_WARNING(format_string_t<Args...> fmt, Args &&...args)
+    inline void NAV_WARN_ONCE(format_string_t<Args...> fmt, Args &&...args)
     {
-        CREATE_STATIC();
+        spd_class.file_logger->set_level(spdlog::level::warn);
+        spd_class.my_logger->set_level(spdlog::level::warn);
+        spd_class.file_logger->warn(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->warn(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void NAV_INFO_ONCE(format_string_t<Args...> fmt, Args &&...args)
+    {
+        spd_class.file_logger->set_level(spdlog::level::trace);
+        spd_class.my_logger->set_level(spdlog::level::trace);
+        spd_class.file_logger->trace(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->trace(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void NAV_ERROR_ONCE(format_string_t<Args...> fmt, Args &&...args)
+    {
+        spd_class.file_logger->set_level(spdlog::level::err);
+        spd_class.my_logger->set_level(spdlog::level::err);
+        spd_class.file_logger->error(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->error(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void NAV_PASS_ONCE(format_string_t<Args...> fmt, Args &&...args)
+    {
+        spd_class.file_logger->set_level(spdlog::level::info);
+        spd_class.my_logger->set_level(spdlog::level::info);
+        spd_class.file_logger->info(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->info(fmt, std::forward<Args>(args)...);
+    }
+
+#ifdef NDEBUG
+#define DEBUG_NAV_WARN(msg...) ((void)0)
+#define DEBUG_NAV_ERROR(msg...) ((void)0)
+#define DEBUG_NAV_HIGHLIGHT(msg...) ((void)0)
+#define DEBUG_NAV_INFO(msg...) ((void)0)
+#define DEBUG_NAV_PASS(msg...) ((void)0)
+#else
+    template <typename... Args>
+    inline void DEBUG_NAV_HIGHLIGHT(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC_DEBUG();
+        spd_class.file_logger->set_level(spdlog::level::critical);
+        spd_class.my_logger->set_level(spdlog::level::critical);
+        spd_class.file_logger->critical(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->critical(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void DEBUG_NAV_WARN(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC_DEBUG();
         spd_class.file_logger->set_level(spdlog::level::warn);
         spd_class.my_logger->set_level(spdlog::level::warn);
         spd_class.file_logger->warn(fmt, std::forward<Args>(args)...);
@@ -119,14 +177,7 @@ namespace spdlog_nav {
     template <typename... Args>
     inline void DEBUG_NAV_INFO(format_string_t<Args...> fmt, Args &&...args)
     {
-        // 获取当前 ROS 节点名称
-        const char *node_name = ros::this_node::getName().c_str();
-        if (!node_name)
-        {
-            node_name = "Unknown_Node";
-        }
-
-        CREATE_STATIC();
+        CREATE_STATIC_DEBUG();
         spd_class.file_logger->set_level(spdlog::level::trace);
         spd_class.my_logger->set_level(spdlog::level::trace);
         spd_class.file_logger->trace(fmt, std::forward<Args>(args)...);
@@ -136,7 +187,7 @@ namespace spdlog_nav {
     template <typename... Args>
     inline void DEBUG_NAV_ERROR(format_string_t<Args...> fmt, Args &&...args)
     {
-        CREATE_STATIC();
+        CREATE_STATIC_DEBUG();
         spd_class.file_logger->set_level(spdlog::level::err);
         spd_class.my_logger->set_level(spdlog::level::err);
         spd_class.file_logger->error(fmt, std::forward<Args>(args)...);
@@ -146,12 +197,70 @@ namespace spdlog_nav {
     template <typename... Args>
     inline void DEBUG_NAV_PASS(format_string_t<Args...> fmt, Args &&...args)
     {
+        CREATE_STATIC_DEBUG();
+        spd_class.file_logger->set_level(spdlog::level::info);
+        spd_class.my_logger->set_level(spdlog::level::info);
+        spd_class.file_logger->info(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->info(fmt, std::forward<Args>(args)...);
+    }
+#endif
+
+#ifdef NDEBUG
+    template <typename... Args>
+    inline void RELEASE_NAV_HIGHLIGHT(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC();
+        spd_class.file_logger->set_level(spdlog::level::critical);
+        spd_class.my_logger->set_level(spdlog::level::critical);
+        spd_class.file_logger->critical(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->critical(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void RELEASE_NAV_WARN(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC();
+        spd_class.file_logger->set_level(spdlog::level::warn);
+        spd_class.my_logger->set_level(spdlog::level::warn);
+        spd_class.file_logger->warn(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->warn(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void RELEASE_NAV_INFO(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC();
+        spd_class.file_logger->set_level(spdlog::level::trace);
+        spd_class.my_logger->set_level(spdlog::level::trace);
+        spd_class.file_logger->trace(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->trace(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void RELEASE_NAV_ERROR(format_string_t<Args...> fmt, Args &&...args)
+    {
+        CREATE_STATIC();
+        spd_class.file_logger->set_level(spdlog::level::err);
+        spd_class.my_logger->set_level(spdlog::level::err);
+        spd_class.file_logger->error(fmt, std::forward<Args>(args)...);
+        spd_class.my_logger->error(fmt, std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    inline void RELEASE_NAV_PASS(format_string_t<Args...> fmt, Args &&...args)
+    {
         CREATE_STATIC();
         spd_class.file_logger->set_level(spdlog::level::info);
         spd_class.my_logger->set_level(spdlog::level::info);
         spd_class.file_logger->info(fmt, std::forward<Args>(args)...);
         spd_class.my_logger->info(fmt, std::forward<Args>(args)...);
     }
+#else
+    #define RELEASE_NAV_WARN(msg...) ((void)0)
+    #define RELEASE_NAV_ERROR(msg...) ((void)0)
+    #define RELEASE_NAV_HIGHLIGHT(msg...) ((void)0)
+    #define RELEASE_NAV_INFO(msg...) ((void)0)
+    #define RELEASE_NAV_PASS(msg...) ((void)0)
 #endif
 } // namespace spdlog_nav
 

@@ -11,6 +11,7 @@
 #include <std_srvs/Trigger.h>
 #include <string>
 #include <vector>
+#include "navlog_control/spd_logging.hpp"
 
 NavigationModel nav_model;
 double vehicle_x = 0.0;
@@ -63,13 +64,13 @@ void update_param()
         }
         else
         {
-            ROS_ERROR("Failed to call service /nav/update_config");
+            NAV_ERROR_ONCE("Failed to call service /nav/update_config");
         }
     }
     else
     {
         // 文件没有发生变化，跳过更新
-        ROS_INFO("No change in JSON data. Skipping update.");
+        // ROS_INFO("No change in JSON data. Skipping update.");
     }
     return;
 }

@@ -8,11 +8,11 @@
 #include <string>
 #include <tf/tf.h>
 #include <vector>
-
 #include "types.h"
 #include <Eigen/Dense>
 #include <json.hpp>
 #include <queue>
+#include "navlog_control/spd_logging.hpp"
 
 bool is_running = false;
 NavigationModel nav_model;
@@ -76,21 +76,22 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
         {
             queue_path_index = nav_model.points.size() - 1;
         }
+        NAV_WARN_ONCE("nav_service config update:{}", config.c_str());
     }
     else
     {
         res.success = false;
         res.message = "fail to get navigation config since /nav/config is not given!";
     }
-    ROS_WARN("config:%s", config.c_str());
+
 
     if (res.success)
     {
-        ROS_INFO("%s", res.message.c_str());
+        DEBUG_NAV_INFO("{}", res.message.c_str());
     }
     else
     {
-        ROS_ERROR("%s", res.message.c_str());
+        NAV_ERROR_ONCE("{}", res.message.c_str());
     }
     return res.success;
 }
@@ -108,7 +109,6 @@ bool startCallback(std_srvs::Trigger::Request &req,
 {
     // 输出提示信息
     ROS_INFO("start navigation service!");
-
     if (is_running)
     {
         res.success = false;
@@ -123,9 +123,9 @@ bool startCallback(std_srvs::Trigger::Request &req,
     }
 
     if (res.success)
-        ROS_INFO("%s", res.message.c_str());
+        DEBUG_NAV_INFO("{}", res.message.c_str());
     else
-        ROS_ERROR("%s", res.message.c_str());
+        NAV_ERROR_ONCE("{}", res.message.c_str());
     return res.success;
 }
 
@@ -153,9 +153,9 @@ bool stopCallback(std_srvs::Trigger::Request &req,
         is_running = false;
     }
     if (res.success)
-        ROS_INFO("%s", res.message.c_str());
+        DEBUG_NAV_INFO("{}", res.message.c_str());
     else
-        ROS_ERROR("%s", res.message.c_str());
+        NAV_ERROR_ONCE("{}", res.message.c_str());
     return true;
 }
 
@@ -190,7 +190,7 @@ void navStatusPub(ros::Publisher &nav_status_pub)
 void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
     get_relocal_begin = ros::Time::now().toSec();
-    ROS_INFO("reLocalizationCallBack");
+    NAV_INFO_ONCE("reLocalizationCallBack");
     reloc_succeed = true;
 }
 
@@ -214,6 +214,7 @@ void odomToMapCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "nav_service");
+    INIT_NAVLOG_ROS();
     ros::NodeHandle nh;
     ros::ServiceServer update_config_service = nh.advertiseService("/nav/update_config", updateConfigCallback);
     ros::ServiceServer start_service = nh.advertiseService("/nav/start", startCallback);
@@ -230,7 +231,7 @@ int main(int argc, char **argv)
     ros::Publisher nav_status_pub = nh.advertise<std_msgs::String>("/nav/status", 2);
     ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("need_reloc", 1);
 
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(50);
     ParamControl nav_service_params;
     geometry_msgs::PoseStamped goal_point;
     // 初始化nav_model
@@ -268,7 +269,7 @@ int main(int argc, char **argv)
                     std_msgs::Bool relo;
                     relo.data = true;
                     nav_relo_pub.publish(relo);
-                    ROS_ERROR("Navigation need relocalization!");
+                    NAV_ERROR("Navigation need relocalization!");
                     // sleep 1.0s
                     ros::Duration(1.0).sleep();
                     continue;
@@ -283,7 +284,7 @@ int main(int argc, char **argv)
             }
             if (nav_path.empty())
             {
-                ROS_ERROR("NO Navigation Point!");
+                NAV_ERROR("NO Navigation Point!");
                 // 强制停止
                 std_msgs::Bool stop;
                 stop.data = true;
@@ -292,7 +293,7 @@ int main(int argc, char **argv)
             }
             else if (nav_model.parameters.empty() && !(nav_service_params.get_params().use_prior_path && abs(nav_model.points[0].x - 99999) < 0.1))
             {
-                ROS_ERROR("nav_model Parameters Is Empty!");
+                NAV_ERROR("nav_model Parameters Is Empty!");
                 // 强制停止
                 std_msgs::Bool stop;
                 stop.data = true;
@@ -301,7 +302,7 @@ int main(int argc, char **argv)
             }
             else if (nav_model.parameters[0] <= 0 && !(nav_service_params.get_params().use_prior_path && abs(nav_model.points[0].x - 99999) < 0.1))
             {
-                ROS_ERROR("NO nav_times, nav_model.parameters[0] :%f !", nav_model.parameters[0]);
+                NAV_ERROR("NO nav_times, nav_model.parameters[0] :{} !", nav_model.parameters[0]);
                 // 强制停止
                 std_msgs::Bool stop;
                 stop.data = true;
@@ -350,13 +351,13 @@ int main(int argc, char **argv)
                     }
                     *nav_index = 0;
                 }
-                ROS_INFO("get point: x: %f, y: %f, z: %f", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
+                NAV_INFO("get point: x: {}, y: {}, z: {}", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
             }
             else
             {
                 goal_point_pub.publish(goal_point); // 未到点不断发布
-                ROS_INFO("points_num: %ld, left_count: %.0f", nav_path.size(), nav_model.parameters[0]);
-                ROS_INFO("Going to Navigation Point: x: %f, y: %f, z: %f", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
+                NAV_INFO("points_num: {}, left_count: {}", nav_path.size(), nav_model.parameters[0]);
+                NAV_INFO("Going to Navigation Point: x: {}, y: {], z: {}", goal_point.pose.position.x, goal_point.pose.position.y, goal_point.pose.position.z);
             }
         }
         else
@@ -365,7 +366,7 @@ int main(int argc, char **argv)
             std_msgs::Bool stop;
             stop.data = true;
             stop_pub.publish(stop);
-            ROS_ERROR("Navigation service is not running!");
+            NAV_ERROR("Navigation service is not running!");
         }
     }
     return 0;

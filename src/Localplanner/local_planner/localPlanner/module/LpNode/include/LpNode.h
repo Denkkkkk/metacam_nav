@@ -13,6 +13,7 @@
 #include <tf/transform_datatypes.h>
 #include <time.h>
 #include <visualization_msgs/Marker.h>
+#include "navlog_control/spd_logging.hpp"
 class LpNode
 {
 private:

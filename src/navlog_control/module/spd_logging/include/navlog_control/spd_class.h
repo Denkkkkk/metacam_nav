@@ -1,13 +1,10 @@
 #define SPDLOG_COLOR_MODE SPDLOG_COLOR_MODE_AUTO
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/spdlog.h"
-#include <filesystem>
 #include <iostream>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h> // 引入终端彩色输出 sink
 #include <ros/package.h>
-
-namespace fs = std::filesystem;
 
 class spdClass
 {

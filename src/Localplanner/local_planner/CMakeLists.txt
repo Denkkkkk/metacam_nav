@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(local_planner)
-
 add_subdirectory(localPlanner)
 add_subdirectory(pathFollower)
-
+set(CMAKE_CXX_STANDARD 17)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
@@ -34,7 +33,7 @@ link_directories(
 
 add_executable(localPlanner localPlanner/src/local_main.cpp)
 add_dependencies(localPlanner ${catkin_EXPORTED_TARGETS})
-target_link_libraries(localPlanner LpNode ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(localPlanner LpNode ${PCL_LIBRARIES} ${catkin_LIBRARIES} nav_spd_log)
 
 add_executable(pathFollower
   pathFollower/src/pathFollower.cpp
@@ -43,7 +42,7 @@ add_executable(pathFollower
 
 # 为编译添加msssages包的依赖
 add_dependencies(pathFollower ${catkin_EXPORTED_TARGETS})
-target_link_libraries(pathFollower ${catkin_LIBRARIES} ${PCL_LIBRARIES} pathFollower_param)
+target_link_libraries(pathFollower ${catkin_LIBRARIES} ${PCL_LIBRARIES} pathFollower_param nav_spd_log)
 
 install(
   TARGETS

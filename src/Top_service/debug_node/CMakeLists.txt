@@ -30,4 +30,4 @@ link_directories(
 )
 
 add_executable(debug_node src/debug_node.cpp)
-target_link_libraries(debug_node ${catkin_LIBRARIES})
+target_link_libraries(debug_node ${catkin_LIBRARIES} nav_spd_log)

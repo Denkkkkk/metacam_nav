@@ -39,19 +39,10 @@
     <arg name="vehicleY" value="$(arg vehicleY)" />
   </include>
 
-  <!-- odom-map -->
-  <include file="$(find map_to_odom)/launch/map_to_odom.launch">
-    <arg name="vehicleX" value="0.0" />
-    <arg name="vehicleY" value="0.0" />
-    <arg name="vehicleYaw" value="0.0" />
-    <arg name="ns" value="$(arg ns)" />
-  </include>
-
   <!-- velodyne点云处理成/相应话题和里程/话题输出 -->
   <include file="$(find vehicle_simulator)/launch/robot_simulator.launch">
     <arg name="ns" value="$(arg ns)" />
   </include>
-
 
   <!-- 启动rviz -->
   <group if="$(arg use_rviz)">
