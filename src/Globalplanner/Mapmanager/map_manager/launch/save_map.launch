@@ -1,6 +1,6 @@
 <launch>
     <arg name="map_topic" default="/projected_map" />
-    <arg name="save_file" default="$(find map_manager)/map/test" />
+    <arg name="save_file" default="$(find map_manager)/map/reservoir" />
     <arg name="occ_thresh" default="90" />
     <arg name="free_thresh" default="0" />
 

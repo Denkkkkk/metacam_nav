@@ -30,7 +30,7 @@ bool ParamControl::load_config(const std::string &usual_config)
     }
     // 从nav_config.yaml读取 local_planner 参数
     // 读取参数
-    std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
+    // std::cout << "[YAML] Loading " << ros::this_node::getName() << " usual" << " parameters... " << std::endl;
     try
     {
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
@@ -59,7 +59,7 @@ void ParamControl::update_params()
     }
     count++;
 
-    print_params();
+    // print_params();
 }
 
 void ParamControl::print_params()

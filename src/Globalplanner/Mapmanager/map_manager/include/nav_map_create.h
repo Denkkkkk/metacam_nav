@@ -26,6 +26,17 @@
 #include <std_msgs/Bool.h>
 #include <chrono>
 
+#define CREATE_STATIC()   \
+    do                    \
+    {                     \
+        static int i = 1; \
+        if (i++ < 20)     \
+        {                 \
+            return;       \
+        }                 \
+        i = 1;            \
+    } while (false)
+
 class MapRecord
 {
 private:

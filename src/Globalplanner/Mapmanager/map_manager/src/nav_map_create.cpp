@@ -81,7 +81,7 @@ void MapRecord::cloudMapCallback(const sensor_msgs::PointCloud2::ConstPtr &cloud
     cloudRecordFilter.filter(filter_rs_cloud);                      // 下采样滤波后的点云
     cloud_map_record->clear();
     *cloud_map_record = filter_rs_cloud;
-    ROS_ERROR("cloudMapSize: %ld", cloud_map_record->points.size());
+    ROS_WARN("cloudMapSize: %ld", cloud_map_record->points.size());
 
     sensor_msgs::PointCloud2 cloud_map_record_msg;
     pcl::toROSMsg(*cloud_map_record, cloud_map_record_msg);
@@ -91,6 +91,7 @@ void MapRecord::cloudMapCallback(const sensor_msgs::PointCloud2::ConstPtr &cloud
     if (save_always)
     {
         static bool save_temp = true;
+        CREATE_STATIC();
         if (save_temp)
         {
             save_pcd(cloud_map_record_msg, relocalization_map_ss_temp, false);
@@ -125,7 +126,7 @@ void MapRecord::terrainMapCallback(const sensor_msgs::PointCloud2::ConstPtr &ter
     terrainRecordFilter.filter(filter_rs_cloud);           // 下采样滤波后的点云
     terrain_map_record->clear();
     *terrain_map_record = filter_rs_cloud;
-    ROS_ERROR("terrainMapSize: %ld", terrain_map_record->points.size());
+    ROS_WARN("terrainMapSize: %ld", terrain_map_record->points.size());
 
     sensor_msgs::PointCloud2 terrain_map_record_msg;
     pcl::toROSMsg(*terrain_map_record, terrain_map_record_msg);
@@ -135,6 +136,7 @@ void MapRecord::terrainMapCallback(const sensor_msgs::PointCloud2::ConstPtr &ter
     if (save_always)
     {
         static bool save_temp = true;
+        CREATE_STATIC();
         if (save_temp)
         {
             save_pcd(terrain_map_record_msg, terrain_map_ss_temp, false);
@@ -152,7 +154,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "terrain_map_record", ros::init_options::AnonymousName); // 节点匿名化，AnonymousName 会在节点名称后添加一个随机的唯一后缀，这样即使你有多个同名的节点，也不会发生冲突
     MapRecord map_record_node;
-    ros::Rate rate(1);
+    ros::Rate rate(10);
     bool status = ros::ok();
     while (status)
     {
