@@ -62,8 +62,6 @@ roslaunch nav_real_start nav_real_start.launch
 
 # Workspace introduction
 
-![image-20250104165616849](doc/image-20250104165616849.png)
-
 ## Localplanner
 
 局部规划器基于cmu开源的exploration框架进行二次开发。
