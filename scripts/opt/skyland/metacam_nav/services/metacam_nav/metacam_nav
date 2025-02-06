@@ -1,0 +1,156 @@
+#!/bin/bash
+
+_interrupt_handler()
+{
+   pkill rosmaster
+   echo "Process is interrupted by user, exiting..."
+   exit -1
+}
+# 将 _interrupt_handler 函数与 SIGINT 信号绑定，ctrl+c 时执行 _interrupt_handler 函数
+trap _interrupt_handler SIGINT 
+
+INSTALL_PATH=/opt/skyland/metacam_nav
+###############################################################
+#                           Options                           #
+###############################################################
+for parm in "$@"
+do
+   key=$(echo ${parm%%=*})
+   value=$(echo ${parm#*=})
+
+   # info
+   if [ $key = "--version" ] || [ $key = "-v" ];then
+      printf "$(dpkg -s metacam-firmware)\n"
+      exit 1
+   fi
+   if [ $key = "--changelog" ] || [ $key = "-v" ];then
+      less $INSTALL_PATH/CHANGELOG.md
+      exit 1
+   fi
+   # network
+   if [ $key = "--network-hotspot" ];then
+      echo "Starting metacam-hotspot"
+      sudo nmcli connection up metacam-hotspot
+      if [ $? -eq 0 ]; then
+         echo "Done"
+      else
+         echo "Failed"
+      fi
+      exit 1
+   fi
+   if [ $key = "--network-eth1-static" ];then
+      echo "Set eth1 to static network"
+      sudo nmcli connection up eth1-static
+      if [ $? -eq 0 ]; then
+         echo "Done"
+      else
+         echo "Failed"
+      fi
+      exit 1
+   fi
+   if [ $key = "--network-eth1-dhcp" ];then
+      echo "Set eth1 to dhcp network"
+      sudo nmcli connection up eth1-dhcp
+      if [ $? -eq 0 ]; then
+         echo "Done"
+      else
+         echo "Failed"
+      fi
+      exit 1
+   fi
+
+   # service
+   if [ $key = "--start" ] || [ $key = "--restart" ]; then
+      echo "Restarting the systemd service..."
+      sudo systemctl restart metacam_nav.service
+      echo "Done."
+      exit 1
+   fi
+   if [ $key = "--stop" ];then
+      echo "Stopping the systemd service..."
+      pkill rosmaster
+      sudo systemctl stop metacam_nav.service
+      echo "Done."
+      exit 1
+   fi
+   if [ $key = "--enable-systemd" ];then
+      sudo systemctl enable metacam_nav.service
+      sudo systemctl restart metacam_nav.service
+      echo "use 'journalctl -u metacam_nav.service' to check the history output or add '-f' to watch the flow output"
+      exit 1
+   fi
+   if [ $key = "--disable-systemd" ];then
+      sudo systemctl disable metacam_nav.service
+      echo "Auto start metacam service is disabled!"
+      exit 1
+   fi
+   if [ $key = "--status" ];then
+      if rosnode list &> /dev/null; then
+         echo -e "\033[92mROS: ON\033[0m"
+      else
+         echo -e "\033[91mROS: OFF\033[0m"
+      fi
+
+      service_status=$(systemctl status metacam_nav.service | grep "Active:")
+      if [[ $service_status == *"running"* ]]; then
+         echo -e "\033[92mrunning:${service_status##*;}\033[0m"
+      else
+         echo -e "\033[91mdead:${service_status##*;}\033[0m"
+      fi
+      exit 1
+   fi
+   if [ $key = "--log" ];then
+      journalctl -u metacam_nav.service
+      exit 1
+   fi
+   
+   if [ $key = "--help" ] || [ "$key" = "-h" ];then
+      printf "Usage: metacam or metacam --[options] \n"
+      printf "options: 
+      \r  - check info: metacam [--version] [--changelog] [--help]
+      \r  - network: [--network-hotspot: switch to / restart hotspot] [--network-eth1-static / --network-eth1-dhcp: switch eth1 between static and dhcp]
+      \r  - lidar options: [--lidar-standby: set lidar to standby mode] [--lidar-work: set lidar to work mode] [--lidar-getip: get lidar ip] [--lidar-setip: set lidar to static ip]
+      \r  - actions [--enable-systemd] [--disable-systemd] [--status] [--log] [--start: start metacam service] [--stop: stop metacam service] [--upgrade: upgrade from internet] \n"
+      exit 1
+   fi
+
+   echo "metacam: invalid option:" ${key}
+   echo "use 'metacam -h' or 'metacam --help' to get more information"
+   exit 1
+done
+
+###############################################################
+#                         metacam_nav core                        #
+###############################################################
+# for循环检测不到任何参数输入就会执行这里
+echo -e "\033[0;35m┌────────────────────────────────────────────────────────────────────┐\033[0m"
+echo -e "\033[0;35m│                        • metacam_nav Core •                        │\033[0m"
+echo -e "\033[0;35m│                                                                    │\033[0m"
+echo -e "\033[0;35m│                                                                    │\033[0m"
+echo -e "\033[0;35m└────────────────────────────────────────────────────────────────────┘\033[0m"
+
+# abtain the environment variables skyland has
+if [ "$(whoami)" != "skyland" ]; then
+   su - skyland
+fi
+
+# source ros and package env
+source /opt/ros/melodic/setup.bash
+source $INSTALL_PATH/setup.bash
+
+# check if the metacam is running
+if [[ $(systemctl is-active "metacam_nav.service") == "active" ]]; then
+   echo "Another metacam_nav.service is running, stopping it before start ..."
+   pkill rosmaster
+   sudo systemctl stop metacam_nav.service
+   echo "Done."
+fi
+pkill rosmaster
+rosclean purge -y
+
+# run metacam.launch, here we use timed_roslaunch to make sure roscore is run before other nodes
+echo "Starting metacam_nav.service ..."
+
+source /opt/ros/melodic/setup.bash
+source $INSTALL_PATH/setup.bash
+roslaunch nav_real_start nav_real_start.launch

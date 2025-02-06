@@ -1,4 +1,5 @@
 #!/bin/bash
+# tab 自动补全设置
 _metacam_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -9,28 +10,10 @@ _metacam_completion() {
             COMPREPLY=()
             return 0
             ;;
-        --set-model)
-            COMPREPLY=()
-            return 0
-            ;;
         --changelog)
             COMPREPLY=()
             return 0
             ;;
-
-        --network-hotspot)
-            COMPREPLY=()
-            return 0
-            ;;
-        --network-eth1-static)
-            COMPREPLY=()
-            return 0
-            ;;
-        --network-eth1-dhcp)
-            COMPREPLY=()
-            return 0
-            ;;
-
         --upgrade)
             COMPREPLY=()
             return 0
@@ -63,28 +46,6 @@ _metacam_completion() {
             COMPREPLY=()
             return 0
             ;;
-
-        --lidar-model)
-            COMPREPLY=()
-            return 0
-            ;;
-        --lidar-standby)
-            COMPREPLY=()
-            return 0
-            ;;
-        --lidar-work)
-            COMPREPLY=()
-            return 0
-            ;;
-        --lidar-getip)
-            COMPREPLY=()
-            return 0
-            ;;
-        --lidar-setip)
-            COMPREPLY=()
-            return 0
-            ;;
-
         --help)
             COMPREPLY=()
             return 0
@@ -97,4 +58,4 @@ _metacam_completion() {
     esac
 }
 
-complete -F _metacam_completion metacam
+complete -F _metacam_completion metacam_nav
