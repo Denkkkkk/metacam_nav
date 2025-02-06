@@ -85,10 +85,10 @@ def calc_time_cost_end():
     end_time = time.time()
     print(f"Time cost: {(int)(end_time - begin_time)} s")
 
+# 读取versions.yaml文件，并进行管理
 class VERSION():
     def __init__(self, filepath):
         self._filepath = filepath
-        
         self.major = 0
         self.minor = 0
         self.patch = 0

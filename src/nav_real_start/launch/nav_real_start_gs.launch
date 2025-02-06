@@ -29,7 +29,7 @@
     <group if="$(arg use_rviz)">
         <node launch-prefix="nice" pkg="rviz" type="rviz" name="rvizGA"
             args="-d $(find vehicle_simulator)/rviz/robot_simulator_Sentry.rviz" respawn="true" />
-    </group>
+    </group> 
 
     <!-- 启动服务通信 -->
     <include file="$(find nav_service)/launch/nav_service.launch" />

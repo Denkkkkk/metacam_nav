@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     args = parse_args()
 
-    # clean pycache
+    # clean pycache，清理 Python 生成的字节码文件（__pycache__ 文件夹）
     execute_command("find ./ -type d -name '__pycache__' -exec rm -rf {} +")
     script_folder = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_folder)
@@ -68,16 +68,10 @@ if __name__ == "__main__":
 
     if args.build or args.all:
         print(f">> Start to build, please refer to output/build.log")
-        code, _, _ = execute_command("catkin_make --force-cmake -DUSE_ROS=ON -DCMAKE_BUILD_TYPE=Release -j6 > output/build.log 2>&1")
+        code, _, _ = execute_command("catkin_make --force-cmake -DUSE_ROS=ON -DCMAKE_BUILD_TYPE=Release > output/build.log 2>&1")
         if code != 0:
             print(">> Fail to build, plese refer to output/build.log!")
             exit(-1)
-        if args.with_ros2_interface:
-            code, _, _ = execute_command("bash -c 'cd interfaces/ros2 && source /opt/ros/melodic/setup.bash && source /opt/skyland/metacam-runtime/setup.bash && source /opt/ros/eloquent/local_setup.bash && colcon build --parallel-workers 6 --packages-select ros1_bridge' > output/build_ros2.log 2>&1")
-            if code != 0:
-                print(">> Fail to build, plese refer to output/build.log!")
-                exit(-1)
-            
         if code == 0:
             print(">> Build successfully!")
 
@@ -85,24 +79,16 @@ if __name__ == "__main__":
         version.build += 1
         ver = f"v{version.major}.{version.minor}.{version.patch}.{version.build}"
         if version.tag: ver = f"{ver}.{version.tag}"
-        print(f">> Start to make metacam_runtime_{ver}.deb and metacam_runtime_{ver}.metadeb!")
-
-        print(f">> Start to pack web service, please refer to output/pack.log")
-        code, _, _ = execute_command("interfaces/web/pack.sh > output/pack.log 2>&1")
-        if code == 0:
-            print(">> Pack webapi successfully!")
-        else:
-            print(">> Fail to pack, plese refer to output/pack.log!")
-            exit(-1)
+        print(f">> Start to make metacam_nav_{ver}.deb and metacam_nav_{ver}.metadeb!")
 
         cmds = []
-        cmds.append("mkdir -p output/metacam_runtime")
-        cmds.append("cp -r scripts/opt output/metacam_runtime")
-        cmds.append("cp -r scripts/DEBIAN output/metacam_runtime")
-        cmds.append("cp -r scripts/requirements.sh output/metacam_runtime/opt/skyland/metacam-runtime/requirements.sh")
+        cmds.append("mkdir -p output/metacam_nav")
+        cmds.append("cp -r scripts/opt output/metacam_nav")
+        cmds.append("cp -r scripts/DEBIAN output/metacam_nav")
+        cmds.append("cp -r scripts/requirements.sh output/metacam_nav/opt/skyland/metacam-nav/requirements.sh")
         cmds.append("awk '/^Version/ {print \"Version: " + f"{version.major}.{version.minor}.{version.patch}-rc{version.build}" +
-                    "\"; next} 1' output/metacam_runtime/DEBIAN/control > temp.txt && mv temp.txt output/metacam_runtime/DEBIAN/control")
-        cmds.append(f"catkin_make install -DCMAKE_INSTALL_PREFIX=output/metacam_runtime/opt/skyland/metacam-runtime -DUSE_ROS=ON -DENCRYPT_PYTHON={'OFF' if args.make_deb_debug else 'ON'}")
+                    "\"; next} 1' output/metacam_nav/DEBIAN/control > temp.txt && mv temp.txt output/metacam_nav/DEBIAN/control")
+        cmds.append(f"catkin_make install -DCMAKE_INSTALL_PREFIX=output/metacam_nav/opt/skyland/metacam-runtime -DUSE_ROS=ON -DENCRYPT_PYTHON={'OFF' if args.make_deb_debug else 'ON'}")
         # ros2
         if os.path.exists("interfaces/ros2/install"):
             print(">> Copying ros2 wrapper...")
