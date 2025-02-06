@@ -1,8 +1,8 @@
 Package: metacam-nav
-Version: 2.3.18
+Version: major.minor.patch-rc`build`
 Section: admin
 Priority: optional
 Essential: yes
 Architecture: arm64
 Maintainer: lidongquan <1327165187@qq.com>
-Description: navigation package based on metacam
+Description: navigation package based on metacam device

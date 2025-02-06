@@ -2,86 +2,16 @@
 # 1. Only 'version', 'tag', 'build_count' and 'build_time' are necessary
 # 2. 'build_count' will increment after each '--make_deb'
 
-- version: 2.3.4
+# stable：稳定版本。
+# beta：测试版本。
+# dev：开发版本。
+# custom：定制版本。
+
+- version: 2.3.19
   tag: generic
-  build_count: 15
+  build_count: 1
   build_time: 2024.10.23 15:07:18
   features: 
-    - support configuration of models
-    - add public api and configuration of camera parameters
-    - update the production web page
+    - deploying programs using docker
     - support versions.yaml
   bug_fixed: ~
-
-- version: 2.2.6
-  tag: ~
-  build_time: 2024-06-11
-  features:
-    - Add udp/tcp rosbridge
-    - Re-write rtk driver by CSZ
-    - Enable services with root permission
-    - Add tty/pps rules
-    - Change file server rules
-    - More smarter project.py
-
-- version: 2.2.4
-  tag: ~
-  build_time: 2024-05-16
-  bug_fixed:
-    - Fix rosbridge connection bug
-
-- version: 2.1.23
-  tag: ~
-  build_time: 2024-04-17
-  features:
-    - Add livox info
-    - Add jetson status
-    - Make cloud registered controllable
-    - Add WIFI & rosbridge resumer
-
-- version: 2.1.22
-  tag: ~
-  build_time: 2024-04-12
-  features:
-    - Support SD auto mount
-    - Support dual camera preview
-    - Support battery driver
-    - Support manufacture
-  bug_fixed:
-    - Fix record bag bug
-    - Fix bgr colorized point bug
-
-- version: 2.1.16
-  tag: ~
-  build_time: 2024-01-30
-  features:
-    - Rewrite project building tools
-    - Support product.html
-    - Support foxglove
-    - Support compile metadeb
-  bug_fixed:
-    - Fix unstable firmware installation bug
-
-- version: 2.1.0
-  tag: ~
-  build_time: 2023-11-06
-  features:
-    - Supported lidars: ouster32, mid-360
-    - SLAM: lower load on-board slam
-    - Save files: still picture(with timestamp, capture parameters)
-    - Camera: Jetson AWB / AE, auto cpature and save
-
-- version: 2.0.3
-  tag: ~
-  build_time: 2023-09-12
-  features:
-    - Save 10FPS 4k video of 3 camera intead of JPEG
-    - Add support of APP 2.0
-
-- version: 1.1.2
-  tag: ~
-  build_time: 2023-08-04
-  features:
-    - Add feature for on-device camera save control
-    - Add support of APP 2.0
-    - fix bug in record
