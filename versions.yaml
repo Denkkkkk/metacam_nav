@@ -9,8 +9,10 @@
 
 - version: 2.3.19
   tag: generic
-  build_count: 1
-  build_time: 2024.10.23 15:07:18
+  build_count: 9
+  architecture: amd64
+  user: denk
+  build_time: 2025.02.08 17:37:49
   features: 
     - deploying programs using docker
     - support versions.yaml

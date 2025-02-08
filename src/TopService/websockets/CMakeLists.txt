@@ -9,11 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_python_setup()
 
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-)
-
-
-install(DIRECTORY scripts/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
+# 添加安装 setup.py 的步骤
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} setup.py install --prefix ${CATKIN_DEVEL_PREFIX}
 )

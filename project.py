@@ -76,8 +76,21 @@ if __name__ == "__main__":
         cmds.append("cp -r scripts/opt output/metacam_nav")
         cmds.append("cp -r scripts/DEBIAN output/metacam_nav")
         cmds.append("cp -r scripts/requirements.sh output/metacam_nav/opt/skyland/metacam_nav/requirements.sh")
-        cmds.append("awk '/^Version/ {print \"Version: " + f"{version.major}.{version.minor}.{version.patch}-rc{version.build}" +
-                    "\"; next} 1' output/metacam_nav/DEBIAN/control > temp.txt && mv temp.txt output/metacam_nav/DEBIAN/control")
+        # cmds.append(f'''
+        #     awk '
+        #         /^Version/ {{print "Version: {version.major}.{version.minor}.{version.patch}-rc{version.build}"; next}}
+        #         /^Architecture/ {{print "Architecture: {version.architecture}"; next}}
+        #         1
+        #     ' output/metacam_nav/DEBIAN/control > output/metacam_nav/DEBIAN/control
+        # ''')
+        cmds.append(
+            "awk '/^Version/ {print \"Version: " + f"{version.major}.{version.minor}.{version.patch}-rc{version.build}" +
+                    "\"; next} 1' output/metacam_nav/DEBIAN/control > temp.txt && mv temp.txt output/metacam_nav/DEBIAN/control"
+                )
+        cmds.append(
+            "awk '/^Architecture/ {print \"Architecture: " + f"{version.architecture}" +
+                    "\"; next} 1' output/metacam_nav/DEBIAN/control > temp.txt && mv temp.txt output/metacam_nav/DEBIAN/control"
+                )
         cmds.append(f"catkin_make install -DCMAKE_INSTALL_PREFIX=output/metacam_nav/opt/skyland/metacam_nav -DUSE_ROS=ON -DCMAKE_BUILD_TYPE=Release")
         
         # 

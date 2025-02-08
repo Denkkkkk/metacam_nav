@@ -94,6 +94,8 @@ class VERSION():
         self.patch = 0
         self.build = 0
         self.tag = ""
+        self.architecture = ""
+        self.user = ""
 
     def load(self):
         with open(self._filepath, "r") as file:
@@ -105,6 +107,8 @@ class VERSION():
                 self.patch = int(match.group(3))
                 self.build = int(data[0]["build_count"]) if "build_count" in data[0] else 0
                 self.tag = data[0]["tag"] if "tag" in data[0] else ""
+                self.architecture = data[0]["architecture"] if "architecture" in data[0] else "arm64"
+                self.user = data[0]["user"] if "user" in data[0] else "skyland"
             else:
                 raise re.error("Regex pattern cannot match the given version string")
 
