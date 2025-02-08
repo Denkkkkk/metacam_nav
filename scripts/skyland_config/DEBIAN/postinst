@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -z "$INSTALL_PATH" ]; then
+    INSTALL_PATH=/opt/skyland/skyland_config
+fi
+
+# install systemd servcies needed
+services=("skyland_config")
+for service in "${services[@]}"
+do
+    echo "=============================="
+    cd $INSTALL_PATH/services/$service
+    ./setup.bash --uninstall --install
+    echo
+done
+
+# run config files
+cd $INSTALL_PATH/config
+./setup.bash
+
+# chown
+chown -R root:root $INSTALL_PATH
+
+# remove empty folder & pycache
+find $INSTALL_PATH -type d -empty -delete
+find $INSTALL_PATH -type d -name '__pycache__' -exec rm -rf {} +
+
+echo "The skyland_config is installed. Use 'journalctl -u skyland_config.service' to check the history output or add '-f' to watch the real-time output"

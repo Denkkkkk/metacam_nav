@@ -73,8 +73,11 @@ if __name__ == "__main__":
 
         cmds = []
         cmds.append("mkdir -p output/metacam_nav")
-        cmds.append("cp -r scripts/opt output/metacam_nav")
-        cmds.append("cp -r scripts/DEBIAN output/metacam_nav")
+        cmds.append("mkdir -p output/skyland_config")
+        cmds.append("cp -r scripts/metacam_nav/opt output/metacam_nav")
+        cmds.append("cp -r scripts/metacam_nav/DEBIAN output/metacam_nav")
+        cmds.append("cp -r scripts/skyland_config/opt output/skyland_config")
+        cmds.append("cp -r scripts/skyland_config/DEBIAN output/skyland_config")
         cmds.append("cp -r scripts/requirements.sh output/metacam_nav/opt/skyland/metacam_nav/requirements.sh")
         # cmds.append(f'''
         #     awk '
@@ -98,6 +101,7 @@ if __name__ == "__main__":
         cmds.append(super_command("chmod +x output/metacam_nav/* -R"))
         cmds.append("cp -r versions.yaml output/metacam_nav/opt/skyland/metacam_nav")
         cmds.append(f"dpkg-deb -Zxz -z0 -b output/metacam_nav output/metacam_nav_{ver}.deb")    # compression type: xz; compression level: 0
+        cmds.append(f"dpkg-deb -Zxz -z0 -b output/skyland_config output/skyland_config_v1.0.0.deb")    # compression type: xz; compression level: 0
         code, _, stderr = execute_command(one_command(cmds, force=False))
         if code == 0:
             # 自定义加密函数进行加密压缩打包
