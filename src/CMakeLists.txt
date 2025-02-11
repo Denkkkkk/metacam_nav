@@ -13,7 +13,6 @@ option(BUILD_SIMULATOR "build simulator or not" OFF)
 option(CMAKE_BUILD_TYPE "build type" "Release")
 option(BUILD_CUDA "Build GPU ver" OFF)
 option(BUILD_mpc_local_planner "BUILD_mpc_local_planner" OFF)
-set(CATKIN_ENABLE_TESTING OFF)
 
 find_package(PCL REQUIRED)
 find_package(Eigen3 REQUIRED)

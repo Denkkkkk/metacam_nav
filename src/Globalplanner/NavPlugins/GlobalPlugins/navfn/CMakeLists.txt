@@ -135,7 +135,3 @@ endif (NAVFN_HAVE_FLTK AND NAVFN_HAVE_NETPBM AND NOT APPLE)
 # else (NAVFN_HAVE_NETPBM)
 #   message (STATUS "pgm.h not found (optional)")
 # endif (NAVFN_HAVE_NETPBM)
-
-if(CATKIN_ENABLE_TESTING)
-  add_subdirectory(test)
-endif()

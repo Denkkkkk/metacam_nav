@@ -66,13 +66,13 @@ roslaunch nav_real_start nav_real_start.launch
 
 局部规划器基于cmu开源的exploration框架进行二次开发。
 
-![image-20250104170250890](doc/image-20250104170250890.png)
+![image-20250211172112742](doc/image-20250211172112742.png)
 
 ## Globalplanner
 
 全局规划器基于move_base框架进行二次开发
 
-![image-20250104170619102](doc/image-20250104170619102.png)
+![image-20250211172123496](doc/image-20250211172123496.png)
 
 ## Topic chain
 

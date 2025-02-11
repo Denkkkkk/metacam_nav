@@ -136,57 +136,6 @@ target_link_libraries(costmap_2d_node
     ${catkin_LIBRARIES}
 )
 
-## Configure Tests
-if(CATKIN_ENABLE_TESTING)
-  # Find package test dependencies
-  find_package(rostest REQUIRED)
-
-  # Add the test folder to the include directories
-  include_directories(test)
-
-  # Create targets for test executables
-  add_executable(costmap_tester EXCLUDE_FROM_ALL test/costmap_tester.cpp)
-  add_dependencies(tests costmap_tester)
-  target_link_libraries(costmap_tester costmap_2d ${GTEST_LIBRARIES})
-
-  add_executable(footprint_tests EXCLUDE_FROM_ALL test/footprint_tests.cpp)
-  add_dependencies(tests footprint_tests)
-  target_link_libraries(footprint_tests costmap_2d ${GTEST_LIBRARIES})
-
-  add_executable(obstacle_tests EXCLUDE_FROM_ALL test/obstacle_tests.cpp)
-  add_dependencies(tests obstacle_tests)
-  target_link_libraries(obstacle_tests costmap_2d layers ${GTEST_LIBRARIES})
-
-  add_executable(static_tests EXCLUDE_FROM_ALL test/static_tests.cpp)
-  add_dependencies(tests static_tests)
-  target_link_libraries(static_tests costmap_2d layers ${GTEST_LIBRARIES})
-
-  add_executable(inflation_tests EXCLUDE_FROM_ALL test/inflation_tests.cpp)
-  add_dependencies(tests inflation_tests)
-  target_link_libraries(inflation_tests costmap_2d layers ${GTEST_LIBRARIES})
-
-  catkin_download_test_data(${PROJECT_NAME}_simple_driving_test_indexed.bag
-    http://download.ros.org/data/costmap_2d/simple_driving_test_indexed.bag
-    DESTINATION ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/test
-    MD5 61168cff9425b11e093ea3a627c81c8d)
-  catkin_download_test_data(${PROJECT_NAME}_willow-full-0.025.pgm
-    http://download.ros.org/data/costmap_2d/willow-full-0.025.pgm
-    DESTINATION ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/test
-    MD5 e66b17ee374f2d7657972efcb3e2e4f7)
-
-  add_rostest(test/footprint_tests.launch)
-  add_rostest(test/inflation_tests.launch)
-  add_rostest(test/obstacle_tests.launch)
-  add_rostest(test/simple_driving_test.xml)
-  add_rostest(test/static_tests.launch)
-
-  catkin_add_gtest(array_parser_test test/array_parser_test.cpp)
-  target_link_libraries(array_parser_test costmap_2d)
-
-  catkin_add_gtest(coordinates_test test/coordinates_test.cpp)
-  target_link_libraries(coordinates_test costmap_2d)
-endif()
-
 install( TARGETS
     costmap_2d_markers
     costmap_2d_cloud
