@@ -51,7 +51,6 @@
 
     <group if="$(arg run_in_docker)">
         <include file="$(find odom_tf)/launch/odom_tf.launch" />
-        <include file="$(find debug_node)/launch/debug_node.launch" />
         <include file="$(find websockets)/launch/websockets_docker.launch" />
      </group>
 

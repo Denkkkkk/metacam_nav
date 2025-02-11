@@ -22,7 +22,7 @@ pathFollower:
   minSpeed: 0.16               # 加减速死区阈值
   maxAddAccel: 3.0             # 最大加速加速度
   maxSlowAccel: 4.0            # 最大减速加速度
-  use_getgoal_yaw: false       # 允许控制到目标点时的车头朝向
+  use_getgoal_yaw: true       # 允许控制到目标点时的车头朝向
   getgoal_yaw: 0.0             # 到目标点时的车头相对世界坐标系的朝向
 
 #通用参数配置
