@@ -21,6 +21,14 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     try
     {
         YAML::Node usual_conf = YAML::LoadFile(usual_config);
+        // Sports parameters
+        param.yawRateGain = usual_conf["pathFollower"]["yawRateGain"].as<double>();
+        param.stopYawRateGain = usual_conf["pathFollower"]["stopYawRateGain"].as<double>();
+        param.maxYawRate = usual_conf["pathFollower"]["maxYawRate"].as<double>();
+        param.maxStopYawRate = usual_conf["pathFollower"]["maxStopYawRate"].as<double>();
+        param.dirDiffThre_slow = usual_conf["pathFollower"]["dirDiffThre_slow"].as<double>();
+        param.dirDiffThre_keep = usual_conf["pathFollower"]["dirDiffThre_keep"].as<double>();
+        param.quick_turn_speed = usual_conf["pathFollower"]["quick_turn_speed"].as<double>();
         // 从 usual_conf 中提取各项参数
         param.endGoalDis = usual_conf["pathFollower"]["endGoalDis"].as<double>();
         param.use_closeGoal_direct = usual_conf["pathFollower"]["use_closeGoal_direct"].as<bool>();
@@ -47,14 +55,6 @@ bool ParamControl::load_config(const std::string &local_config, const std::strin
     try
     {
         YAML::Node local_conf = YAML::LoadFile(local_config);
-        // Sports parameters
-        param.yawRateGain = local_conf["pathFollower"]["yawRateGain"].as<double>();
-        param.stopYawRateGain = local_conf["pathFollower"]["stopYawRateGain"].as<double>();
-        param.maxYawRate = local_conf["pathFollower"]["maxYawRate"].as<double>();
-        param.maxStopYawRate = local_conf["pathFollower"]["maxStopYawRate"].as<double>();
-        param.dirDiffThre_slow = local_conf["pathFollower"]["dirDiffThre_slow"].as<double>();
-        param.dirDiffThre_keep = local_conf["pathFollower"]["dirDiffThre_keep"].as<double>();
-        param.quick_turn_speed = local_conf["pathFollower"]["quick_turn_speed"].as<double>();
         // Get goal parameters
         param.close_direct_speed = local_conf["pathFollower"]["close_direct_speed"].as<double>();
         param.closeGoal_direct_dis = local_conf["pathFollower"]["closeGoal_direct_dis"].as<double>();

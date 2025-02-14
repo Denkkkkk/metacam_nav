@@ -235,7 +235,7 @@ void LpNode::local_planner()
 
                     grid_Synchronize_obstacles_to_paths(rotDir, x2, y2, h); // 根据待规划的点云，根据点云高度遮挡减掉可行的路径
                 }
-            }
+            }   
             // 满足以下所有条件限制转弯，一般都不开启
             // 1 点云到车体的距离（经过缩减）小于 车体的直径（经过缩减），
             // 2 点云相对车体正前方或侧方距离大于半车长度

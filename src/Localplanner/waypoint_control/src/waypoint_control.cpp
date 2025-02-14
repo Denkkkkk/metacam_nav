@@ -230,15 +230,15 @@ void waypoint_control::run()
             pubCloseMap.publish(close_map); // 完成保护地图构建后，恢复模式清除局部地图
 
             // 计算当前车体到全局目标点的射线方向,发布一个反方向0.5m的waypoint
-            double angle = atan2(goal_point.pose.position.y - vehicleY, goal_point.pose.position.x - vehicleX);
-            geometry_msgs::PoseStamped lateral_point;
-            lateral_point.header.frame_id = "map";
-            lateral_point.pose.position.x = vehicleX - lateral_dis * cos(angle);
-            lateral_point.pose.position.y = vehicleY - lateral_dis * sin(angle);
-            lateral_point.pose.orientation.z = 0;
-            lateral_point.pose.orientation.w = 1;
-            lateral_point.header.stamp = ros::Time::now();
-            publishWayPoint(lateral_point);
+            // double angle = atan2(goal_point.pose.position.y - vehicleY, goal_point.pose.position.x - vehicleX);
+            // geometry_msgs::PoseStamped lateral_point;
+            // lateral_point.header.frame_id = "map";
+            // lateral_point.pose.position.x = vehicleX - lateral_dis * cos(angle);
+            // lateral_point.pose.position.y = vehicleY - lateral_dis * sin(angle);
+            // lateral_point.pose.orientation.z = 0;
+            // lateral_point.pose.orientation.w = 1;
+            // lateral_point.header.stamp = ros::Time::now();
+            // publishWayPoint(lateral_point);
         }
         break;
     case MIDPOINT:

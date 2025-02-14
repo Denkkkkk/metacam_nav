@@ -66,10 +66,6 @@ bool RoboCtrl::slowDown()
     {
         local_slowDown = 1000;
     }
-    // 打印局部规划器最近的点云距离
-    // ROS_WARN("localplanner_cloud_minDis: %f", local_slowDown);
-    // 打印terrainCloud_minDis
-    // ROS_WARN("terrainCloud_minDis: %f", terrainCloud_minDis);
     near_cloud_stop = false;
     if (terrainCloud_minDis < pctlPtr->get_params().vehicle_stop_range) // 急停
     {
@@ -159,6 +155,7 @@ void RoboCtrl::pubVehicleSpeed(const double vehicleSpeed)
     pubSpeed.publish(car_speed);
     NAV_WARN("cmd_vel.angular.x: {}, cmd_vel.linear.x: {}, cmd_vel.angular.z:{}",cmd_vel.angular.x, cmd_vel.linear.x, cmd_vel.angular.z);
 }
+
 /**
  * @brief 以全局目标点为方向发布速度
  *

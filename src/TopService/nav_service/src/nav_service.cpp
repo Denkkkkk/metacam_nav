@@ -229,10 +229,10 @@ int main(int argc, char **argv)
     ros::Publisher stop_pub = nh.advertise<std_msgs::Bool>("/stop", 2);
     // 发布导航状态
     ros::Publisher nav_status_pub = nh.advertise<std_msgs::String>("/nav/status", 2);
-    ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("need_reloc", 1);
+    ros::Publisher nav_relo_pub = nh.advertise<std_msgs::Bool>("/need_reloc", 1);
 
     ros::Rate loop_rate(50);
-    NAV_WARN("nav_service node start init!");
+    NAV_WARN_ONCE("nav_service node start init!");
     ParamControl nav_service_params;
     geometry_msgs::PoseStamped goal_point;
     // 初始化nav_model

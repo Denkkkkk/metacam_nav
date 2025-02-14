@@ -1,8 +1,8 @@
 #无图探索local_planner参数配置
 localPlanner:
   vehicleWidth: 0.7          # 车宽
-  vehicleLength: 1.4        # 车长
-  add_point_radius: 0.23      # 障碍物最大膨胀半径
+  vehicleLength: 1.4         # 车长
+  add_point_radius: 0.23     # 障碍物最大膨胀半径
   minPathRange: 0.65         # 最小规划范围
   goalClearRange: 0.45       # 快到目的地时减小障碍物检测的范围
   slow_dis: 0.9              # 近障减速距离
@@ -10,7 +10,7 @@ localPlanner:
 
 #全局规划器参数配置
 globalPlanner:
-  map_file_name: "gs.yaml"  #二维栅格地图文件名
+  map_file_name: "gs.yaml"   #二维栅格地图文件名
 
 #路径跟踪器参数配置
 pathFollower:
@@ -22,8 +22,16 @@ pathFollower:
   minSpeed: 0.16               # 加减速死区阈值
   maxAddAccel: 3.0             # 最大加速加速度
   maxSlowAccel: 4.0            # 最大减速加速度
-  use_getgoal_yaw: true       # 允许控制到目标点时的车头朝向
+  use_getgoal_yaw: true        # 允许控制到目标点时的车头朝向
   getgoal_yaw: 0.0             # 到目标点时的车头相对世界坐标系的朝向
+  # sports parameters
+  yawRateGain: 2.0             # 一般情况下的车头转动增益
+  stopYawRateGain: 3.0         # 静止下的车头转动增益
+  maxYawRate: 35.0             # 车头最大转动角速度
+  maxStopYawRate: 45.0         # 静止时车头最大转动角速度
+  dirDiffThre_slow: 0.35       # 角度差大于这个值就减速
+  dirDiffThre_keep: 0.05       # 保持不响应转向的角度差
+  quick_turn_speed: 0.1        # 减速到这个速度就允许快速转向
 
 #通用参数配置
 usualParams:

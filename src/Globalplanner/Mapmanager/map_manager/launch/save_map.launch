@@ -8,4 +8,4 @@
         args="--occ $(arg occ_thresh) --free $(arg free_thresh) -f $(arg save_file)">
         <remap from="map" to="$(arg map_topic)" />
     </node>
-</launch>
+</launch> 
