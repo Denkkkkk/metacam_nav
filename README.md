@@ -173,7 +173,7 @@ roslaunch nav_real_start nav_real_start.launch
 
 <img src="doc/image-20250213225925024.png" alt="image-20250213225925024" style="zoom: 80%;" />
 
-其中RECOVER模式目前主要用来管理地图的清理机制，以及清理可能存在的转弯点，该模式不太稳定，目前一般不启用。
+其中RECOVER模式目前主要用来管理地图的清理机制（如接收到两个相邻的全局点距离大于0.2m视为两次不同目标位置的规划，此时会强制清理一次地图），以及清理可能存在的转弯点，该模式不太稳定，目前一般不启用。
 
 ## Globalplanner
 
