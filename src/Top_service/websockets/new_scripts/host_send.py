@@ -3,7 +3,6 @@ import rclpy
 from rclpy.node import Node
 from nav_msgs.msg import Odometry  # Import the Odometry message type
 from sensor_msgs.msg import PointCloud2  # Import the PointCloud2 message type
-import time
 import socket
 import struct
 import std_msgs.msg
@@ -37,30 +36,6 @@ class TestaListener(Node):
 
         self.get_logger().info("Socket connections established, ready to send data")
 
-    def connect_socket(self):
-        """Attempt to establish socket connections with retries."""
-        retry_limit = 5  # Maximum number of retries
-        retry_delay = 2  # Delay between retries (in seconds)
-
-        # Try connecting to the odometry and cloud sockets with retries
-        for attempt in range(retry_limit):
-            try:
-                self.sock_odometry = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sock_odometry.connect(('0.0.0.0', 38992))  # Connect to System B on port 38992
-
-                self.sock_cloud = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sock_cloud.connect(('0.0.0.0', 38994))  # Connect to System B on port 38994
-
-                self.get_logger().info("Socket connections established, ready to send data")
-                return  # Successfully connected, exit the retry loop
-            except socket.error as exc:
-                self.get_logger().error(f"Socket connection failed (attempt {attempt + 1}/{retry_limit}): {exc}")
-                if attempt < retry_limit - 1:
-                    self.get_logger().info(f"Retrying in {retry_delay} seconds...")
-                    time.sleep(retry_delay)
-                else:
-                    self.get_logger().error("Failed to connect after multiple attempts.")
-
     def callback_odometry(self, msg):
         # Extracting various fields from the Odometry message
         position_x = msg.pose.pose.position.x
@@ -84,14 +59,10 @@ class TestaListener(Node):
                f"{angular_velocity_x}#{angular_velocity_y}#{angular_velocity_z}"
         
         try:
-            if self.sock_odometry:
-                self.sock_odometry.sendall(data.encode('utf-8'))  # Send the data as UTF-8 encoded string
-            else:
-                self.get_logger().error("Odometry socket is not connected.")
-                self.connect_socket()  # Attempt to reconnect
+            self.get_logger().info("Sending Odometry to System B")
+            self.sock_odometry.sendall(data.encode('utf-8'))  # Send the data as UTF-8 encoded
         except socket.error as exc:
             self.get_logger().error(f"Caught exception socket.error: {exc}")
-            self.connect_socket()  # Attempt to reconnect
 
     def callback_cloud(self, msg):
         # Extract the raw point cloud data and its metadata
@@ -118,15 +89,10 @@ class TestaListener(Node):
         # print("Sending PointCloud2 data:", point_data)
         # Send the point cloud data over the socket
         try:
-            if self.sock_cloud:
-                self.sock_cloud.sendall(point_data.encode('utf-8'))  # Send the data as UTF-8 encoded string
-            else:
-                self.get_logger().error("PointCloud2 socket is not connected.")
-                self.connect_socket()  # Attempt to reconnect
+            self.get_logger().info("Sending PointCloud2 data to System B")
+            self.sock_cloud.sendall(point_data.encode('utf-8'))  # Send the data as UT
         except socket.error as exc:
             self.get_logger().error(f"Caught exception socket.error: {exc}")
-            self.connect_socket()  # Attempt to reconnect
-
 
     def extract_points_from_pointcloud(self, msg):
         # This function extracts 3D points from a PointCloud2 message.

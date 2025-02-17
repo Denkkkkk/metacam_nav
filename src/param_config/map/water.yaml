@@ -1,0 +1,7 @@
+image: reservoir1.pgm
+resolution: 0.050000
+origin: [-3.250000, -42.499998, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+
