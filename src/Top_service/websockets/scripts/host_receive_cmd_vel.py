@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import socket
 import rclpy
 from rclpy.node import Node
@@ -8,7 +9,8 @@ import time
 class CmdVelPublisher(Node):
     def __init__(self):
         super().__init__('host_receive_cmd_vel')
-        self.publisher_ = self.create_publisher(Twist, '/cmd_vel', 10)
+        HUB_ID = os.environ.get("HUB_ID")
+        self.publisher_ = self.create_publisher(Twist, f'/{HUB_ID}/cmd_vel', 10)
         self.get_logger().info("CmdVelPublisher initialized. Waiting for incoming connections...")
 
     def publish_cmd_vel(self, linear_x, angular_x, angular_z):

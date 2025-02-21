@@ -1,5 +1,5 @@
 <launch>
-    <!-- 选择性开启-->
+    <!-- 选择性开启 "use_global_planner" true为有图-->
     <arg name="use_global_planner" default="true" />
     <arg name="run_in_docker" default="true" />
     <arg name="use_rviz" default="false" />

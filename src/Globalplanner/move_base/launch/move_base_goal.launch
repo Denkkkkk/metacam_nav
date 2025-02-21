@@ -1,6 +1,6 @@
 <launch>
     <!-- Arguments -->
-    <arg name="cmd_vel_topic" default="cmd_vel" />
+    <arg name="cmd_vel_topic" default="/move_base/cmd_vel" />
     <arg name="odom_topic" default="/odom_interface" />
     <remap from="odom" to="$(arg odom_topic)" />
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
