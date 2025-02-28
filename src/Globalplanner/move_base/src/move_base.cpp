@@ -67,6 +67,7 @@ namespace move_base {
 
         // get some parameters that will be global to the move base node
         std::string global_planner, local_planner;
+        // 获取参数，第一个为参数名，第二个为参数值，第三个为默认值
         private_nh.param("base_global_planner", global_planner, std::string("navfn/NavfnROS"));
         private_nh.param("base_local_planner", local_planner, std::string("base_local_planner/TrajectoryPlannerROS"));
         private_nh.param("use_local_planner", use_local_planner_, true);
@@ -598,6 +599,7 @@ namespace move_base {
         return true;
     }
 
+    // 将目标位姿转换到全局坐标系
     geometry_msgs::PoseStamped MoveBase::goalToGlobalFrame(const geometry_msgs::PoseStamped &goal_pose_msg)
     {
         std::string global_frame = planner_costmap_ros_->getGlobalFrameID();
@@ -718,14 +720,17 @@ namespace move_base {
         }
     }
 
+    // 动作服务器回调：处理导航目标，启动规划线程，进入主控制循环。
     void MoveBase::executeCb(const move_base_msgs::MoveBaseGoalConstPtr &move_base_goal)
     {
+        // 目标不合法检查
         if (!isQuaternionValid(move_base_goal->target_pose.pose.orientation))
         {
             as_->setAborted(move_base_msgs::MoveBaseResult(), "Aborting on goal because it was sent with an invalid quaternion");
             return;
         }
 
+        // 把目标位姿转换到全局坐标系
         geometry_msgs::PoseStamped goal = goalToGlobalFrame(move_base_goal->target_pose);
 
         publishZeroVelocity();
@@ -736,9 +741,11 @@ namespace move_base {
         planner_cond_.notify_one();
         lock.unlock();
 
+        // 发布现在的目标
         current_goal_pub_.publish(goal);
 
         ros::Rate r(controller_frequency_);
+        // 启动代价地图
         if (shutdown_costmaps_)
         {
             ROS_DEBUG_NAMED("move_base", "Starting up costmaps that were shut down previously");
@@ -762,8 +769,11 @@ namespace move_base {
                 c_freq_change_ = false;
             }
 
+            // 动作服务器可以在任务执行过程中被抢占（preempt），即中断当前任务并开始执行新的任务
+            // 检查是否有抢占请求
             if (as_->isPreemptRequested())
             {
+                // 检查一个动作服务器（action server）是否收到了新的目标。
                 if (as_->isNewGoalAvailable())
                 {
                     // if we're active and a new goal is available, we'll accept it, but we won't shut anything down
