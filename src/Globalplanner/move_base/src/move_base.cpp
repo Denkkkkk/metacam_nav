@@ -50,6 +50,7 @@ namespace move_base {
     MoveBase::MoveBase(tf2_ros::Buffer &tf) : tf_(tf),
                                               as_(NULL),
                                               planner_costmap_ros_(NULL), controller_costmap_ros_(NULL),
+                                            //   全局规划器，载入nav_core::BaseGlobalPlanner类
                                               bgp_loader_("nav_core", "nav_core::BaseGlobalPlanner"),
                                               blp_loader_("nav_core", "nav_core::BaseLocalPlanner"),
                                               recovery_loader_("nav_core", "nav_core::RecoveryBehavior"),
@@ -68,6 +69,7 @@ namespace move_base {
         // get some parameters that will be global to the move base node
         std::string global_planner, local_planner;
         // 获取参数，第一个为参数名，第二个为参数值，第三个为默认值
+        // 全局规划器global_planner默认为navfn/NavfnROS
         private_nh.param("base_global_planner", global_planner, std::string("navfn/NavfnROS"));
         private_nh.param("base_local_planner", local_planner, std::string("base_local_planner/TrajectoryPlannerROS"));
         private_nh.param("use_local_planner", use_local_planner_, true);
@@ -125,6 +127,7 @@ namespace move_base {
         // initialize the global planner
         try
         {
+            // bgp_loader_是一个插件加载器，用于加载全局规划器
             planner_ = bgp_loader_.createInstance(global_planner);
             planner_->initialize(bgp_loader_.getName(global_planner), planner_costmap_ros_);
         }
@@ -1302,6 +1305,7 @@ namespace move_base {
 
     bool MoveBase::getRobotPose(geometry_msgs::PoseStamped &global_pose, costmap_2d::Costmap2DROS *costmap)
     {
+        // 一开始获得在各自坐标系下的单位矢量
         tf2::toMsg(tf2::Transform::getIdentity(), global_pose.pose);
         geometry_msgs::PoseStamped robot_pose;
         tf2::toMsg(tf2::Transform::getIdentity(), robot_pose.pose);
@@ -1312,6 +1316,8 @@ namespace move_base {
         // get robot pose on the given costmap frame
         try
         {
+            // 通过tf查找各自的坐标系的变换关系
+            // 把单位向量通过tf变换，变换到costmap的global_frame坐标系下
             tf_.transform(robot_pose, global_pose, costmap->getGlobalFrameID());
         }
         catch (tf2::LookupException &ex)
