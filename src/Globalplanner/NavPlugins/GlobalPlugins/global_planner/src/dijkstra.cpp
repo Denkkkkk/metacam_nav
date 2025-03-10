@@ -76,7 +76,7 @@ void DijkstraExpansion::setSize(int xs, int ys) {
 //   or until it runs out of cells to update,
 //   or until the Start cell is found (atStart = true)
 //
-
+// 主要传播函数，使用 Dijkstra 算法进行广度优先搜索。该函数在指定的循环次数内运行，或者直到没有更多的单元格需要更新，或者找到起始单元格为止
 bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x, double start_y, double end_x, double end_y,
                                            int cycles, float* potential) {
     cells_visited_ = 0;
@@ -94,11 +94,15 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
     // set goal
     int k = toIndex(start_x, start_y);
 
+    // 是否需要精确
     if(precise_)
     {
         double dx = start_x - (int)start_x, dy = start_y - (int)start_y;
+        // 计算起始点 start_x 和 start_y 的小数部分，并将其四舍五入到小数点后两位。
+        // 计算浮点数的向下取整值
         dx = floorf(dx * 100 + 0.5) / 100;
         dy = floorf(dy * 100 + 0.5) / 100;
+        // 根据起始点的偏移量，计算并设置四个相邻节点的初始潜在值。
         potential[k] = neutral_cost_ * 2 * dx * dy;
         potential[k+1] = neutral_cost_ * 2 * (1-dx)*dy;
         potential[k+nx_] = neutral_cost_*2*dx*(1-dy);
@@ -130,7 +134,8 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
 
     for (; cycle < cycles; cycle++) // go for this many cycles, unless interrupted
             {
-        // 
+        // 当前优先级缓冲区为空，且下一个优先级缓冲区为空
+        // 没办法继续查找，则查找路线失败
         if (currentEnd_ == 0 && nextEnd_ == 0) // priority blocks empty
             return false;
 
@@ -140,6 +145,7 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
             nwv = currentEnd_;
 
         // reset pending_ flags on current priority buffer
+        // 重置当前优先级缓冲区中的 pending_ 标志
         int *pb = currentBuffer_;
         int i = currentEnd_;
         while (i-- > 0)
@@ -152,6 +158,8 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
             updateCell(costs, potential, *pb++);
 
         // swap priority blocks currentBuffer_ <=> nextBuffer_
+        // 把下一个优先级缓冲区的节点转移到当前优先级缓冲区
+        // TODO：滚动数组？ nextEnd_为什么要置0？
         currentEnd_ = nextEnd_;
         nextEnd_ = 0;
         pb = currentBuffer_;        // swap buffers
@@ -159,7 +167,9 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
         nextBuffer_ = pb;
 
         // see if we're done with this priority level
+        // 当当前优先级缓冲区为空时，它会将溢出缓冲区中的节点转移到当前缓冲区，并增加优先级阈值
         if (currentEnd_ == 0) {
+            // TODO:threshold_ 为什么要加 priorityIncrement_？
             threshold_ += priorityIncrement_;    // increment priority threshold
             currentEnd_ = overEnd_;    // set current to overflow block
             overEnd_ = 0;
@@ -173,6 +183,7 @@ bool DijkstraExpansion::calculatePotentials(unsigned char* costs, double start_x
             break;
     }
     //ROS_INFO("CYCLES %d/%d ", cycle, cycles);
+    // 在指定的循环次数内找到了起始单元格
     if (cycle < cycles)
         return true; // finished up here
     else
@@ -194,6 +205,7 @@ inline void DijkstraExpansion::updateCell(unsigned char* costs, float* potential
 
     // do planar wave update
     float c = getCost(costs, n);
+    // 如果当前单元格的代价值大于等于致命代价值，则不进行传播
     if (c >= lethal_cost_)    // don't propagate into obstacles
         return;
 
@@ -201,12 +213,14 @@ inline void DijkstraExpansion::updateCell(unsigned char* costs, float* potential
 
     // now add affected neighbors to priority blocks
     if (pot < potential[n]) {
+        // 四个相邻节点的代价值开方
         float le = INVSQRT2 * (float)getCost(costs, n - 1);
         float re = INVSQRT2 * (float)getCost(costs, n + 1);
         float ue = INVSQRT2 * (float)getCost(costs, n - nx_);
         float de = INVSQRT2 * (float)getCost(costs, n + nx_);
         potential[n] = pot;
         //ROS_INFO("UPDATE %d %d %d %f", n, n%nx, n/nx, potential[n]);
+        // 小于阈值，加入下一个优先级缓冲区
         if (pot < threshold_)    // low-cost buffer block
                 {
             if (potential[n - 1] > pot + le)
@@ -219,6 +233,7 @@ inline void DijkstraExpansion::updateCell(unsigned char* costs, float* potential
                 push_next(n+nx_);
         } else            // overflow block
         {
+            // 如果当前单元格的潜在值大于阈值，则加入溢出优先级缓冲区
             if (potential[n - 1] > pot + le)
                 push_over(n-1);
             if (potential[n + 1] > pot + re)

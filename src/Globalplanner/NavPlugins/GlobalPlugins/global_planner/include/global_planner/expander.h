@@ -42,6 +42,10 @@
 
 namespace global_planner {
 
+/**
+ * @class Expander
+ * @brief Provides a virtual base class for the expanding part of Dijkstra's algorithm
+ */
 class Expander {
     public:
         Expander(PotentialCalculator* p_calc, int nx, int ny) :
@@ -99,6 +103,7 @@ class Expander {
         unsigned char lethal_cost_, neutral_cost_;
         int cells_visited_;
         float factor_;
+        // 类指针，指向一个 PotentialCalculator 类对象
         PotentialCalculator* p_calc_;
 
 };

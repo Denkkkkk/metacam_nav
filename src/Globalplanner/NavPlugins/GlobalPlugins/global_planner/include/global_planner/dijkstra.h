@@ -83,7 +83,9 @@ class DijkstraExpansion : public Expander {
          */
         void updateCell(unsigned char* costs, float* potential, int n); /** updates the cell at index n */
 
+        // 获取指定单元格的代价值
         float getCost(unsigned char* costs, int n) {
+            // TODO: 这里的 costs 的计算公式怎么来的？
             float c = costs[n];
             if (c < lethal_cost_ - 1 || (unknown_ && c==255)) {
                 c = c * factor_ + neutral_cost_;
@@ -97,6 +99,9 @@ class DijkstraExpansion : public Expander {
         /** block priority buffers */
         int *buffer1_, *buffer2_, *buffer3_; /**< storage buffers for priority blocks */
         int *currentBuffer_, *nextBuffer_, *overBuffer_; /**< priority buffer block ptrs */
+        // 表示当前优先级缓冲区 currentBuffer_ 中的元素数量
+        // 表示下一个优先级缓冲区 nextBuffer_ 中的元素数量。
+        // 表示溢出优先级缓冲区 overBuffer_ 中的元素数量。
         int currentEnd_, nextEnd_, overEnd_; /**< end points of arrays */
         bool *pending_; /**< pending_ cells during propagation */
         bool precise_;
