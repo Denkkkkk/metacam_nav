@@ -24,9 +24,9 @@ void RoboCtrl::odomHandler(const nav_msgs::Odometry::ConstPtr &odomIn)
 }
 
 /**
- * @brief 局部目标点回调
- *
+ * @brief 局部目标点回调函数
  * @param goal
+ * @note 计算记录的way_point和接收到的way_point的距离，如果距离大于0.1m，则更新way_point且use_real_goal为true
  */
 void RoboCtrl::goalHandler(const geometry_msgs::PoseStamped::ConstPtr &goal)
 {

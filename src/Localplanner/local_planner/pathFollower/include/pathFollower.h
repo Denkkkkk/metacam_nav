@@ -44,7 +44,7 @@ enum ControlMode
 class RoboCtrl
 {
 public:
-    ParamControl *pctlPtr;
+    ParamControl *pctlPtr;  // 参数控制指针
     int pub_rate;
     RoboCtrl();
     ~RoboCtrl() { delete pctlPtr; }

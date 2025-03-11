@@ -12,12 +12,18 @@
 #include "navlog_control/spd_logging.hpp"
 using namespace std;                            
 
+// ----------------------构造函数----------------------
+// 订阅话题
+//  /way_point：调用goalHandler回调函数，获得局部目标点way_point
+// ---------------------------------------------------
 RoboCtrl::RoboCtrl()
 {
     pctlPtr = new ParamControl();
+    // 获得参数并赋值给way_point.pose.position.x和way_point.pose.position.y
     nhPrivate.getParam("vehicleX", way_point.pose.position.x);
     nhPrivate.getParam("vehicleY", way_point.pose.position.y);
     nhPrivate.getParam("ns", ns);
+    // goal_point_origin 和 way_point 通过读取参数文件赋值
     goal_point_origin = way_point;
     use_real_goal = true;
     cmdTopic = ns + "/cmd_vel";
@@ -240,7 +246,9 @@ void RoboCtrl::pure_persuit()
 {
 
     maxSpeed1 = pctlPtr->get_params().maxSpeed; // 恢复最大速度
-    // 全局目标点到最新车体位置的距离
+    // 目标点到最新车体位置的距离
+    // 如果使用目标点：goal_point_origin
+    // 否则：way_point
     if (pctlPtr->get_params().use_map)
     {
         goal_point = goal_point_origin;
@@ -249,17 +257,18 @@ void RoboCtrl::pure_persuit()
     {
         goal_point = way_point;
     }
+    // 计算目标点到车体的距离
     float endDisX = goal_point.pose.position.x - vehicleX;
     float endDisY = goal_point.pose.position.y - vehicleY;
     endGoalDis_now = sqrt(endDisX * endDisX + endDisY * endDisY);
-    // 虚拟全局目标点到最新车体位置的距离
+    // 虚拟全局目标点到车体位置的距离
     float virture_endDisX = virture_goalX - vehicleX;
     float virture_endDisY = virture_goalY - vehicleY;
     virture_endGoalDis_now = sqrt(virture_endDisX * virture_endDisX + virture_endDisY * virture_endDisY);
 
     /**
      * @brief 二次保护的到点状态判断
-     *
+     * @details 根据多种状态来判断是否到点get_goal，并修改相应的状态量
      */
     if (!use_real_goal && virture_endGoalDis_now > pctlPtr->get_params().endGoalDis + 0.3)
     {
@@ -290,7 +299,8 @@ void RoboCtrl::pure_persuit()
      * @brief 是否直接跟随全局路径
      *
      */
-    nav_msgs::Path splined_path;
+    nav_msgs::Path splined_path;    // 采样路径
+    // 判断是否能直接跟随全局路径
     if (pctlPtr->get_params().use_map && path_status.data && pctlPtr->get_params().goal_path_direct && (control_mode == MIDPlanning || control_mode == GUIDEPlanning))
     {
         splined_path = goal_path;
@@ -299,6 +309,7 @@ void RoboCtrl::pure_persuit()
     {
         splined_path = path;
     }
+    // 如果使用useCloudSlowDown，根据条件设置限速
     if (pctlPtr->get_params().useCloudSlowDown)
     {
         if (!slowDown())
@@ -349,6 +360,7 @@ void RoboCtrl::pure_persuit()
     }
     /**
      * @brief 到点或异常，优先判断并输出状态
+     * @details 需要停止，根据不同的状态打印不同的日志
      *
      */
     if (no_odom_flag || pathSize < 2 || get_goal.data || !pathInit || safetyStop || near_cloud_stop)
@@ -393,6 +405,9 @@ void RoboCtrl::pure_persuit()
     }
     else
     {
+        // --------------------------------------
+        // 根据不同情况调整速度
+        // --------------------------------------
         float disX, disY, dis;
         // 每次收到/path的时候都会重置pathPointID为0，然后一直累加
         while (pathPointID < pathSize - 1)

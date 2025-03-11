@@ -50,6 +50,9 @@ struct Params
     double vehicle_stop_range;
 };
 
+/**
+ * @brief 参数控制类
+ */
 class ParamControl
 {
 public:

@@ -4,7 +4,9 @@ void ParamControl::load_params()
 {
     // 加载路径
     nh.getParam("robot", robot);
+    // 从launch文件加载的参数中获取robot参数，robot参数是tita，对应tita.yaml
     local_config = ros::package::getPath("local_planner") + "/config/" + robot + ".yaml";
+    // 从param_config功能包的/config/nav_config.yaml中加载参数
     usual_config = ros::package::getPath("param_config") + "/config/nav_config.yaml";
     // 打印路径
     std::cout << "local_config: " << local_config << std::endl;
@@ -14,6 +16,9 @@ void ParamControl::load_params()
     param_origin = param;
 }
 
+/**
+ * @brief 从本地和通用配置文件中加载参数
+ */
 bool ParamControl::load_config(const std::string &local_config, const std::string &usual_config)
 {
     // 从nav_config.yaml读取 local_planner 参数

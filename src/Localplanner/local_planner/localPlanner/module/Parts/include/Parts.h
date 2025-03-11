@@ -18,6 +18,8 @@ using namespace std;
 #ifndef PLOTPATHSET
 #define PLOTPATHSET 1 // 开启可行路径可视化
 #endif
+
+// 使用extern关键字声明的全局变量和函数，可以在其他文件中使用
 extern const double PI;
 extern string pathFolder;
 extern double terrainVoxelSize;
@@ -71,7 +73,7 @@ extern pcl::PointCloud<pcl::PointXYZI>::Ptr terrainCloudDwz;
 extern pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudStack[1]; // 包含 laserCloudStackNum 个指向类型为 pcl::PointXYZI 的点云对象的指针。
 extern pcl::PointCloud<pcl::PointXYZI>::Ptr plannerCloud;       // 可能用于存储路径规划相关的点云数据
 extern pcl::PointCloud<pcl::PointXYZI>::Ptr plannerCloudCrop;
-extern pcl::PointCloud<pcl::PointXYZI>::Ptr PannerAtuCloud;
+extern pcl::PointCloud<pcl::PointXYZI>::Ptr PannerAtuCloud; // 用于规划的点云
 
 extern pcl::PointCloud<pcl::PointXYZI>::Ptr addedObstacles;     // 存储被添加的障碍物的数据
 extern pcl::PointCloud<pcl::PointXYZI>::Ptr addedObstaclesCrop; // 裁剪距离后的额加障碍物数据
