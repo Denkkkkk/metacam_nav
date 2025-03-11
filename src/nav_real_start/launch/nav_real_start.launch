@@ -1,6 +1,6 @@
 <launch>
     <!-- 选择性开启-->
-    <arg name="use_global_planner" default="true" />
+    <arg name="use_global_planner" default="false" />
     <arg name="use_rviz" default="false" />
 
     <!-- 局部规划的初始点位-->

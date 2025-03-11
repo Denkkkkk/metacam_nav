@@ -14,7 +14,7 @@ globalPlanner:
 
 #路径跟踪器参数配置
 pathFollower:
-  endGoalDis: 1.0              # 到达目标点范围内就停止
+  endGoalDis: 0.4              # 到达目标点范围内就停止
   use_closeGoal_direct: false  # 开启到目标点附近的精确到点模式（在靠近目标0.6m时会关闭避障）
   useCloudSlowDown: true       # 使能根据周围障碍物点云密集情况进行减速
   vehicle_stop_range: 0.25     # 车辆强制停止的障碍物范围,防止客户伸脚进来暴力测试
@@ -37,8 +37,8 @@ pathFollower:
 usualParams:
   maxSpeed: 0.8                # 整车最大速度
   use_relocalization: false    # 是否使用重定位调整到同一个地图坐标系
-  use_map: true                # 是否使用先验地图
-  use_prior_path: true         # 是否使用先验路径
+  use_map: false               # 是否使用先验地图
+  use_prior_path: false        # 是否使用先验路径
 
 #导航服务参数配置
 nav_service:
