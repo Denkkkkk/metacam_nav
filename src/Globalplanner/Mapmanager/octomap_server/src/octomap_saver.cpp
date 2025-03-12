@@ -42,6 +42,7 @@ using octomap_msgs::GetOctomap;
 using namespace std;
 using namespace octomap;
 
+
 class MapSaver{
 public:
   MapSaver(const std::string& mapname, bool full){

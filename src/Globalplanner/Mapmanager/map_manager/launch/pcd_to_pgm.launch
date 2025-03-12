@@ -1,6 +1,6 @@
 <launch>
-    <!-- <arg name="cloud_in_topic" default="/map_flie_pub" /> -->
-    <arg name="cloud_in_topic" default="/terrain_map_pub" />    
+    <arg name="cloud_in_topic" default="/map_file_pub" />
+    <!-- <arg name="cloud_in_topic" default="/terrain_map_pub" />     -->
 
     <include file="$(find map_manager)/launch/interface/octomap_server.launch">
         <arg name="cloud_in_topic" value="$(arg cloud_in_topic)" />

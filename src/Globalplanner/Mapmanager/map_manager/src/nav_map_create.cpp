@@ -14,7 +14,7 @@ MapRecord::MapRecord() : terrain_map_record(new pcl::PointCloud<pcl::PointXYZI>(
 
     terrain_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/terrain_map_pub", 5);
     cloud_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/cloud_map_pub", 5);
-    map_flie_pub = nh.advertise<sensor_msgs::PointCloud2>("/map_flie_pub", 1, true);
+    map_flie_pub = nh.advertise<sensor_msgs::PointCloud2>("/map_file_pub", 1, true);
     terrain_map_xyzi = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>()); // 如果不用参数列表，就得这样
     cloud_map_record = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>());
 
