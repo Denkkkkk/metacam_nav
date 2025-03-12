@@ -15,7 +15,10 @@ public:
         tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>();
     }
 
-    // 里程计消息回调函数
+    /**
+     * @brief 里程计回调函数
+     * @note 里程计数据作为变换发布，父坐标系是mapping_init，子坐标系是body
+     */
     void odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
     {
         // 创建变换消息

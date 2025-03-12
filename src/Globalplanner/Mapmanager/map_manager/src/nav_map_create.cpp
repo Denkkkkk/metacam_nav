@@ -9,8 +9,11 @@ MapRecord::MapRecord() : terrain_map_record(new pcl::PointCloud<pcl::PointXYZI>(
     nhPrivate.getParam("obstacleHeightThre", obstacleHeightThre);
     nhPrivate.getParam("save_always", save_always);
 
-    terrain_map_sub = nh.subscribe<sensor_msgs::PointCloud2>("terrain_map", 5, &MapRecord::terrainMapCallback, this);
-    cloud_map_sub = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, &MapRecord::cloudMapCallback, this);
+    terrain_map_sub = nh.subscribe<sensor_msgs::PointCloud2>("terrain_map", 5, &MapRecord::terrainMapCallback, this);   // 订阅点云话题： terrain_map: 地形点云图
+    // / terrain_map话题是从Localplanner的terrain_analysis输出的地形点云数据
+    // TODO 解耦lio
+    cloud_map_sub = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, &MapRecord::cloudMapCallback, this);  // 订阅点云话题 cloud_interface: cloud点云图
+    // /cloud_interface话题是从lio输出的点云数据
 
     terrain_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/terrain_map_pub", 5);
     cloud_map_pub = nh.advertise<sensor_msgs::PointCloud2>("/cloud_map_pub", 5);
@@ -32,6 +35,12 @@ MapRecord::MapRecord() : terrain_map_record(new pcl::PointCloud<pcl::PointXYZI>(
     relocalization_map_ss_temp << pcd_path << "pcd_temp/" << "relocal" << std::put_time(time_info, "%Y%m%d_%H_%M") << ".pcd";
 }
 
+/**
+ * @brief 保存点云数据到PCD文件
+ * @param cloud 点云数据
+ * @param file_name 文件名
+ * @param binary_ 是否以二进制格式保存
+ */
 void MapRecord::save_pcd(const sensor_msgs::PointCloud2 &cloud, std::stringstream &file_name, bool binary_)
 {
     std::stringstream ss;
@@ -57,14 +66,21 @@ void MapRecord::save_pcd(const sensor_msgs::PointCloud2 &cloud, std::stringstrea
     pcl::io::savePCDFile(ss.str(), cloud, v, q, binary_);
 }
 
+/**
+ * @brief 点云回调函数
+ * @note 接收点云数据，进行滤波和下采样处理，发布并保存处理后的点云数据
+ */
 void MapRecord::cloudMapCallback(const sensor_msgs::PointCloud2::ConstPtr &cloud_map_pc2)
 {
     pcl::PointCloud<pcl::PointXYZI> cloud_map_xyzi;
     pcl::fromROSMsg(*cloud_map_pc2, cloud_map_xyzi);
     pcl::PointXYZI point;
+    // 过滤噪点
     for (int i = 0; i < cloud_map_xyzi.points.size(); i++)
     {
         point = cloud_map_xyzi.points[i];
+        // 非法点检查
+        // nan表示不是一个数字，inf表示无穷大
         if (std::isnan(point.x) || std::isnan(point.y) || std::isnan(point.z) ||
             std::isinf(point.x) || std::isinf(point.y) || std::isinf(point.z))
         {
@@ -109,10 +125,15 @@ void MapRecord::terrainMapCallback(const sensor_msgs::PointCloud2::ConstPtr &ter
 {
     terrain_map_xyzi->clear();
     pcl::fromROSMsg(*terrain_map_pc2, *terrain_map_xyzi);
+    // 根据点云的强度值进行过滤，强度值大于obstacleHeightThre的点会被保留
     pcl::PointXYZI point;
     for (int i = 0; i < terrain_map_xyzi->points.size(); i++)
     {
         point = terrain_map_xyzi->points[i];
+        // 点的强度值（intensity）通常表示该点的反射强度或亮度
+        // 在激光雷达（LiDAR）数据中，强度值表示激光束从物体表面反射回传感器的强度。
+        // 不同材质和表面的反射特性不同，因此强度值可以用来区分不同类型的物体或表面。
+        // 低强度点可能来自灰尘、雨雪或远距离噪声，可通过阈值过滤。
         if (point.intensity > obstacleHeightThre)
         {
             point.intensity += 0.5;
@@ -128,15 +149,18 @@ void MapRecord::terrainMapCallback(const sensor_msgs::PointCloud2::ConstPtr &ter
     *terrain_map_record = filter_rs_cloud;
     ROS_WARN("terrainMapSize: %ld", terrain_map_record->points.size());
 
+    // 发布降采样后的点云terrain_map_record
     sensor_msgs::PointCloud2 terrain_map_record_msg;
     pcl::toROSMsg(*terrain_map_record, terrain_map_record_msg);
     terrain_map_record_msg.header.frame_id = "map";
     terrain_map_record_msg.header.stamp = terrain_map_pc2->header.stamp;
     terrain_map_pub.publish(terrain_map_record_msg);
+    // 保存点云数据到PCD文件
     if (save_always)
     {
         static bool save_temp = true;
         CREATE_STATIC();
+        // 交叉保存，相当于做了数据冗余
         if (save_temp)
         {
             save_pcd(terrain_map_record_msg, terrain_map_ss_temp, false);

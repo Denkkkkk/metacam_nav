@@ -38,6 +38,7 @@ map_to_odom::map_to_odom()
     actu_odom = Eigen::Isometry3d::Identity();
 }
 
+// 发布odom到map的坐标变换
 void map_to_odom::pub_odom_to_map()
 {
     odom_to_map_trans.header.stamp = ros::Time::now();
@@ -45,6 +46,10 @@ void map_to_odom::pub_odom_to_map()
     pubOdomToMapPose.publish(odom_to_map_trans);
 }
 
+/**
+ * @brief 里程计回调函数
+ * @note 获取里程计位姿信息，存储为Eigen::Isometry3d格式的actu_odom
+ */
 void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
 {
     actu_odom.setIdentity(); // 重置为单位矩阵，否则会发生累积变换
@@ -66,11 +71,13 @@ void map_to_odom::odomCallBack(const nav_msgs::Odometry::ConstPtr &msg)
     // std::cout << actu_odom.matrix() << std::endl;
 }
 
+// 停止回调函数，用于接收急停信号
 void map_to_odom::stopCallBack(const std_msgs::Bool::ConstPtr &stop)
 {
     safetyStop = stop->data;
 }
 
+// 初始化里程计回调函数
 void map_to_odom::initOdomCallBack(const std_msgs::Bool::ConstPtr &msg)
 {
     if (msg->data)
@@ -91,6 +98,7 @@ void map_to_odom::reLocalizationCallBack(const geometry_msgs::PoseStamped::Const
 {
 
     geometry_msgs::Quaternion geoQuat = vTm_msg->pose.orientation;
+    // 非法四元数检查
     if (fabs((geoQuat.x * geoQuat.x + geoQuat.y * geoQuat.y + geoQuat.z * geoQuat.z + geoQuat.w * geoQuat.w) - 1) > 0.01)
     {
         ROS_WARN("map_to_odom.cpp: received incorrect orientation!%f\n", fabs((geoQuat.x * geoQuat.x + geoQuat.y * geoQuat.y + geoQuat.z * geoQuat.z + geoQuat.w * geoQuat.w) - 1));

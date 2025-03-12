@@ -20,6 +20,7 @@ CloudInterface::CloudInterface()
     subScan = nh.subscribe<sensor_msgs::PointCloud2>(cloud_in_topic, 2, &CloudInterface::scanHandler, this);
     subOdometry = nh.subscribe<nav_msgs::Odometry>(odom_topic, 5, &CloudInterface::odomHandler, this);
     // subSpeed = nh.subscribe<std_msgs::Float32>("/speed", 5, &CloudInterface::speedHandler, this);
+    // 发布lio处理过的点云数据到话题/cloud_interface
     pubScan = nh.advertise<sensor_msgs::PointCloud2>(cloud_out_topic, 100000);
 }
 
