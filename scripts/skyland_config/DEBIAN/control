@@ -3,6 +3,6 @@ Version: 1.0.0.0
 Section: admin
 Priority: optional
 Essential: yes
-Architecture: amd64
+Architecture: arm64
 Maintainer: lidongquan <1327165187@qq.com>
 Description: skyland_config package based on metacam device
