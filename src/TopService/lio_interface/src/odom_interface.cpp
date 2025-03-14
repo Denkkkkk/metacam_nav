@@ -20,6 +20,12 @@ OdomInterface::OdomInterface()
     pubOdom = nh.advertise<nav_msgs::Odometry>(odom_out_topic, 5);
 }
 
+/**
+ * @brief 里程计回调函数
+ *
+ * @param odom
+ * @note 里程计数据转到map坐标系下
+ */
 void OdomInterface::odomCallBack(const nav_msgs::Odometry::ConstPtr &odom)
 {
     // 坐标系转到全局map下

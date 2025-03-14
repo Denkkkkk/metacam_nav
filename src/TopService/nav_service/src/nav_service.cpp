@@ -162,12 +162,22 @@ bool stopCallback(std_srvs::Trigger::Request &req,
     return true;
 }
 
+/**
+ * @brief 里程计回调函数，获取里程计数据
+ *
+ * @param msg
+ */
 void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
 {
     vehicle_x = msg->pose.pose.position.x;
     vehicle_y = msg->pose.pose.position.y;
 }
 
+/**
+ * @brief 发布导航状态
+ *
+ * @param nav_status_pub
+ */
 void navStatusPub(ros::Publisher &nav_status_pub)
 {
     NavStatus nav_status;
@@ -197,6 +207,11 @@ void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
     reloc_succeed = true;
 }
 
+/**
+ * @brief 里程计转地图坐标系
+ *
+ * @param msg
+ */
 void odomToMapCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
     odom_to_map.setIdentity(); // 重置为单位矩阵，否则会发生累积变换

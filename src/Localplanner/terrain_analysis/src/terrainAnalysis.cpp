@@ -286,10 +286,11 @@ int main(int argc, char **argv)
     nhPrivate.getParam("terrainMapRadius", terrainMapRadius);
     // nhPrivate.param("planarVoxelSize", planarVoxelSize, 0.2);
 
+    // 订阅lio输出的里程计话题，/odom_interface是lio输出的里程计
     ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/odom_interface", 5, odometryHandler);
-
+    // 订阅lio输出的点云话题，/cloud_interface是lio输出的点云
     ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>("/cloud_interface", 5, laserCloudHandler);
-
+    // TODO: 好像这个话题是没有发布者的？
     ros::Subscriber subClearing = nh.subscribe<std_msgs::Float32>("/map_clearing", 5, clearingHandler);
 
     ros::Publisher pubLaserCloud = nh.advertise<sensor_msgs::PointCloud2>("/terrain_map", 5);
