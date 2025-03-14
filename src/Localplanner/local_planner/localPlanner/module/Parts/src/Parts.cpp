@@ -37,7 +37,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr terrainCloudDwz(new pcl::PointCloud<pcl::Po
 pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudStack[1];                                  // 包含 laserCloudStackNum 个指向类型为 pcl::PointXYZI 的点云对象的指针。
 pcl::PointCloud<pcl::PointXYZI>::Ptr plannerCloud(new pcl::PointCloud<pcl::PointXYZI>()); // 可能用于存储路径规划相关的点云数据
 pcl::PointCloud<pcl::PointXYZI>::Ptr plannerCloudCrop(new pcl::PointCloud<pcl::PointXYZI>());
-pcl::PointCloud<pcl::PointXYZI>::Ptr PannerAtuCloud(new pcl::PointCloud<pcl::PointXYZI>());
+pcl::PointCloud<pcl::PointXYZI>::Ptr PannerAtuCloud(new pcl::PointCloud<pcl::PointXYZI>()); // 用于规划的点云
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr addedObstacles(new pcl::PointCloud<pcl::PointXYZI>()); // 存储被添加的障碍物的数据
 pcl::PointCloud<pcl::PointXYZI>::Ptr addedObstaclesCrop(new pcl::PointCloud<pcl::PointXYZI>());

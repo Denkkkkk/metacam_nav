@@ -73,6 +73,9 @@ script_path=$(readlink -f "${BASH_SOURCE[0]}")
 # echo "script_path: ${script_path}"
 parent_path=$(dirname "$script_path")
 
+
+# ---------------------------
+# 把当前终端置顶 wmctrl -r :ACTIVE: -b toggle,above;
 gnome-terminal --tab -- bash -c "wmctrl -r :ACTIVE: -b toggle,above;$parent_path/all_run.sh ${para_s} ${para_r} ${para_k} ${para_m} ${para_q}"
 
 

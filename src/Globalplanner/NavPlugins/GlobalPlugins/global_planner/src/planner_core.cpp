@@ -207,18 +207,24 @@ namespace global_planner {
 
     bool GlobalPlanner::worldToMap(double wx, double wy, double &mx, double &my)
     {
+        // 获取地图的原点坐标和分辨率
         double origin_x = costmap_->getOriginX(), origin_y = costmap_->getOriginY();
         double resolution = costmap_->getResolution();
 
+        // 检查世界坐标是否在地图的原点左下方，如果是则返回 false
         if (wx < origin_x || wy < origin_y)
             return false;
 
+        // 将世界坐标转换为地图坐标
+        // TODO：这个公式是怎么来的？
         mx = (wx - origin_x) / resolution - convert_offset_;
         my = (wy - origin_y) / resolution - convert_offset_;
 
+        // 检查转换后的地图坐标是否在地图的范围内，如果是则返回 true
         if (mx < costmap_->getSizeInCellsX() && my < costmap_->getSizeInCellsY())
             return true;
 
+        // 如果地图坐标不在地图范围内，返回 false
         return false;
     }
 
@@ -245,6 +251,7 @@ namespace global_planner {
         ros::NodeHandle n;
         std::string global_frame = frame_id_;
 
+        // 边界检查
         // until tf can handle transforming things that are way in the past... we'll require the goal to be in our global frame
         if (goal.header.frame_id != global_frame)
         {
@@ -272,6 +279,7 @@ namespace global_planner {
                               "The robot's start position is off the global costmap. Planning will always fail, are you sure the robot has been properly localized?");
             return false;
         }
+        // 如果使用旧的navfn行为，直接使用start_x_i和start_y_i
         if (old_navfn_behavior_)
         {
             start_x = start_x_i;

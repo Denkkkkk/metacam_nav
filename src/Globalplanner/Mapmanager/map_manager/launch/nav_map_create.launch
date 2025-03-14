@@ -8,7 +8,7 @@
     <param name="visual_pcd_path" value="$(find map_manager)/pcd/terrain20250311_12_24.pcd" />
     <param name="use_sim_time" value="false" />
     <param name="obstacleHeightThre" value="0.15" />
-    <param name="save_always" value="true" />
+    <param name="save_always" value="true" /> <!-- 一直保存 -->
   </node>
 
   <!-- 启动rviz -->

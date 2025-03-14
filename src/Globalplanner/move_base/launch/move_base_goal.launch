@@ -8,6 +8,7 @@
     <!-- move_base -->
     <node pkg="move_base" type="move_base" name="move_base" respawn="true" output="screen">
         <!-- 设置使用的全局规划器 -->
+        <!-- 全局规划器为global_planner/GlobalPlanner -->
         <param name="base_global_planner" value="global_planner/GlobalPlanner" />
         <!-- 设置调用的局部规划器，必须要现有这个局部规划包 -->
         <param name="use_local_planner" value="false" />

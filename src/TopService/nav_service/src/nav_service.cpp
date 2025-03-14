@@ -53,13 +53,16 @@ bool updateConfigCallback(std_srvs::Trigger::Request &req,
                           std_srvs::Trigger::Response &res)
 {
     std::string config;
+    // 从 ROS 参数服务器获取名为 /nav/config 的参数值，并将其存储在 config 变量中
     if (ros::param::get("/nav/config", config))
     {
         nlohmann::json json_data = nlohmann::json::parse(config);
+        // 装进nav_model
         nav_model = json_data.get<NavigationModel>();
         res.success = true;
         res.message = "get navigation config successfully!";
         // 将全部点都乘odom_to_map，装回到nav_model
+        // 里程计坐标系转换到地图坐标系
         if (nav_model.points.size() > 0 && nav_model.points[0].x != 99999)
         {
             for (auto &point : nav_model.points)
@@ -159,12 +162,22 @@ bool stopCallback(std_srvs::Trigger::Request &req,
     return true;
 }
 
+/**
+ * @brief 里程计回调函数，获取里程计数据
+ *
+ * @param msg
+ */
 void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
 {
     vehicle_x = msg->pose.pose.position.x;
     vehicle_y = msg->pose.pose.position.y;
 }
 
+/**
+ * @brief 发布导航状态
+ *
+ * @param nav_status_pub
+ */
 void navStatusPub(ros::Publisher &nav_status_pub)
 {
     NavStatus nav_status;
@@ -194,6 +207,11 @@ void reLocalizationCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
     reloc_succeed = true;
 }
 
+/**
+ * @brief 里程计转地图坐标系
+ *
+ * @param msg
+ */
 void odomToMapCallBack(const geometry_msgs::PoseStamped::ConstPtr &msg)
 {
     odom_to_map.setIdentity(); // 重置为单位矩阵，否则会发生累积变换

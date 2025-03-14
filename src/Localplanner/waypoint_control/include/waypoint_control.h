@@ -108,7 +108,7 @@ private:
     // 动态参数
     double default_point_time = 6.0; // waypoint持续基础时间
     double reach_goal_dis = 0.5;
-    bool goal_point_only = false; // waypoint持续最大时间
+    bool goal_point_only = false;
     bool clear_justnow = false;
     bool debug = false;
     bool use_recovery_mode = false;

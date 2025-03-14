@@ -162,6 +162,9 @@ void LpNode::local_planner()
     // 如果pathScale和pathRange都不是最小值
     while ((pathScale != lctlPtr->get_params().minPathScale && lctlPtr->get_params().usePathScale) || pathRange >= lctlPtr->get_params().minPathRange)
     {
+        // -------------------------------------
+        // 参数设置
+        // -------------------------------------
         NAV_PASS("Planning...pathRange: {}", pathRange);
         // 向参数服务器设置参数pathRange
         nhPrivate.setParam("pathRange", pathRange);
@@ -179,6 +182,9 @@ void LpNode::local_planner()
             lctlPtr->set_enlarge_dirThre(0);
         }
 
+        // -------------------------------------
+        // 清空数据并初始化参数
+        // -------------------------------------
         clear_Lists_score(); // 先清空数据
         plannerCloudCropSize = plannerCloudCrop->points.size();
         PannerAtuCloud->clear();    // 实际用于规划的点云
@@ -187,6 +193,10 @@ void LpNode::local_planner()
         minObsAngCCW = 180.0;
         diameter = sqrt(lctlPtr->get_params().vehicleLength / 2.0 * lctlPtr->get_params().vehicleLength / 2.0 + lctlPtr->get_params().vehicleWidth / 2.0 * lctlPtr->get_params().vehicleWidth / 2.0);
         angOffset = atan2(lctlPtr->get_params().vehicleWidth, lctlPtr->get_params().vehicleLength) * 180.0 / PI;
+
+        // -------------------------------------
+        // 处理点云：筛选获得用于规划的点云
+        // -------------------------------------
         for (int i = 0; i < plannerCloudCropSize; i++)
         {
             float x = plannerCloudCrop->points[i].x * pathScale; // 先除了用来计算，后面发布规划路径点位和可行路径的时候会乘回来，使障碍物看得更远
@@ -203,6 +213,7 @@ void LpNode::local_planner()
                     cloudDir += 2 * M_PI;
             }
             cloudDir *= 180 / PI;
+            // ---------------筛选用于规划的点云----------------------
             // 用于规划的点云满足以下三个条件
             //  ①checkObstacle为true
             // *②只考虑规划路径范围内的点云，这是主要的，也可以说可以只看这个
@@ -246,6 +257,8 @@ void LpNode::local_planner()
                 local_diff_limitTurn(x, y); // 限制转弯角度
             }
         }
+
+        
         // 发布实际用于规划的点云
         // x,y方向偏移量
         pcl::PointCloud<pcl::PointXYZI> PannerAtuCloud1;

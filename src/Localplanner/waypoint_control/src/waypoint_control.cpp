@@ -44,6 +44,7 @@ waypoint_control::waypoint_control()
     goal_point.pose.position.y = 0;
 }
 
+// 发布 WayPoint 到话题 /way_point
 void waypoint_control::publishWayPoint(geometry_msgs::PoseStamped &point)
 {
     point.header.frame_id = "map";
@@ -182,9 +183,15 @@ void waypoint_control::updateCase()
     return;
 }
 
+// --------------------------------------
+// 控制状态流转
+// 主要发布消息：
+// 1. control_mode: 发布到话题 /control_mode，消息类型 std_msgs::Int8
+// 2. way_point: 发布到话题 /way_point，消息类型 geometry_msgs::PoseStamped
+// --------------------------------------
 void waypoint_control::run()
 {
-    if (goal_point_only)
+    if (goal_point_only)    // 仅关注目标点
     {
         control_mode = GOALDIRECT;
     }
@@ -201,13 +208,17 @@ void waypoint_control::run()
         }
         updateCase();
     }
-    std::string control_mode_str;
+    // ----------------------------------
+    // 状态流转
+    // ----------------------------------
+    std::string control_mode_str;   // 控制状态字符串
     switch (control_mode)
     {
+        // ----------------恢复状态------------------
     case RECOVER:
         control_mode_str = "RECOVER";
         control_mode_pub = pubRECOVER;
-        if (!is_lateraling)
+        if (!is_lateraling) // 如果不是横移中
         {
             lateral_begin = ros::Time::now().toSec();
             if (debug)
@@ -241,14 +252,15 @@ void waypoint_control::run()
             // publishWayPoint(lateral_point);
         }
         break;
+        // ----------------中间点状态------------------
     case MIDPOINT:
         _midP_mode_ptr->pub_turn_point();
-        if (_midP_mode_ptr->is_midplanning)
+        if (_midP_mode_ptr->is_midplanning) // 中间点规划中
         {
             control_mode_str = "MIDPlanning";
             control_mode_pub = pubMIDPlanning;
         }
-        else
+        else    // 引导线规划中
         {
             control_mode_str = "GUIDEPlanning";
             control_mode_pub = pubGUIDEPlanning;
@@ -260,6 +272,7 @@ void waypoint_control::run()
             need_pub_goal = true;
         }
         break;
+        // ----------------目标点状态------------------
     case GOALDIRECT:
         control_mode_str = "GOALDIRECT";
         control_mode_pub = pubGOALDIRECT;

@@ -177,13 +177,19 @@ namespace move_base {
        */
       void wakePlanner(const ros::TimerEvent& event);
 
+      // 一个对象的类型，它用于存储和管理坐标变换的缓冲区
       tf2_ros::Buffer& tf_;
 
+      // MoveBaseActionServer的类指针，本质上是一个SimpleActionServer
       MoveBaseActionServer* as_;
 
+      // 局部规划器智能指针
+      // boost::shared_ptr 智能指针，指向nav_core::BaseLocalPlanner类对象
       boost::shared_ptr<nav_core::BaseLocalPlanner> tc_;
+      // 二维代价地图指针
       costmap_2d::Costmap2DROS* planner_costmap_ros_, *controller_costmap_ros_;
 
+      // 全局规划器智能指针
       boost::shared_ptr<nav_core::BaseGlobalPlanner> planner_;
       std::string robot_base_frame_, global_frame_;
 
@@ -209,6 +215,9 @@ namespace move_base {
 
       ros::Time last_valid_plan_, last_valid_control_, last_oscillation_reset_;
       geometry_msgs::PoseStamped oscillation_pose_;
+      // pluginlib 加载卸载类的库
+      // 三个加载器，分别用于加载全局规划器、局部规划器、恢复行为
+      // 加载nav_core的三个基类
       pluginlib::ClassLoader<nav_core::BaseGlobalPlanner> bgp_loader_;
       pluginlib::ClassLoader<nav_core::BaseLocalPlanner> blp_loader_;
       pluginlib::ClassLoader<nav_core::RecoveryBehavior> recovery_loader_;
@@ -221,6 +230,7 @@ namespace move_base {
       //set up the planner's thread
       bool runPlanner_;
       boost::recursive_mutex planner_mutex_;
+      // 一个同步原语，用于在线程之间进行协调和通信。
       boost::condition_variable_any planner_cond_;
       geometry_msgs::PoseStamped planner_goal_;
       boost::thread* planner_thread_;

@@ -69,6 +69,7 @@ bool PlannerWithCostmap::makePlanService(navfn::MakeNavPlan::Request& req, navfn
 
     req.start.header.frame_id = "map";
     req.goal.header.frame_id = "map";
+    // 调用 makePlan 函数，生成路径
     bool success = makePlan(req.start, req.goal, path);
     resp.plan_found = success;
     if (success) {
@@ -89,6 +90,7 @@ PlannerWithCostmap::PlannerWithCostmap(string name, Costmap2DROS* cmap) :
         GlobalPlanner(name, cmap->getCostmap(), cmap->getGlobalFrameID()) {
     ros::NodeHandle private_nh("~");
     cmap_ = cmap;
+    // advertiseService 注册一个服务，服务名为 make_plan，回调函数为 makePlanService
     make_plan_service_ = private_nh.advertiseService("make_plan", &PlannerWithCostmap::makePlanService, this);
     pose_sub_ = private_nh.subscribe<rm::PoseStamped>("goal", 1, &PlannerWithCostmap::poseCallback, this);
 }
